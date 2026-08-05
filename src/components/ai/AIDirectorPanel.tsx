@@ -191,7 +191,7 @@ export const AIDirectorPanel: React.FC = () => {
                   <span>🔒 Strict Keyframe Lock</span>
                 </div>
                 <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
-                  Preserves original room, lighting, wardrobe & composition from Picture 1 in Shot 1.
+                  Shot 1 begins exactly from Picture 1, preserving its original environment, lighting, wardrobe, and composition.
                 </p>
               </button>
 
@@ -208,7 +208,7 @@ export const AIDirectorPanel: React.FC = () => {
                   <span>🎨 Identity Lock Only</span>
                 </div>
                 <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
-                  Transfers character face/hair into new room, lighting & wardrobe.
+                  Preserves the character's facial identity and hairstyle while allowing a new environment, lighting, and wardrobe.
                 </p>
               </button>
             </div>
