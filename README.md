@@ -109,7 +109,6 @@ MiniMax-H3-Director/
 │   ├── types/                # TypeScript interface definitions
 │   ├── index.css             # Tailwind CSS & universal light/dark theme rules
 │   └── main.tsx              # React mounting entry point
-└── workflow reference/       # ComfyUI workflow JSON reference files
 ```
 
 ---
