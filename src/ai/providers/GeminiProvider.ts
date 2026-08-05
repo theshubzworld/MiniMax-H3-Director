@@ -253,10 +253,11 @@ Inspect the attached keyframe image(s) (Picture 1).
 - You ARE ALLOWED to re-place the character into a NEW environment, wardrobe, and lighting requested by the user's idea ("${params.idea}") and style ("${params.narrativeStyle}").`
         : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
 Inspect the attached keyframe image(s) (Picture 1).
-- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for: subject identity, face, hair, clothing, accessories, location, background, lighting, and composition.
+- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for all visible visual attributes (hair, face, clothing, accessories, body proportions, room/location, architecture, background, lighting, weather, composition).
 - Shot 1 MUST begin EXACTLY from Picture 1.
-- DO NOT invent specific hair color, hair style, or clothing text descriptions (e.g. "brown hair tied back", "wearing a beige sweater"). Refer to the character strictly as "the subject from <Picture 1>" or "the woman from <Picture 1>" so Picture 1 provides 100% of her visual identity.
-- The narrative genre (${params.narrativeStyle}) MUST ONLY influence physical action, camera movement, atmosphere, events, and audio—NOT the starting room, wardrobe, or lighting of Shot 1.`
+- DO NOT restate or re-describe visual attributes already present in Picture 1.
+- Refer to the subject using neutral references such as: "the subject from <Picture 1>", "the person from <Picture 1>", "the character from <Picture 1>", "the vehicle from <Picture 1>", or "the animal from <Picture 1>".
+- Only describe new motion, physical interactions, emotion, camera movement, atmosphere, and events occurring after the opening frame.`
       : '';
 
     const promptText = `You are an AI Video Director for MiniMax H3.

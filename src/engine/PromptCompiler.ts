@@ -53,13 +53,13 @@ export class PromptCompiler {
       parts.push(`[Shot 1] ${style},`);
       if (mode === 'I2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>, preserving the original subject appearance, wardrobe, environment, lighting, and composition shown in the reference image,`);
+          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original environment shown in the reference image,`);
         } else {
-          parts.push(`referencing character facial features and identity from <Picture 1>,`);
+          parts.push(`referencing character facial identity from <Picture 1>,`);
         }
       } else if (mode === 'FL2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>, preserving its original starting environment and subject appearance,`);
+          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original starting environment,`);
         } else {
           parts.push(`referencing starting character features from <Picture 1>,`);
         }
@@ -86,9 +86,9 @@ export class PromptCompiler {
       const char = shot.character;
       let charDesc = char.identity || 'the subject';
 
-      // In Strict Mode for image-based generations, sanitize text that contradicts Picture 1
+      // In Strict Mode for image-based generations, sanitize visual attribute text that contradicts Picture 1
       if (isStrict && (mode === 'I2VA' || mode === 'FL2VA' || mode === 'L2VA')) {
-        if (/hair|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back/i.test(charDesc)) {
+        if (/hair|eyes|skin|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back|blonde|brunette/i.test(charDesc)) {
           charDesc = 'the subject from <Picture 1>';
         }
       }
