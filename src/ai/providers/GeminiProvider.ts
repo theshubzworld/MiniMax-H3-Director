@@ -131,9 +131,8 @@ export class GeminiProvider implements AIProvider {
 
     for (const model of this.models) {
       const endpoints = [
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
-        ...regionalFallbacks.map((loc) => `https://${loc}-aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`),
         `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
+        ...regionalFallbacks.map((loc) => `https://${loc}-aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`),
       ];
 
       for (let attempt = 0; attempt < endpoints.length; attempt++) {
