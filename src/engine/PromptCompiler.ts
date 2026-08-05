@@ -84,7 +84,15 @@ export class PromptCompiler {
     // Character & Identity
     if (shot.character) {
       const char = shot.character;
-      const charDesc = char.identity || 'the subject';
+      let charDesc = char.identity || 'the subject';
+
+      // In Strict Mode for image-based generations, sanitize text that contradicts Picture 1
+      if (isStrict && (mode === 'I2VA' || mode === 'FL2VA' || mode === 'L2VA')) {
+        if (/hair|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back/i.test(charDesc)) {
+          charDesc = 'the subject from <Picture 1>';
+        }
+      }
+
       const speakerTag = char.speakerId ? ` (${char.speakerId})` : '';
 
       const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim();

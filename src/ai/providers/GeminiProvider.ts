@@ -254,7 +254,8 @@ Inspect the attached keyframe image(s) (Picture 1).
         : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
 Inspect the attached keyframe image(s) (Picture 1).
 - Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for: subject identity, face, hair, clothing, accessories, location, background, lighting, and composition.
-- Shot 1 MUST begin EXACTLY from Picture 1. Do NOT replace or reinterpret Shot 1's wardrobe, room location, weather, or lighting with conflicting genre defaults.
+- Shot 1 MUST begin EXACTLY from Picture 1.
+- DO NOT invent specific hair color, hair style, or clothing text descriptions (e.g. "brown hair tied back", "wearing a beige sweater"). Refer to the character strictly as "the subject from <Picture 1>" or "the woman from <Picture 1>" so Picture 1 provides 100% of her visual identity.
 - The narrative genre (${params.narrativeStyle}) MUST ONLY influence physical action, camera movement, atmosphere, events, and audio—NOT the starting room, wardrobe, or lighting of Shot 1.`
       : '';
 
