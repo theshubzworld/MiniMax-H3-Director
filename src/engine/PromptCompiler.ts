@@ -53,7 +53,7 @@ export class PromptCompiler {
       parts.push(`[Shot 1] ${style},`);
       if (mode === 'I2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>, preserving the original subject appearance, wardrobe, environment, lighting, and composition shown in the reference image.`);
+          parts.push(`the opening frame begins exactly from <Picture 1>, preserving the original subject appearance, wardrobe, environment, lighting, and composition shown in the reference image,`);
         } else {
           parts.push(`referencing character facial features and identity from <Picture 1>,`);
         }
@@ -87,10 +87,10 @@ export class PromptCompiler {
       const charDesc = char.identity || 'the subject';
       const speakerTag = char.speakerId ? ` (${char.speakerId})` : '';
 
-      const rawPose = (char.pose || '').replace(/^standing\s+(in\s+)?/i, '').trim();
+      const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim();
       let poseStr = '';
       if (rawPose) {
-        if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing)\b/i.test(rawPose)) {
+        if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing|backing|pressing|standing)\b/i.test(rawPose)) {
           poseStr = ` ${rawPose}`;
         } else if (/^(at|on|in|near|by|under|over|beside|facing)\b/i.test(rawPose)) {
           poseStr = ` standing ${rawPose}`;
@@ -100,7 +100,16 @@ export class PromptCompiler {
       }
 
       const rawExpr = (char.expression || '').replace(/^(a|an|the)\s+/i, '').trim();
-      const exprStr = rawExpr ? ` with a ${rawExpr} expression` : '';
+      let exprStr = '';
+      if (rawExpr) {
+        if (/\bexpression\b/i.test(rawExpr) || /\beyes\b/i.test(rawExpr) || /\bgasp\b/i.test(rawExpr)) {
+          exprStr = `, ${rawExpr}`;
+        } else if (/^[aeiou]/i.test(rawExpr)) {
+          exprStr = ` with an ${rawExpr} expression`;
+        } else {
+          exprStr = ` with a ${rawExpr} expression`;
+        }
+      }
 
       const motionStr = char.motion ? `, ${char.motion}` : '';
       parts.push(`${charDesc}${speakerTag}${poseStr}${exprStr}${motionStr}.`);
