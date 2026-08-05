@@ -1,12 +1,12 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { useHistoryStore } from '../../store/HistoryStore';
-import { Video, Undo, Redo, Download, Sparkles, Layout } from 'lucide-react';
+import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon } from 'lucide-react';
 import { MiniMaxMode } from '../../types/project';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 
 export const Header: React.FC = () => {
-  const { project, updateSettings, setMode, activeView, setActiveView } = useStudioStore();
+  const { project, updateSettings, setMode, activeView, setActiveView, theme, toggleTheme } = useStudioStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
 
   const handleModeChange = (mode: MiniMaxMode) => {
@@ -121,6 +121,16 @@ export const Header: React.FC = () => {
             <Redo className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Light / Dark Theme Toggle */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="p-2 bg-zinc-900 border border-zinc-800 hover:border-cyan-500/50 text-zinc-300 hover:text-cyan-400 rounded-xl transition-all shadow-sm"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-500" />}
+        </button>
 
         {/* Export Button */}
         <button

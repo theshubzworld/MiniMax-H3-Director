@@ -2,9 +2,61 @@
 
 @layer base {
   html, body {
-    background-color: #09090b;
-    color: #f4f4f5;
+    background-color: var(--bg-root, #09090b);
+    color: var(--text-root, #f4f4f5);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
+
+  html.dark {
+    color-scheme: dark;
+    --bg-root: #09090b;
+    --text-root: #f4f4f5;
+  }
+
+  html.light {
+    color-scheme: light;
+    --bg-root: #f4f4f5;
+    --text-root: #18181b;
+
+    /* Universal Tailwind Zinc Color Variable Override for Light Mode */
+    --color-zinc-950: #ffffff;
+    --color-zinc-900: #f4f4f5;
+    --color-zinc-850: #e4e4e7;
+    --color-zinc-800: #e4e4e7;
+    --color-zinc-700: #d4d4d8;
+    --color-zinc-600: #a1a1aa;
+    --color-zinc-500: #71717a;
+    --color-zinc-400: #52525b;
+    --color-zinc-300: #3f3f46;
+    --color-zinc-200: #27272a;
+    --color-zinc-100: #18181b;
+    --color-zinc-50: #09090b;
+
+    /* Light Mode Accent Badges */
+    --color-cyan-950: #e0f2fe;
+    --color-purple-950: #f3e8ff;
+    --color-emerald-950: #d1fae5;
+    --color-amber-950: #fef3c7;
+    --color-red-950: #fee2e2;
+    --color-pink-950: #fce7f3;
+
+    /* Light Mode Readable Text Colors */
+    --color-cyan-400: #0284c7;
+    --color-cyan-300: #0369a1;
+    --color-purple-400: #7e22ce;
+    --color-purple-300: #6b21a8;
+    --color-emerald-400: #047857;
+    --color-emerald-300: #065f46;
+    --color-amber-400: #b45309;
+    --color-amber-300: #92400e;
+    --color-red-400: #dc2626;
+    --color-red-300: #b91c1c;
+  }
+}
+
+/* Smooth transition for theme switching */
+* {
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }

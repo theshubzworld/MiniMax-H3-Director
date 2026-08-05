@@ -89,6 +89,7 @@ interface StudioState {
   activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy';
   diagnostics: DiagnosticsResult;
   proposedPromptDiff: string | null;
+  theme: 'dark' | 'light';
 
   // Actions
   setProject: (project: StudioProject) => void;
@@ -108,6 +109,8 @@ interface StudioState {
   recompileAndValidate: () => void;
   autoFixProject: () => void;
   setProposedPromptDiff: (diff: string | null) => void;
+  toggleTheme: () => void;
+  setTheme: (theme: 'dark' | 'light') => void;
 }
 
 export const useStudioStore = create<StudioState>((set, get) => {
@@ -115,6 +118,12 @@ export const useStudioStore = create<StudioState>((set, get) => {
   const initialCompiled = PromptCompiler.compile(DEFAULT_PROJECT);
   const initialProject = { ...DEFAULT_PROJECT, compiledPrompt: initialCompiled };
   const initialDiag = PromptValidator.validate(initialProject);
+  const initialTheme = (localStorage.getItem('minimax_studio_theme') as 'dark' | 'light') || 'dark';
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(initialTheme);
+  }
 
   return {
     project: initialProject,
@@ -122,6 +131,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
     activeView: 'wizard',
     diagnostics: initialDiag,
     proposedPromptDiff: null,
+    theme: initialTheme,
 
     setProject: (project) => {
       const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
@@ -328,5 +338,25 @@ export const useStudioStore = create<StudioState>((set, get) => {
     },
 
     setProposedPromptDiff: (diff) => set({ proposedPromptDiff: diff }),
+
+    toggleTheme: () => {
+      const current = get().theme;
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('minimax_studio_theme', next);
+      if (typeof document !== 'undefined') {
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(next);
+      }
+      set({ theme: next });
+    },
+
+    setTheme: (next) => {
+      localStorage.setItem('minimax_studio_theme', next);
+      if (typeof document !== 'undefined') {
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(next);
+      }
+      set({ theme: next });
+    },
   };
 });
