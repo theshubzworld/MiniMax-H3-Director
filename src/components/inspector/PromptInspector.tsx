@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Copy, Check, Sparkles, Wrench, FileText, Code } from 'lucide-react';
+import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2 } from 'lucide-react';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { PromptFormatter } from '../../engine/PromptFormatter';
+import { AIEngine } from '../../ai/AIEngine';
 
 export const PromptInspector: React.FC = () => {
-  const { project, diagnostics, autoFixProject } = useStudioStore();
+  const { project, diagnostics, autoFixProject, setProject } = useStudioStore();
   const [copied, setCopied] = useState(false);
   const [fixed, setFixed] = useState(false);
+  const [isPolishingCam, setIsPolishingCam] = useState(false);
+  const [isEnhancingAudio, setIsEnhancingAudio] = useState(false);
   const [activeTab, setActiveTab] = useState<'prompt' | 'health' | 'json'>('prompt');
 
   const handleCopy = () => {
@@ -20,6 +23,40 @@ export const PromptInspector: React.FC = () => {
     autoFixProject();
     setFixed(true);
     setTimeout(() => setFixed(false), 2000);
+  };
+
+  const handlePolishCamera = async () => {
+    setIsPolishingCam(true);
+    try {
+      const provider = AIEngine.getActiveProvider();
+      const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
+      const enhancedShots = await provider.enhanceCamera(project.shots, apiKey);
+      setProject({
+        ...project,
+        shots: enhancedShots,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsPolishingCam(false);
+    }
+  };
+
+  const handleEnhanceSoundscape = async () => {
+    setIsEnhancingAudio(true);
+    try {
+      const provider = AIEngine.getActiveProvider();
+      const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
+      const enhancedAudio = await provider.enhanceAudio(project.audio, apiKey);
+      setProject({
+        ...project,
+        audio: enhancedAudio,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsEnhancingAudio(false);
+    }
   };
 
   return (
@@ -125,17 +162,21 @@ export const PromptInspector: React.FC = () => {
         <div className="grid grid-cols-2 gap-1.5 text-xs">
           <button
             type="button"
-            onClick={autoFixProject}
-            className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-left text-[11px] font-medium transition-all"
+            onClick={handlePolishCamera}
+            disabled={isPolishingCam}
+            className="p-1.5 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-zinc-200 rounded-lg text-left text-[11px] font-medium transition-all flex items-center gap-1.5"
           >
-            ✨ Polish Camera 3D
+            {isPolishingCam ? <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> : <span>✨</span>}
+            <span>{isPolishingCam ? 'Polishing 3D...' : 'Polish Camera 3D'}</span>
           </button>
           <button
             type="button"
-            onClick={autoFixProject}
-            className="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-left text-[11px] font-medium transition-all"
+            onClick={handleEnhanceSoundscape}
+            disabled={isEnhancingAudio}
+            className="p-1.5 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-zinc-200 rounded-lg text-left text-[11px] font-medium transition-all flex items-center gap-1.5"
           >
-            ✨ Enhance Soundscape
+            {isEnhancingAudio ? <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> : <span>✨</span>}
+            <span>{isEnhancingAudio ? 'Enhancing...' : 'Enhance Soundscape'}</span>
           </button>
         </div>
       </div>

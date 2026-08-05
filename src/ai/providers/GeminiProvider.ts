@@ -455,7 +455,49 @@ Return JSON format:
     };
   }
 
-  public async enhanceCamera(shots: Shot[]): Promise<Shot[]> {
+  public async enhanceCamera(shots: Shot[], apiKey?: string): Promise<Shot[]> {
+    const key = this.getEffectiveApiKey(apiKey);
+    if (key) {
+      try {
+        const payload = {
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: `You are an expert 3D Cinematographer for MiniMax H3. Optimize camera movements for these ${shots.length} shots to maximize visual pacing.
+Input shots: ${JSON.stringify(shots.map((s) => ({ shotNumber: s.shotNumber, action: s.rawActionDescription, camera: s.camera })))}
+
+Return JSON array of camera objects matching:
+[
+  { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her trembling hands" }
+]`,
+                },
+              ],
+            },
+          ],
+          generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
+        };
+        const data = await this.callVertexExpress(payload, key);
+        const rawText = (data.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || '').join('\n');
+        const parsed = this.extractJsonObject(rawText);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return shots.map((shot, idx) => ({
+            ...shot,
+            camera: {
+              ...shot.camera,
+              motionType: parsed[idx]?.motionType || shot.camera?.motionType || 'Push In',
+              amplitude: parsed[idx]?.amplitude || shot.camera?.amplitude || 'small amplitude',
+              speed: parsed[idx]?.speed || shot.camera?.speed || 'slow speed',
+              targetSubject: parsed[idx]?.targetSubject || shot.camera?.targetSubject || 'the main subject',
+            },
+          }));
+        }
+      } catch (err) {
+        console.warn('[Gemini] enhanceCamera AI call failed, using matrix fallback', err);
+      }
+    }
+
     return shots.map((shot, idx) => {
       const cam = CAMERA_MOTION_MATRIX[(idx + 1) % CAMERA_MOTION_MATRIX.length];
       return {
@@ -464,16 +506,63 @@ Return JSON format:
           motionType: cam.motionType,
           amplitude: cam.amplitude,
           speed: cam.speed,
-          targetSubject: shot.camera.targetSubject || 'the main character',
+          targetSubject: shot.camera?.targetSubject || 'the main character',
         },
       };
     });
   }
 
-  public async enhanceAudio(audio: AudioSettings): Promise<AudioSettings> {
+  public async enhanceAudio(audio: AudioSettings, apiKey?: string): Promise<AudioSettings> {
+    const key = this.getEffectiveApiKey(apiKey);
+    if (key) {
+      try {
+        const payload = {
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: `You are an AI Audio Director. Enhance this stereo soundscape and non-diegetic music score for MiniMax H3 video generation.
+Current audio: ${JSON.stringify(audio)}
+
+Return JSON object:
+{
+  "customSoundscape": "Crisp room acoustic tone, subtle patter of rain against window glass, and low rhythmic metallic hum.",
+  "genreStyle": "Cinematic Thriller",
+  "instrumentation": ["low sub-bass drone", "dissonant violins", "ticking clock"],
+  "tempo": "slow",
+  "dynamics": "quietly building crescendo"
+}`,
+                },
+              ],
+            },
+          ],
+          generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
+        };
+        const data = await this.callVertexExpress(payload, key);
+        const rawText = (data.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || '').join('\n');
+        const parsed = this.extractJsonObject(rawText);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...audio,
+            customSoundscape: parsed.customSoundscape || audio.customSoundscape,
+            music: {
+              ...audio.music,
+              genreStyle: parsed.genreStyle || audio.music?.genreStyle || 'Cinematic',
+              instrumentation: parsed.instrumentation || audio.music?.instrumentation || ['strings'],
+              tempo: parsed.tempo || audio.music?.tempo || 'moderate',
+              dynamics: parsed.dynamics || audio.music?.dynamics || 'building crescendo',
+            },
+          };
+        }
+      } catch (err) {
+        console.warn('[Gemini] enhanceAudio AI call failed, using preset fallback', err);
+      }
+    }
+
     return {
       ...audio,
-      customSoundscape: 'Rich atmospheric soundscape with crisp footsteps and immersive ambient acoustics.',
+      customSoundscape: 'Rich atmospheric soundscape with crisp acoustic details and immersive room tone.',
     };
   }
 
