@@ -39,10 +39,10 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
 
 export class GeminiProvider implements AIProvider {
   public id = 'gemini';
-  public name = 'Google Vertex AI Express / Gemini (2.5 Pro / 2.5 Flash / 2.0 Flash / 1.5 Pro)';
+  public name = 'Google Vertex AI Express / Gemini (2.5 Pro / 3.5 Flash / 2.5 Flash)';
 
-  // Models ordered with gemini-2.5-pro as primary, fallback to flash models on 429 rate limit
-  private models = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
+  // Models ordered with gemini-2.5-pro as primary, gemini-3.5-flash and flash models as 429 failover
+  private models = ['gemini-2.5-pro', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
 
   private getEffectiveApiKey(apiKey?: string): string {
     let key = apiKey && apiKey.trim().length > 0 ? apiKey.trim() : '';
