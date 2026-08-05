@@ -14,19 +14,24 @@ export class PromptOptimizer {
       updatedProject.shots = TimelineEngine.recalculateShotTimings(updatedProject.shots);
     }
 
-    // 2. Ensure Camera Motions are populated
-    updatedProject.shots = updatedProject.shots.map((shot) => {
-      if (!shot.camera || !shot.camera.motionType) {
-        return {
-          ...shot,
-          camera: {
-            motionType: 'Push In',
-            amplitude: 'small amplitude',
-            speed: 'slow speed',
-          },
-        };
-      }
-      return shot;
+    // 2. Ensure Camera Motions & Focal Targets are populated
+    updatedProject.shots = updatedProject.shots.map((shot, idx) => {
+      const camera = shot.camera || {};
+      const character = shot.character || {};
+      return {
+        ...shot,
+        camera: {
+          motionType: camera.motionType || 'Push In',
+          amplitude: camera.amplitude || 'small amplitude',
+          speed: camera.speed || 'slow speed',
+          targetSubject: camera.targetSubject || 'the main focal subject',
+        },
+        character: {
+          ...character,
+          speakerId: character.speakerId || `S${idx + 1}`,
+          identity: character.identity || 'The main protagonist',
+        },
+      };
     });
 
     // 3. Clean Soundscape Text

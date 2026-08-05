@@ -7,12 +7,19 @@ import { PromptFormatter } from '../../engine/PromptFormatter';
 export const PromptInspector: React.FC = () => {
   const { project, diagnostics, autoFixProject } = useStudioStore();
   const [copied, setCopied] = useState(false);
+  const [fixed, setFixed] = useState(false);
   const [activeTab, setActiveTab] = useState<'prompt' | 'health' | 'json'>('prompt');
 
   const handleCopy = () => {
     navigator.clipboard.writeText(project.compiledPrompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleAutoFix = () => {
+    autoFixProject();
+    setFixed(true);
+    setTimeout(() => setFixed(false), 2000);
   };
 
   return (
@@ -30,11 +37,16 @@ export const PromptInspector: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            onClick={autoFixProject}
-            className="p-1.5 bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 rounded-lg hover:bg-emerald-900/60 transition-all"
-            title="Auto-Fix Formatting"
+            onClick={handleAutoFix}
+            className={`px-2 py-1 border text-xs font-semibold rounded-lg flex items-center gap-1 transition-all ${
+              fixed
+                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20'
+                : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60'
+            }`}
+            title="Auto-Fix Formatting & Compliance"
           >
-            <Wrench className="w-3.5 h-3.5" />
+            {fixed ? <Check className="w-3.5 h-3.5" /> : <Wrench className="w-3.5 h-3.5" />}
+            <span>{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
           </button>
 
           <button
