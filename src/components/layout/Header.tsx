@@ -34,15 +34,9 @@ export const Header: React.FC = () => {
             </div>
           </div>
           <div>
-            <h1 className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
+            <h1 className="font-extrabold text-base tracking-tight text-zinc-100 flex items-center gap-2">
               MiniMax H3 <span className="text-xs bg-cyan-950 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full font-mono">Prompt Studio</span>
             </h1>
-            <input
-              type="text"
-              value={project.name}
-              onChange={(e) => updateSettings({})}
-              className="text-xs text-zinc-400 bg-transparent hover:bg-zinc-900 px-1 py-0.5 rounded focus:outline-none focus:bg-zinc-900 border border-transparent hover:border-zinc-800"
-            />
           </div>
         </div>
 

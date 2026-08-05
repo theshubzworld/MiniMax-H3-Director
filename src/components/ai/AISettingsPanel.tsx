@@ -32,7 +32,7 @@ export const AISettingsPanel: React.FC = () => {
             <Sliders className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white">AI Director Engine Settings</h2>
+            <h2 className="text-base font-bold text-zinc-100">AI Director Engine Settings</h2>
             <p className="text-xs text-zinc-400">Configure AI provider, models, temperature, and API keys.</p>
           </div>
         </div>

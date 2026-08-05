@@ -62,7 +62,7 @@ export const Wizard: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
                 <Video className="w-5 h-5 text-cyan-400" />
                 Step 1: MiniMax H3 Mode Specs & Visual Setup
               </h2>
@@ -209,7 +209,7 @@ export const Wizard: React.FC = () => {
       {/* Step 4: Review & Export */}
       {currentStep === 4 && (
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
-          <h2 className="text-lg font-bold text-white">Step 4: Review Compiled MiniMax H3 Prompt</h2>
+          <h2 className="text-lg font-bold text-zinc-100">Step 4: Review Compiled MiniMax H3 Prompt</h2>
           <p className="text-xs text-zinc-400">Your prompt has been compiled adhering 100% to MiniMax specifications.</p>
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 font-mono text-xs text-cyan-300 whitespace-pre-wrap">
             {project.compiledPrompt}
