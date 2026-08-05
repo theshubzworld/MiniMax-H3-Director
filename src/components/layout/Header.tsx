@@ -1,12 +1,12 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { useHistoryStore } from '../../store/HistoryStore';
-import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon } from 'lucide-react';
+import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film } from 'lucide-react';
 import { MiniMaxMode } from '../../types/project';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 
 export const Header: React.FC = () => {
-  const { project, updateSettings, setMode, activeView, setActiveView, theme, toggleTheme } = useStudioStore();
+  const { project, setProject, updateSettings, setMode, activeView, setActiveView, theme, toggleTheme } = useStudioStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
 
   const handleModeChange = (mode: MiniMaxMode) => {
@@ -27,16 +27,38 @@ export const Header: React.FC = () => {
     <header className="h-16 bg-zinc-950/90 border-b border-zinc-800/80 px-6 flex items-center justify-between backdrop-blur-md sticky top-0 z-40">
       {/* Brand Logo & Name */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-cyan-500/20">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-cyan-500/20 flex-shrink-0">
             <div className="w-full h-full bg-zinc-950 rounded-[10px] flex items-center justify-center">
               <Video className="w-5 h-5 text-cyan-400" />
             </div>
           </div>
-          <div>
-            <h1 className="font-extrabold text-base tracking-tight text-zinc-100 flex items-center gap-2">
-              MiniMax H3 <span className="text-xs bg-cyan-950 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full font-mono">Prompt Studio</span>
-            </h1>
+
+          <div className="flex flex-col justify-center">
+            <div className="flex items-center gap-2">
+              <h1 className="font-extrabold text-sm sm:text-base tracking-tight text-zinc-100 flex items-center gap-1.5">
+                MiniMax H3 <span className="text-[10px] bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold tracking-wider">DIRECTOR</span>
+              </h1>
+            </div>
+
+            <div className="flex items-center gap-2 mt-0.5">
+              <div className="flex items-center gap-1 text-zinc-400 hover:text-zinc-200 transition-colors">
+                <Film className="w-3 h-3 text-cyan-400 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={project.name}
+                  onChange={(e) => setProject({ ...project, name: e.target.value })}
+                  placeholder="Untitled Project"
+                  className="text-[11px] font-medium text-zinc-300 hover:text-zinc-100 focus:text-zinc-100 bg-transparent hover:bg-zinc-900/60 px-1 py-0.2 rounded focus:outline-none focus:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-all w-36 sm:w-48 truncate"
+                  title="Click to edit project name"
+                />
+              </div>
+
+              <span className="text-[10px] text-zinc-400 font-mono hidden xl:inline-flex items-center gap-1 bg-zinc-900/80 px-2 py-0.2 rounded border border-zinc-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                {project.shots.length} Shots • {project.settings.durationSeconds}s • {project.settings.mode}
+              </span>
+            </div>
           </div>
         </div>
 
