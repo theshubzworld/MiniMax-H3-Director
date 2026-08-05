@@ -237,11 +237,12 @@ Inspect the attached keyframe image(s) (Picture 1).
 - You ARE ALLOWED to re-place the character into a NEW environment, wardrobe, and lighting requested by the user's idea ("${params.idea}") and style ("${params.narrativeStyle}").`
         : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
 Inspect the attached keyframe image(s) (Picture 1).
-- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for all visible visual attributes (hair, face, clothing, accessories, body proportions, room/location, architecture, background, lighting, weather, composition).
-- Shot 1 MUST begin EXACTLY from Picture 1.
-- DO NOT restate or re-describe visual attributes already present in Picture 1.
-- Refer to the subject using neutral references such as: "the subject from <Picture 1>", "the person from <Picture 1>", "the character from <Picture 1>", "the vehicle from <Picture 1>", or "the animal from <Picture 1>".
-- Only describe new motion, physical interactions, emotion, camera movement, atmosphere, and events occurring after the opening frame.`
+- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for location, environment, room, lighting, wardrobe, pose, and subject appearance.
+- Shot 1 MUST begin EXACTLY from Picture 1's starting pose and setting.
+- DO NOT rename clothing (e.g., "silk camisole", "designer loungewear") or invent conflicting locations (e.g., "minimalist bedroom", "sun-drenched room", "kitchen", "twilight forest").
+- Initial motion in Shot 1 MUST evolve naturally from the exact starting pose shown in Picture 1 (e.g. subtle head tilt, lowering hand from face, soft smile, adjusting selfie angle, blinking).
+- Refer to the subject strictly as "the subject from <Picture 1>" without re-describing hair or outfit.
+- Only describe micro-motion, camera movement, audio, and natural story events occurring forward from the unchanged opening frame.`
       : '';
 
     const promptText = `You are an AI Video Director for MiniMax H3.

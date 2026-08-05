@@ -53,13 +53,13 @@ export class PromptCompiler {
       parts.push(`[Shot 1] ${style},`);
       if (mode === 'I2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original environment shown in the reference image,`);
+          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original environment shown in the reference image, preserving the existing location, lighting, wardrobe, and composition.`);
         } else {
           parts.push(`referencing character facial identity from <Picture 1>,`);
         }
       } else if (mode === 'FL2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original starting environment,`);
+          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original starting environment, preserving the existing location, lighting, wardrobe, and composition.`);
         } else {
           parts.push(`referencing starting character features from <Picture 1>,`);
         }
@@ -75,16 +75,20 @@ export class PromptCompiler {
       const env = shot.environment;
       const rawEnvParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere].filter(Boolean) as string[];
       if (rawEnvParts.length > 0 && rawEnvParts[0]) {
-        const cleanLocation = rawEnvParts[0].replace(/^(a|an|the)\s+/i, '');
-        const cleanedParts = [cleanLocation, ...rawEnvParts.slice(1)].map((p, idx) => {
-          let s = p.trim().replace(/\.+$/, '').replace(/,$/, '');
-          if (idx > 0 && /^[A-Z]/.test(s) && !/^(IMAX|HDR|CG|3D|4K|8K)\b/.test(s)) {
-            s = s.charAt(0).toLowerCase() + s.slice(1);
-          }
-          return s;
-        });
-        const joinedEnv = cleanedParts.join(', ');
-        parts.push(`set in a ${joinedEnv} environment.`);
+        // In Strict Mode for Shot 1, omit invented location text that overrides Picture 1
+        const shouldOmitEnv = isStrict && index === 0 && (mode === 'I2VA' || mode === 'FL2VA');
+        if (!shouldOmitEnv) {
+          const cleanLocation = rawEnvParts[0].replace(/^(a|an|the)\s+/i, '');
+          const cleanedParts = [cleanLocation, ...rawEnvParts.slice(1)].map((p, idx) => {
+            let s = p.trim().replace(/\.+$/, '').replace(/,$/, '');
+            if (idx > 0 && /^[A-Z]/.test(s) && !/^(IMAX|HDR|CG|3D|4K|8K)\b/.test(s)) {
+              s = s.charAt(0).toLowerCase() + s.slice(1);
+            }
+            return s;
+          });
+          const joinedEnv = cleanedParts.join(', ');
+          parts.push(`set in a ${joinedEnv} environment.`);
+        }
       }
     }
 
@@ -95,7 +99,7 @@ export class PromptCompiler {
 
       // In Strict Mode for image-based generations, sanitize visual attribute text that contradicts Picture 1
       if (isStrict && (mode === 'I2VA' || mode === 'FL2VA' || mode === 'L2VA')) {
-        if (/hair|eyes|skin|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back|blonde|brunette/i.test(charDesc)) {
+        if (/hair|eyes|skin|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back|blonde|brunette|loungewear|camisole|clothing|apparel|robe|vest|coat|attire/i.test(charDesc)) {
           charDesc = 'the subject from <Picture 1>';
         }
       }
