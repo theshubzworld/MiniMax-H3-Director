@@ -16,6 +16,7 @@ const DEFAULT_PROJECT: StudioProject = {
   updatedAt: new Date().toISOString(),
   settings: {
     mode: 'T2VA',
+    referenceMode: 'strict',
     durationSeconds: 6,
     aspectRatio: '16:9',
     style: '2D Anime',

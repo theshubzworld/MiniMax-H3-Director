@@ -244,9 +244,23 @@ export class GeminiProvider implements AIProvider {
     const shotDuration = Math.max(1, Number((params.durationSeconds / params.shotsCount).toFixed(2)));
     const imageParts = await this.prepareImageParts(params.images);
 
+    const isCreative = params.referenceMode === 'creative';
+    const imageRuleText = params.images && params.images.length > 0
+      ? isCreative
+        ? `CRITICAL I2V CREATIVE IDENTITY MODE RULES:
+Inspect the attached keyframe image(s) (Picture 1).
+- Picture 1 is used STRICTLY for character identity, face shape, and hair style.
+- You ARE ALLOWED to re-place the character into a NEW environment, wardrobe, and lighting requested by the user's idea ("${params.idea}") and style ("${params.narrativeStyle}").`
+        : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
+Inspect the attached keyframe image(s) (Picture 1).
+- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for: subject identity, face, hair, clothing, accessories, location, background, lighting, and composition.
+- Shot 1 MUST begin EXACTLY from Picture 1. Do NOT replace or reinterpret Shot 1's wardrobe, room location, weather, or lighting with conflicting genre defaults.
+- The narrative genre (${params.narrativeStyle}) MUST ONLY influence physical action, camera movement, atmosphere, events, and audio—NOT the starting room, wardrobe, or lighting of Shot 1.`
+      : '';
+
     const promptText = `You are an AI Video Director for MiniMax H3.
 Generate a complete, structured ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video in ${params.mode} mode based on idea: "${params.idea}".
-${params.images && params.images.length > 0 ? 'CRITICAL: Inspect the attached keyframe image(s). Ensure character identity, face, clothing, and environment remain 100% consistent with Picture 1 across all shots.' : ''}
+${imageRuleText}
 
 You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
 1. camera: { motionType (Push In/Pull Out/Arc Shot/Tracking Shot/etc), amplitude (small amplitude/medium amplitude/large amplitude), speed (slow speed/normal speed/fast speed), targetSubject }

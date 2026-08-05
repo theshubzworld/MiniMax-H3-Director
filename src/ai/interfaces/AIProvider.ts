@@ -29,6 +29,7 @@ export interface StoryboardParams {
   idea: string;
   images?: string[];
   mode: string;
+  referenceMode?: 'strict' | 'creative';
   durationSeconds: number;
   shotsCount: number;
   narrativeStyle: NarrativeStyle;

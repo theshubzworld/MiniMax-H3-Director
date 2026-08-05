@@ -20,9 +20,11 @@ export class PromptCompiler {
       shots.length
     );
 
+    const referenceMode = settings.referenceMode || 'strict';
+
     // 2. Compile Multimodal Description (Part Two - Section 1)
     const compiledShots = shots.map((shot: Shot, index: number) => {
-      return PromptCompiler.compileSingleShot(shot, index, settings.style, settings.mode);
+      return PromptCompiler.compileSingleShot(shot, index, settings.style, settings.mode, referenceMode);
     });
 
     const multimodalDescription = `integrated_multimodal_description: ${compiledShots.join(' ')}`;
@@ -41,15 +43,26 @@ export class PromptCompiler {
   /**
    * Compiles a single shot into natural English storyboard prose.
    */
-  private static compileSingleShot(shot: Shot, index: number, style: string, mode: string): string {
+  private static compileSingleShot(shot: Shot, index: number, style: string, mode: string, referenceMode: string = 'strict'): string {
     const shotNum = index + 1;
     const parts: string[] = [];
+    const isStrict = referenceMode === 'strict';
 
     // Shot Header & Cut Timing
     if (index === 0) {
       parts.push(`[Shot 1] ${style},`);
       if (mode === 'I2VA') {
-        parts.push(`the opening frame begins from <Picture 1>,`);
+        if (isStrict) {
+          parts.push(`the opening frame begins exactly from <Picture 1>, preserving the original subject appearance, wardrobe, environment, lighting, and composition shown in the reference image.`);
+        } else {
+          parts.push(`referencing character facial features and identity from <Picture 1>,`);
+        }
+      } else if (mode === 'FL2VA') {
+        if (isStrict) {
+          parts.push(`the opening frame begins exactly from <Picture 1>, preserving its original starting environment and subject appearance,`);
+        } else {
+          parts.push(`referencing starting character features from <Picture 1>,`);
+        }
       }
     } else {
       const timeStamp = TimelineEngine.formatTimestamp(shot.startTimeSeconds);

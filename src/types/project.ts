@@ -48,8 +48,11 @@ export interface ReferenceImage {
   };
 }
 
+export type ImageReferenceMode = 'strict' | 'creative';
+
 export interface ProjectSettings {
   mode: MiniMaxMode;
+  referenceMode?: ImageReferenceMode;
   durationSeconds: number;
   aspectRatio: AspectRatio;
   style: VisualStyle;

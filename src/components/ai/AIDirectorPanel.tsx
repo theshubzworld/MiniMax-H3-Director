@@ -41,7 +41,7 @@ const STORY_SEED_PRESETS = [
 ];
 
 export const AIDirectorPanel: React.FC = () => {
-  const { project, setProject, addShot, removeShot, autoFixProject } = useStudioStore();
+  const { project, setProject, updateSettings, addShot, removeShot, autoFixProject } = useStudioStore();
   const [idea, setIdea] = useState('');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Anime');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -75,6 +75,7 @@ export const AIDirectorPanel: React.FC = () => {
         idea: idea || project.description || 'Cyberpunk action standoff scene',
         images: imageUrls,
         mode: project.settings.mode,
+        referenceMode: project.settings.referenceMode || 'strict',
         durationSeconds: totalDuration,
         shotsCount: currentShotCount,
         narrativeStyle,
@@ -171,6 +172,48 @@ export const AIDirectorPanel: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Image Reference Behavior Mode Selector */}
+        {project.settings.mode !== 'T2VA' && (
+          <div>
+            <label className="text-xs text-zinc-400 font-medium mb-1.5 block">Image Reference Anchor Behavior</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => updateSettings({ referenceMode: 'strict' })}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                  (project.settings.referenceMode || 'strict') === 'strict'
+                    ? 'bg-cyan-950/60 border-cyan-500 text-cyan-300 shadow-md shadow-cyan-500/10'
+                    : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                }`}
+              >
+                <div className="font-bold text-xs flex items-center gap-1.5">
+                  <span>🔒 Strict Keyframe Lock</span>
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
+                  Preserves original room, lighting, wardrobe & composition from Picture 1 in Shot 1.
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => updateSettings({ referenceMode: 'creative' })}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                  project.settings.referenceMode === 'creative'
+                    ? 'bg-purple-950/60 border-purple-500 text-purple-300 shadow-md shadow-purple-500/10'
+                    : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                }`}
+              >
+                <div className="font-bold text-xs flex items-center gap-1.5">
+                  <span>🎨 Identity Lock Only</span>
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
+                  Transfers character face/hair into new room, lighting & wardrobe.
+                </p>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Narrative Style Selector (Expanded Presets) */}
         <div>
