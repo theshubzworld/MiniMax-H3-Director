@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus } from 'lucide-react';
+import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus, Coffee } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const { activeView, setActiveView, addShot } = useStudioStore();
@@ -110,13 +110,23 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Specs info */}
-      <div className="p-4 border-t border-zinc-900 bg-zinc-900/30">
-        <div className="text-[11px] text-zinc-400 space-y-1">
+      {/* Footer Specs info & Support Card */}
+      <div className="p-4 border-t border-zinc-900 bg-gradient-to-b from-zinc-950 to-amber-950/20 space-y-3">
+        <div className="text-[11px] text-zinc-400 space-y-0.5">
           <p className="font-semibold text-zinc-200">MiniMax H3 Engine v1.0</p>
           <p>Native Stereo Audio Sync</p>
           <p className="text-[10px] text-cyan-400 font-mono">T2VA / I2VA / FL2VA / L2VA</p>
         </div>
+
+        <a
+          href="https://buymeacoffee.com/shubzworld"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/10 transition-all"
+        >
+          <Coffee className="w-4 h-4" />
+          <span>Support Me ☕</span>
+        </a>
       </div>
     </aside>
   );

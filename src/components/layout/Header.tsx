@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { useHistoryStore } from '../../store/HistoryStore';
-import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film } from 'lucide-react';
+import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film, Coffee } from 'lucide-react';
 import { MiniMaxMode } from '../../types/project';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 
@@ -147,6 +147,18 @@ export const Header: React.FC = () => {
         >
           {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-500" />}
         </button>
+
+        {/* Buy Me A Coffee Support Button */}
+        <a
+          href="https://buymeacoffee.com/shubzworld"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 bg-amber-500/10 border border-amber-500/40 hover:bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+          title="Support project on Buy Me a Coffee"
+        >
+          <Coffee className="w-4 h-4 text-amber-400" />
+          <span className="hidden sm:inline">Buy Me a Coffee</span>
+        </a>
 
         {/* Export Button */}
         <button
