@@ -39,10 +39,10 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
 
 export class GeminiProvider implements AIProvider {
   public id = 'gemini';
-  public name = 'Google Vertex AI Express / Gemini (3.5 Flash / 2.5 Flash / 2.5 Pro)';
+  public name = 'Google Vertex AI Express / Gemini (2.5 Pro / 2.5 Flash / 2.0 Flash / 1.5 Pro)';
 
-  // Models ordered matching Reference InstaDNA: high-speed 3.5 Flash / 2.5 Flash first (0 rate limits), 2.5 Pro as fallback
-  private models = ['gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-2.5-pro'];
+  // Models ordered with gemini-2.5-pro as primary, fallback to flash models on 429 rate limit
+  private models = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
 
   private getEffectiveApiKey(apiKey?: string): string {
     let key = apiKey && apiKey.trim().length > 0 ? apiKey.trim() : '';
@@ -58,30 +58,18 @@ export class GeminiProvider implements AIProvider {
   private extractJsonObject(text: string): any {
     const t = String(text || '').trim();
     if (!t) return null;
-    try {
-      const p = JSON.parse(t);
-      if (Array.isArray(p)) return p.find((x) => x && typeof x === 'object') || null;
-      if (p && typeof p === 'object') return p;
-    } catch {
-      /* ignore */
-    }
 
-    const fenced = t.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-    const candidate = fenced ? fenced[1] : t;
     try {
-      const p = JSON.parse(candidate.trim());
-      if (Array.isArray(p)) return p.find((x) => x && typeof x === 'object') || null;
-      if (p && typeof p === 'object') return p;
+      return JSON.parse(t);
     } catch {
-      /* ignore */
-    }
-
-    const first = candidate.indexOf('{');
-    const last = candidate.lastIndexOf('}');
-    if (first < 0 || last <= first) return null;
-    try {
-      return JSON.parse(candidate.slice(first, last + 1));
-    } catch {
+      const match = t.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+      if (match) {
+        try {
+          return JSON.parse(match[0]);
+        } catch {
+          return null;
+        }
+      }
       return null;
     }
   }
@@ -126,7 +114,7 @@ export class GeminiProvider implements AIProvider {
   }
 
   /**
-   * Vertex AI Express REST API caller with 429 Rate-Limit region failover matching Reference InstaDNA gemini.js
+   * Vertex AI Express REST API caller with 429 Rate-Limit failover matching Gemini 2.5 Pro -> Flash escalation
    */
   private async callVertexExpress(payload: any, apiKey: string): Promise<any> {
     const regionalFallbacks = ['us-central1', 'us-east4', 'us-west1', 'europe-west1', 'europe-west4'];
@@ -142,21 +130,18 @@ export class GeminiProvider implements AIProvider {
     let lastError: any;
 
     for (const model of this.models) {
-      const isGlobalOnly = /gemini-3\.5-|gemini-3\.1-|gemini-3-/.test(model);
-      const locationsToTry = isGlobalOnly ? [''] : ['us-central1', ...regionalFallbacks];
+      const endpoints = [
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
+        ...regionalFallbacks.map((loc) => `https://${loc}-aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`),
+        `https://aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`,
+      ];
 
-      for (let attempt = 0; attempt < locationsToTry.length; attempt++) {
-        const currentLocation = locationsToTry[attempt];
-        const host = currentLocation
-          ? `https://${currentLocation}-aiplatform.googleapis.com`
-          : `https://aiplatform.googleapis.com`;
-
-        const url = `${host}/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`;
+      for (let attempt = 0; attempt < endpoints.length; attempt++) {
+        const url = endpoints[attempt];
 
         try {
           if (attempt > 0) {
-            const delay = Math.pow(2, attempt) * 400;
-            console.warn(`[Vertex AI] Retrying at failover location "${currentLocation || 'global'}" in ${delay}ms...`);
+            const delay = Math.min(1000, Math.pow(2, attempt) * 200);
             await new Promise((r) => setTimeout(r, delay));
           }
 
@@ -167,17 +152,17 @@ export class GeminiProvider implements AIProvider {
           });
 
           if (res.status === 429) {
-            console.warn(`[Vertex AI] Rate limited (429) on ${model} at location "${currentLocation || 'global'}". Escalating model...`);
-            lastError = new Error(`Rate limited (429) on ${model} at ${currentLocation || 'global'}`);
-            break; // Immediately break location loop to escalate to next model (3.5 Flash -> 2.5 Flash -> 2.5 Pro)
+            console.warn(`[Gemini API] Rate limited (429) on model "${model}". Escalating to fallback model...`);
+            lastError = new Error(`Rate limited (429) on ${model}`);
+            break; // Escalate immediately to next fallback model (2.5 Pro -> 2.5 Flash -> 2.0 Flash -> 1.5 Pro)
           }
 
           if (res.ok) {
             const data = await res.json();
-            console.log(`[Vertex AI] ✅ Success at ${url} (model: ${model})`);
+            console.log(`[Gemini API] ✅ Success using model "${model}" via ${new URL(url).hostname}`);
             return data;
           } else {
-            console.warn(`[Vertex AI] ${model} at ${currentLocation || 'global'} returned ${res.status}`);
+            console.warn(`[Gemini API] ${model} returned HTTP ${res.status} from ${new URL(url).hostname}`);
           }
         } catch (e) {
           lastError = e;
@@ -185,7 +170,7 @@ export class GeminiProvider implements AIProvider {
       }
     }
 
-    throw lastError || new Error(`Vertex AI request failed across endpoints for models ${this.models.join(', ')}`);
+    throw lastError || new Error(`Gemini API request failed across models: ${this.models.join(', ')}`);
   }
 
   public async analyzeVisualDNA(images: string[], apiKey?: string): Promise<VisualDNA> {
