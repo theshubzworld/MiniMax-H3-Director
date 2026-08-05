@@ -73,10 +73,17 @@ export class PromptCompiler {
     // Environment & Setting
     if (shot.environment) {
       const env = shot.environment;
-      const envParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere].filter(Boolean) as string[];
-      if (envParts.length > 0 && envParts[0]) {
-        const cleanLocation = envParts[0].replace(/^(a|an|the)\s+/i, '');
-        const joinedEnv = [cleanLocation, ...envParts.slice(1)].join(', ');
+      const rawEnvParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere].filter(Boolean) as string[];
+      if (rawEnvParts.length > 0 && rawEnvParts[0]) {
+        const cleanLocation = rawEnvParts[0].replace(/^(a|an|the)\s+/i, '');
+        const cleanedParts = [cleanLocation, ...rawEnvParts.slice(1)].map((p, idx) => {
+          let s = p.trim().replace(/\.+$/, '').replace(/,$/, '');
+          if (idx > 0 && /^[A-Z]/.test(s) && !/^(IMAX|HDR|CG|3D|4K|8K)\b/.test(s)) {
+            s = s.charAt(0).toLowerCase() + s.slice(1);
+          }
+          return s;
+        });
+        const joinedEnv = cleanedParts.join(', ');
         parts.push(`set in a ${joinedEnv} environment.`);
       }
     }
@@ -95,10 +102,10 @@ export class PromptCompiler {
 
       const speakerTag = char.speakerId ? ` (${char.speakerId})` : '';
 
-      const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim();
+      const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim().replace(/\.+$/, '');
       let poseStr = '';
       if (rawPose) {
-        if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing|backing|pressing|standing)\b/i.test(rawPose)) {
+        if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing|backing|pressing|standing|shoulders|body|head|arms|hands)\b/i.test(rawPose)) {
           poseStr = ` ${rawPose}`;
         } else if (/^(at|on|in|near|by|under|over|beside|facing)\b/i.test(rawPose)) {
           poseStr = ` standing ${rawPose}`;
@@ -107,10 +114,10 @@ export class PromptCompiler {
         }
       }
 
-      const rawExpr = (char.expression || '').replace(/^(a|an|the)\s+/i, '').trim();
+      const rawExpr = (char.expression || '').replace(/^(a|an|the)\s+/i, '').trim().replace(/\.+$/, '');
       let exprStr = '';
       if (rawExpr) {
-        if (/\bexpression\b/i.test(rawExpr) || /\beyes\b/i.test(rawExpr) || /\bgasp\b/i.test(rawExpr)) {
+        if (/\bexpression\b/i.test(rawExpr) || /\beyes\b/i.test(rawExpr) || /\bgasp\b/i.test(rawExpr) || /\bintensifies\b/i.test(rawExpr) || /\bwelling\b/i.test(rawExpr)) {
           exprStr = `, ${rawExpr}`;
         } else if (/^[aeiou]/i.test(rawExpr)) {
           exprStr = ` with an ${rawExpr} expression`;
@@ -149,6 +156,6 @@ export class PromptCompiler {
       }
     }
 
-    return parts.join(' ').replace(/\.\./g, '.');
+    return parts.join(' ').replace(/,\s*,/g, ',').replace(/\.\./g, '.').replace(/,\s*\./g, '.');
   }
 }

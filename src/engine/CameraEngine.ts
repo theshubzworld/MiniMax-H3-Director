@@ -39,7 +39,13 @@ export class CameraEngine {
     const actionVerb = verbMap[camera.motionType] || 'moves';
     const amplitudeStr = camera.amplitude ? ` with ${camera.amplitude}` : '';
     const speedStr = camera.speed ? ` at ${camera.speed}` : '';
-    const targetStr = camera.targetSubject ? ` toward ${camera.targetSubject}` : '';
+
+    let cleanTarget = (camera.targetSubject || '').trim();
+    if (cleanTarget) {
+      cleanTarget = cleanTarget.replace(/(the subject from <Picture \d+>)'s\s+(\w+)/gi, 'the $2 of $1');
+      cleanTarget = cleanTarget.replace(/<Picture (\d+)>'s\s+(\w+)/gi, 'the $2 of the subject from <Picture $1>');
+    }
+    const targetStr = cleanTarget ? ` toward ${cleanTarget}` : '';
 
     return `The camera ${actionVerb}${amplitudeStr}${speedStr}${targetStr}.`;
   }
