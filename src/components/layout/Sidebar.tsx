@@ -110,8 +110,8 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Specs info & Support Card */}
-      <div className="p-4 border-t border-zinc-900 bg-gradient-to-b from-zinc-950 to-amber-950/20 space-y-3">
+      {/* Footer Specs info & Native Support Card */}
+      <div className="p-4 border-t border-zinc-900 bg-zinc-950 space-y-3">
         <div className="text-[11px] text-zinc-400 space-y-0.5">
           <p className="font-semibold text-zinc-200">MiniMax H3 Engine v1.0</p>
           <p>Native Stereo Audio Sync</p>
@@ -122,10 +122,16 @@ export const Sidebar: React.FC = () => {
           href="https://buymeacoffee.com/shubzworld"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/10 transition-all"
+          className="flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/60 hover:bg-amber-500/10 border border-zinc-800 hover:border-amber-500/30 transition-all group"
+          title="Support project development on Buy Me a Coffee"
         >
-          <Coffee className="w-4 h-4" />
-          <span>Support Me ☕</span>
+          <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+            <Coffee className="w-3.5 h-3.5" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="font-medium text-zinc-300 group-hover:text-amber-300 text-[11px] truncate">Support Development</span>
+            <span className="text-[10px] text-zinc-400 truncate">Buy Me a Coffee ☕</span>
+          </div>
         </a>
       </div>
     </aside>

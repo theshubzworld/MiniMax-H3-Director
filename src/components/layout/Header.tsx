@@ -153,10 +153,10 @@ export const Header: React.FC = () => {
           href="https://buymeacoffee.com/shubzworld"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 bg-amber-500/10 border border-amber-500/40 hover:bg-amber-500/20 text-amber-300 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+          className="p-2 sm:px-3 sm:py-1.5 bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 text-zinc-300 hover:text-amber-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm group"
           title="Support project on Buy Me a Coffee"
         >
-          <Coffee className="w-4 h-4 text-amber-400" />
+          <Coffee className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
           <span className="hidden sm:inline">Buy Me a Coffee</span>
         </a>
 
