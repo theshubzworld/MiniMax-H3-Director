@@ -289,11 +289,11 @@ Inspect the attached keyframe image(s) (Picture 1).
         : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
 Inspect the attached keyframe image(s) (Picture 1).
 - Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for location, environment, room, lighting, wardrobe, pose, and subject appearance.
+- If Picture 1 is a composite/grid containing multiple panels or angles (e.g. 3x3 grid or multiple photo panels), inspect ALL panels to maintain 100% visual identity (armor, tiara, bracelets, sword, shield, leather straps) and draw shot action/poses directly from the grid!
 - Shot 1 MUST begin EXACTLY from Picture 1's starting pose and setting.
-- DO NOT rename clothing (e.g., "silk camisole", "designer loungewear") or invent conflicting locations (e.g., "minimalist bedroom", "sun-drenched room", "kitchen", "twilight forest").
-- Initial motion in Shot 1 MUST evolve naturally from the exact starting pose shown in Picture 1 (e.g. subtle head tilt, lowering hand from face, soft smile, adjusting selfie angle, blinking).
-- Refer to the subject strictly as "the subject from <Picture 1>" without re-describing hair or outfit.
-- Only describe micro-motion, camera movement, audio, and natural story events occurring forward from the unchanged opening frame.`
+- DO NOT rename clothing or invent conflicting locations.
+- Refer to the subject strictly as "the subject from <Picture 1>".
+- IF THE USER IDEA REQUESTS NARRATION, DIALOGUE, OR VOICEOVER (e.g., "add narration dialogue"), YOU MUST POPULATE THE dialogue OBJECT FOR 1 OR MORE SHOTS WITH CONCISE SPOKEN NARRATION PHRASES (1-4 words max per short shot).`
       : '';
 
     const modeDirective = params.mode === 'I2VA'
@@ -328,7 +328,8 @@ You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
 2. character: { speakerId ("S1"), identity, pose, expression, motion }
 3. environment: { location, lighting, weather, timeOfDay, atmosphere }
 4. rawActionDescription: Cinematic, highly descriptive action prose unique for every shot while keeping character identity consistent.
-5. audio: Soundscape layers and background music score.
+5. dialogue (OPTIONAL/WHEN REQUESTED): { hasDialogue: true, speakerId: "S1", languageTag: "English", dialogueText: "Short narration phrase", isOffScreenVoiceover: true } — If idea requests narration/voiceover/dialogue, populate dialogueText with short phrases (1-4 words max per short shot).
+6. audio: Soundscape layers and background music score.
 
 Return JSON format:
 {
@@ -337,7 +338,8 @@ Return JSON format:
       "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her glowing cybernetic eyes" },
       "character": { "speakerId": "S1", "identity": "The cyborg warrior", "pose": "low combat stance", "expression": "intense glare", "motion": "slowly raises plasma katana" },
       "environment": { "location": "rain-soaked alleyway", "lighting": "cyan neon signs", "weather": "heavy rain", "timeOfDay": "midnight", "atmosphere": "gritty suspense" },
-      "rawActionDescription": "Raindrops sizzle as they strike her energized katana edge."
+      "rawActionDescription": "Raindrops sizzle as they strike her energized katana edge.",
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "System online.", "isOffScreenVoiceover": true }
     }
   ],
   "audio": {
@@ -414,6 +416,18 @@ Return JSON format:
               timeOfDay: s.environment?.timeOfDay || 'dramatic twilight',
               atmosphere: s.environment?.atmosphere || 'cinematic tension',
             },
+            dialogue:
+              s.dialogue && (s.dialogue.hasDialogue || (s.dialogue.dialogueText && s.dialogue.dialogueText.trim().length > 0))
+                ? {
+                    hasDialogue: true,
+                    speakerId: s.dialogue.speakerId || 'S1',
+                    languageTag: s.dialogue.languageTag || 'English',
+                    dialogueText: s.dialogue.dialogueText,
+                    isOffScreenVoiceover: s.dialogue.isOffScreenVoiceover ?? true,
+                    lipsClosedDuringVoiceover: s.dialogue.lipsClosedDuringVoiceover ?? false,
+                    carriesAcrossCut: s.dialogue.carriesAcrossCut ?? false,
+                  }
+                : undefined,
             rawActionDescription:
               s.rawActionDescription ||
               `Shot ${idx + 1}: Character performs dramatic action fitting ${params.narrativeStyle} vision. ${params.idea}`,
