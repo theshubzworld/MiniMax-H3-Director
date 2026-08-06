@@ -38,8 +38,10 @@ export class PromptCompiler {
       if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText?.trim()) {
         const d = shot.dialogue;
         const speakerId = d.speakerId || 'S1';
+        const rawRole = shot.character?.identity ? shot.character.identity.replace(/^(the|a|an)\s+/i, '').trim() : '';
+        const roleLabel = rawRole ? ` (${rawRole})` : '';
         const delivery = d.deliveryTone ? ` (${d.deliveryTone})` : '';
-        dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${delivery}: "${d.dialogueText.trim()}"`);
+        dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${roleLabel}${delivery}: "${d.dialogueText.trim()}"`);
       } else {
         dialogueShots.push(`[Shot ${shotNum}]\n(No dialogue.)`);
       }
@@ -176,19 +178,25 @@ export class PromptCompiler {
       parts.push(shot.rawActionDescription.trim());
     }
 
-    // Spoken Dialogue Inline Tagging: says: <d>[Language] Dialogue</d>
+    // Spoken Dialogue Inline Tagging: [Character Identity] (Sx) says: <d>[Language] Dialogue</d>
     if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText.trim().length > 0) {
       const d = shot.dialogue;
       const speakerId = d.speakerId || 'S1';
       const lang = d.languageTag || 'English';
       
+      const charSubject = shot.character?.identity
+        ? shot.character.identity.trim()
+        : isImageMode
+        ? 'The subject from <Picture 1>'
+        : 'The subject';
+
       if (d.isOffScreenVoiceover) {
         parts.push(
-          `says in an off-screen voiceover: <d>[${lang}] ${d.dialogueText.trim()}</d> while their lips remain completely closed.`
+          `${charSubject} (${speakerId}) says in an off-screen voiceover: <d>[${lang}] ${d.dialogueText.trim()}</d> while their lips remain completely closed.`
         );
       } else {
         parts.push(
-          `(${speakerId}) speaks clearly: <d>[${lang}] ${d.dialogueText.trim()}</d>.`
+          `${charSubject} (${speakerId}) says: <d>[${lang}] ${d.dialogueText.trim()}</d>.`
         );
       }
     }

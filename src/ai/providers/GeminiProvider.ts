@@ -303,6 +303,7 @@ ${imageInstruction}
 
 Audio & Dialogue Guidelines:
 - If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
+- Assign a unique speakerId (S1, S2, etc.) to each vocal source, and specify their distinct character identity (e.g. S1: "The man", S2: "The woman") so every dialogue line clearly identifies who is speaking.
 - Include realistic foley soundscape layers and a matching background music score.
 
 Return JSON format:
