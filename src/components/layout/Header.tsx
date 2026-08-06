@@ -28,11 +28,7 @@ export const Header: React.FC = () => {
       {/* Brand Logo & Name */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 p-0.5 shadow-lg shadow-cyan-500/20 flex-shrink-0">
-            <div className="w-full h-full bg-zinc-950 rounded-[10px] flex items-center justify-center">
-              <Video className="w-5 h-5 text-cyan-400" />
-            </div>
-          </div>
+          <img src="/favicon.svg" alt="MiniMax H3 Director Logo" className="w-9 h-9 rounded-xl shadow-lg shadow-cyan-500/20 flex-shrink-0" />
 
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-2">

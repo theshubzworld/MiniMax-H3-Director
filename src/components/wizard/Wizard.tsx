@@ -6,7 +6,7 @@ import { AudioBuilder } from '../builders/AudioBuilder';
 import { MusicBuilder } from '../builders/MusicBuilder';
 import { AIDirectorPanel } from '../ai/AIDirectorPanel';
 import { Video, ArrowRight, ArrowLeft } from 'lucide-react';
-import { MiniMaxMode, AspectRatio, VisualStyle } from '../../types/project';
+import { MiniMaxMode, AspectRatio, VisualStyle, ALL_VISUAL_STYLES } from '../../types/project';
 
 export const Wizard: React.FC = () => {
   const { project, currentStep, setCurrentStep, updateSettings, addShot, updateShot, removeShot, updateAudio } =
@@ -105,35 +105,7 @@ export const Wizard: React.FC = () => {
                   onChange={(e) => updateSettings({ style: e.target.value as VisualStyle })}
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
                 >
-                  {[
-                    'Cinematic',
-                    'Live-action',
-                    '2D Anime',
-                    '3D CG Animation',
-                    'Luxury Fashion',
-                    'Cyberpunk',
-                    'Film Noir',
-                    'Claymation',
-                    'Watercolor',
-                    'Vintage 35mm',
-                    'Documentary',
-                    'Ultra-Realistic Photorealism',
-                    'Dark Fantasy',
-                    'Sci-Fi Cyber-Noir',
-                    'Vaporwave / Synthwave',
-                    'Retro 80s VHS',
-                    'Hyper-Detailed 8K Uncut',
-                    'Isometric Low-Poly',
-                    'Chibi / Kawaii Anime',
-                    'Noir Neo-Realism',
-                    'Watercolor Sketch',
-                    'Surrealist Dreamscape',
-                    'Retro Comic Book / Manga',
-                    'Horror Gothic',
-                    'Architectural Minimalist',
-                    'IMAX High-Frame Rate',
-                    'Unreal Engine 5 Realtime Render',
-                  ].map((st) => (
+                  {ALL_VISUAL_STYLES.map((st) => (
                     <option key={st} value={st}>
                       {st}
                     </option>

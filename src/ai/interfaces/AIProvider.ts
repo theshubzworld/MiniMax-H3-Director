@@ -33,6 +33,7 @@ export interface StoryboardParams {
   durationSeconds: number;
   shotsCount: number;
   narrativeStyle: NarrativeStyle;
+  directorModel?: 'gemini-2.5-pro' | 'gemini-3.5-flash';
 }
 
 export interface AIProvider {

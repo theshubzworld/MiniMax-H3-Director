@@ -3,7 +3,8 @@ import { useStudioStore } from '../../store/StudioStore';
 import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus, Coffee } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { activeView, setActiveView, addShot } = useStudioStore();
+  const { activeView, setActiveView, addShot, sceneKeyframes, setActiveSceneStep } = useStudioStore();
+  const keyframes = sceneKeyframes || [];
 
   return (
     <aside className="w-64 bg-zinc-950 border-r border-zinc-800/80 flex flex-col justify-between h-full flex-shrink-0">
@@ -25,6 +26,37 @@ export const Sidebar: React.FC = () => {
             >
               <Sparkles className="w-4 h-4 text-cyan-400" />
               <span>Director Wizard</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveView('scene-creator')}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                activeView === 'scene-creator'
+                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+              }`}
+            >
+              <Film className="w-4 h-4 text-amber-400" />
+              <span>Scene Creator (Nano Banana)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveView('scene-gallery')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                activeView === 'scene-gallery'
+                  ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/10 text-amber-300 border border-amber-500/40 font-bold'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Film className="w-4 h-4 text-amber-400" />
+                <span>Scene Keyframe Gallery</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono font-extrabold border border-amber-500/40">
+                {keyframes.length}
+              </span>
             </button>
 
             <button
@@ -102,7 +134,7 @@ export const Sidebar: React.FC = () => {
           <button
             type="button"
             onClick={() => addShot()}
-            className="w-full border border-dashed border-zinc-800 hover:border-cyan-500/50 hover:bg-zinc-900 text-zinc-300 py-2 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all"
+            className="w-full border border-dashed border-zinc-800 hover:border-cyan-500/50 hover:bg-zinc-900 text-zinc-300 py-2 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all mb-2"
           >
             <FolderPlus className="w-4 h-4 text-cyan-400" />
             <span>Add New Shot Node</span>

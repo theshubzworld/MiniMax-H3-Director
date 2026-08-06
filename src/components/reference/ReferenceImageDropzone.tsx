@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { ReferenceImage } from '../../types/project';
-import { UploadCloud, Image as ImageIcon, Trash2, Sparkles, Tag } from 'lucide-react';
+import { GalleryPickerModal } from '../modals/GalleryPickerModal';
+import { UploadCloud, Image as ImageIcon, Trash2, Sparkles, Tag, Film } from 'lucide-react';
 
 export const ReferenceImageDropzone: React.FC = () => {
-  const { project, addReference, removeReference, clearAllReferences } = useStudioStore();
+  const { project, addReference, removeReference, clearAllReferences, sceneKeyframes } = useStudioStore();
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = (files: FileList | File[]) => {
@@ -98,12 +100,31 @@ export const ReferenceImageDropzone: React.FC = () => {
               Supports PNG, JPG, WebP. Click or drag files into this drop zone.
             </p>
           </div>
-          <div className="flex items-center gap-2 text-[11px] font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Mode: {project.settings.mode} • Keyframe Anchor Mode Active</span>
+          <div className="flex items-center gap-3 pt-1">
+            <div className="flex items-center gap-2 text-[11px] font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Mode: {project.settings.mode} • Keyframe Anchor Mode Active</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsPickerOpen(true);
+              }}
+              className="px-3.5 py-1.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-zinc-950 text-xs font-bold rounded-xl border border-amber-500/40 transition-all flex items-center gap-1.5 shadow-lg"
+            >
+              <Film className="w-4 h-4 text-amber-400" />
+              <span>🎬 Select Keyframe from Gallery ({(sceneKeyframes || []).length})</span>
+            </button>
           </div>
         </div>
       </div>
+
+      <GalleryPickerModal
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+      />
 
       {/* Uploaded Reference Image Cards Grid */}
       {project.references.length > 0 && (

@@ -71,7 +71,7 @@ describe('MiniMax H3 Director Engine Tests', () => {
       isSilent: false,
       soundscapeLayers: [
         { category: 'ambient', description: 'distant heavy rain and industrial hum', enabled: true },
-        { category: 'foley', description: 'wet boot footsteps on metallic grating', enabled: true },
+        { category: 'footsteps', description: 'wet boot footsteps on metallic grating', enabled: true },
       ],
       music: {
         hasMusic: true,
@@ -79,6 +79,8 @@ describe('MiniMax H3 Director Engine Tests', () => {
         instrumentation: ['analog synth bass', 'distorted lead keys'],
         tempo: 'energetic',
         dynamics: 'rapid crescendo reaching peak at cut',
+        rhythmPattern: 'driving pulse',
+        layeringDescription: 'sub-bass layer underneath',
       },
     },
     references: [

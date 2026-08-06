@@ -114,10 +114,47 @@ export class GeminiProvider implements AIProvider {
   }
 
   /**
-   * Vertex AI Express REST API caller with 429 Rate-Limit failover matching Gemini 2.5 Pro -> Flash escalation
+   * Public helper to run text prompt requests through Vertex Express with rate limit failover.
    */
-  private async callVertexExpress(payload: any, apiKey: string): Promise<any> {
+  public async callTextPrompt(promptText: string, apiKey?: string, directorModel?: string): Promise<string> {
+    const key = this.getEffectiveApiKey(apiKey);
+    const payload = {
+      contents: [{ role: 'user', parts: [{ text: promptText }] }],
+      generationConfig: { temperature: 0.7 },
+    };
+
+    const res = await this.callVertexExpress(payload, key, directorModel);
+    const candidateText = res.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    return candidateText.trim();
+  }
+
+  /**
+   * Public helper to run multimodal (image + text) prompt requests through Vertex Express with rate limit failover.
+   */
+  public async callMultimodalPrompt(promptText: string, images?: string[], apiKey?: string, directorModel?: string): Promise<string> {
+    const key = this.getEffectiveApiKey(apiKey);
+    const imageParts = await this.prepareImageParts(images);
+    const parts = [...imageParts, { text: promptText }];
+    const payload = {
+      contents: [{ role: 'user', parts }],
+      generationConfig: { temperature: 0.7 },
+    };
+
+    const res = await this.callVertexExpress(payload, key, directorModel);
+    const candidateText = res.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    return candidateText.trim();
+  }
+
+  /**
+   * Vertex AI Express REST API caller with smart endpoint routing:
+   * - gemini-3.5-* / gemini-3.1-* / gemini-3-pro → global endpoint only (no regional prefix)
+   * - gemini-2.5-pro → regional failover
+   * - all others → regional failover
+   * Matches InstaDNA's proven callVertexExpress routing logic.
+   */
+  private async callVertexExpress(payload: any, apiKey: string, modelOverride?: string): Promise<any> {
     const regionalFallbacks = ['us-central1', 'us-east4', 'us-west1', 'europe-west1', 'europe-west4'];
+    const modelsToUse = modelOverride ? [modelOverride, ...this.models.filter(m => m !== modelOverride)] : this.models;
 
     const safetySettings = [
       { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
@@ -129,13 +166,25 @@ export class GeminiProvider implements AIProvider {
     const bodyPayload = { ...payload, safetySettings };
     let lastError: any;
 
-    for (const model of this.models) {
-      const endpoints = regionalFallbacks.map(
-        (loc) => `https://${loc}-aiplatform.googleapis.com/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`
-      );
+    for (const model of modelsToUse) {
+      // gemini-3.5-*, gemini-3.1-*, gemini-3-pro → global endpoint ONLY (no regional prefix)
+      const isGlobalOnly = /gemini-3\.5-|gemini-3\.1-|gemini-3-pro/.test(model);
 
-      for (let attempt = 0; attempt < endpoints.length; attempt++) {
-        const url = endpoints[attempt];
+      let locationsToTry: string[];
+      if (isGlobalOnly) {
+        locationsToTry = ['']; // empty string = global endpoint
+      } else {
+        locationsToTry = ['us-central1', ...regionalFallbacks.filter(r => r !== 'us-central1')];
+      }
+      // Deduplicate
+      locationsToTry = [...new Set(locationsToTry)];
+
+      for (let attempt = 0; attempt < locationsToTry.length; attempt++) {
+        const loc = locationsToTry[attempt];
+        const host = loc
+          ? `https://${loc}-aiplatform.googleapis.com`
+          : `https://aiplatform.googleapis.com`;
+        const url = `${host}/v1/publishers/google/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`;
 
         try {
           if (attempt > 0) {
@@ -152,7 +201,7 @@ export class GeminiProvider implements AIProvider {
           if (res.status === 429) {
             console.warn(`[Gemini API] Rate limited (429) on model "${model}". Escalating to fallback model...`);
             lastError = new Error(`Rate limited (429) on ${model}`);
-            break; // Escalate immediately to next fallback model (2.5 Pro -> 2.5 Flash -> 2.0 Flash -> 1.5 Pro)
+            break; // Escalate immediately to next fallback model
           }
 
           if (res.ok) {
@@ -161,6 +210,7 @@ export class GeminiProvider implements AIProvider {
             return data;
           } else {
             console.warn(`[Gemini API] ${model} returned HTTP ${res.status} from ${new URL(url).hostname}`);
+            lastError = new Error(`HTTP ${res.status} from ${new URL(url).hostname}`);
           }
         } catch (e) {
           lastError = e;
@@ -168,7 +218,7 @@ export class GeminiProvider implements AIProvider {
       }
     }
 
-    throw lastError || new Error(`Gemini API request failed across models: ${this.models.join(', ')}`);
+    throw lastError || new Error(`Gemini API request failed across models: ${modelsToUse.join(', ')}`);
   }
 
   public async analyzeVisualDNA(images: string[], apiKey?: string): Promise<VisualDNA> {
@@ -244,8 +294,21 @@ Inspect the attached keyframe image(s) (Picture 1).
 - Only describe micro-motion, camera movement, audio, and natural story events occurring forward from the unchanged opening frame.`
       : '';
 
+    const modeDirective = params.mode === 'I2VA'
+      ? `MINIMAX H3 I2VA MODE CONTRACT:
+Shot 1 begins EXACTLY referencing <Picture 1> at 0.00 seconds into the target video. Focus Shot 1 on initial starting posture and immediate opening motion evolving forward from <Picture 1>.`
+      : params.mode === 'FL2VA'
+      ? `MINIMAX H3 FL2VA MODE CONTRACT:
+Shot 1 aligns referencing <Picture 1> at 0.00 seconds, and final Shot ${params.shotsCount} aligns referencing <Picture 2> at the ending mark (${params.durationSeconds}s). Ensure physical motion and narrative progression continuously connect Picture 1 to Picture 2.`
+      : params.mode === 'L2VA'
+      ? `MINIMAX H3 L2VA MODE CONTRACT:
+Final Shot ${params.shotsCount} ends referencing <Picture 1> at the ending mark (${params.durationSeconds}s). Staging and action across shots build toward the exact closing posture of <Picture 1>.`
+      : `MINIMAX H3 T2VA MODE CONTRACT:
+Generate a 100% text-driven continuous motion sequence with no reference image dependencies.`;
+
     const promptText = `You are an AI Video Director for MiniMax H3.
 Generate a complete, structured ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video in ${params.mode} mode based on idea: "${params.idea}".
+${modeDirective}
 ${imageRuleText}
 
 You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
@@ -296,7 +359,7 @@ Return JSON format:
     };
 
     try {
-      const data = await this.callVertexExpress(payload, key);
+      const data = await this.callVertexExpress(payload, key, params.directorModel);
       const allParts = data.candidates?.[0]?.content?.parts || [];
       const rawText = allParts.map((p: any) => p.text || '').join('\n').trim();
       const parsed = this.extractJsonObject(rawText);

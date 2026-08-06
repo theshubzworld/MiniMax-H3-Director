@@ -12,6 +12,8 @@ import { AISettingsPanel } from './components/ai/AISettingsPanel';
 import { PromptDiffView } from './components/inspector/PromptDiffView';
 import { AudioBuilder } from './components/builders/AudioBuilder';
 import { MusicBuilder } from './components/builders/MusicBuilder';
+import { SceneCreatorPanel } from './components/scene/SceneCreatorPanel';
+import { SceneGalleryView } from './components/gallery/SceneGalleryView';
 import { useStudioStore } from './store/StudioStore';
 
 export const App: React.FC = () => {
@@ -30,6 +32,10 @@ export const App: React.FC = () => {
         {/* Central Workspace */}
         <main className="flex-1 overflow-y-auto p-6 space-y-6 bg-zinc-950">
           {activeView === 'wizard' && <Wizard />}
+
+          {activeView === 'scene-creator' && <SceneCreatorPanel />}
+
+          {activeView === 'scene-gallery' && <SceneGalleryView />}
 
           {activeView === 'storyboard' && (
             <div className="space-y-4 max-w-5xl mx-auto">

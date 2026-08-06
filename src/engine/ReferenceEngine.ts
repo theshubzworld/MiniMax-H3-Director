@@ -16,7 +16,7 @@ export class ReferenceEngine {
         return `For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\n`;
 
       case 'FL2VA':
-        return `How the reference pictures align with the target video — Picture 1 (from Shot 1) aligns with the 0.00-second mark of the target video; Picture 2 (from Shot ${finalShotNum}) aligns with the ${formattedDuration}-second mark of the target video.\n\n`;
+        return `How the reference pictures align with the target video — <Picture 1> (from [Shot 1]) aligns with the 0.00-second mark of the target video; <Picture 2> (from [Shot ${finalShotNum}]) aligns with the ${formattedDuration}-second mark of the target video.\n\n`;
 
       case 'L2VA':
         return `How the reference pictures align with the target video — <Picture 1> (from [Shot ${finalShotNum}]) aligns with the ${formattedDuration}-second mark of the target video.\n\n`;

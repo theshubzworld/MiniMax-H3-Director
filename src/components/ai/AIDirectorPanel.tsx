@@ -4,7 +4,7 @@ import { AIEngine } from '../../ai/AIEngine';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { VisualDNA } from '../../types/visualDna';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Check, Plus, Trash2, Lightbulb, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, Video, Loader2, Check, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu } from 'lucide-react';
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Commercial',
@@ -45,6 +45,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [idea, setIdea] = useState('');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Anime');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [directorModel, setDirectorModel] = useState<'gemini-2.5-pro' | 'gemini-3.5-flash'>('gemini-2.5-pro');
   const [visualDna, setVisualDna] = useState<VisualDNA | null>(null);
 
   const activeShots = project.shots;
@@ -79,6 +80,7 @@ export const AIDirectorPanel: React.FC = () => {
         durationSeconds: totalDuration,
         shotsCount: currentShotCount,
         narrativeStyle,
+        directorModel,
       },
       apiKey
     );
@@ -274,32 +276,66 @@ export const AIDirectorPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-2 pt-2 border-t border-zinc-800">
-        <button
-          type="button"
-          onClick={handleAutoBuild}
-          disabled={isGenerating}
-          className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all"
-        >
-          {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-          <span>
-            {isGenerating
-              ? 'Gemini Director Generating...'
-              : hasReferences
-              ? `✨ Build ${currentShotCount}-Shot Storyboard Using Visual Keyframes (${project.references.length})`
-              : `✨ Build ${currentShotCount}-Shot Storyboard with Gemini 2.5 Pro`}
+      {/* Director Model Selection & Action Buttons */}
+      <div className="space-y-3 pt-2 border-t border-zinc-800">
+        <div className="flex items-center gap-2">
+          <Cpu className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+          <span className="text-xs text-zinc-300 font-semibold">Director AI Model:</span>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setDirectorModel('gemini-2.5-pro')}
+              className={`px-3 py-1 text-xs font-bold rounded-lg border transition-all ${
+                directorModel === 'gemini-2.5-pro'
+                  ? 'bg-violet-500/30 border-violet-500/60 text-violet-300 shadow-md shadow-violet-500/10'
+                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+              }`}
+            >
+              Gemini 2.5 Pro
+            </button>
+            <button
+              type="button"
+              onClick={() => setDirectorModel('gemini-3.5-flash')}
+              className={`px-3 py-1 text-xs font-bold rounded-lg border transition-all ${
+                directorModel === 'gemini-3.5-flash'
+                  ? 'bg-cyan-500/30 border-cyan-500/60 text-cyan-300 shadow-md shadow-cyan-500/10'
+                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+              }`}
+            >
+              3.5 Flash ⚡
+            </button>
+          </div>
+          <span className="text-[11px] text-zinc-500 hidden sm:inline font-mono">
+            {directorModel === 'gemini-2.5-pro' ? '(Highest Quality & Deep Reasoning)' : '(Ultra Fast Generation)'}
           </span>
-        </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={autoFixProject}
-          className="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all"
-        >
-          <Video className="w-4 h-4 text-cyan-400" />
-          <span>✨ Polish Camera 3D</span>
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={handleAutoBuild}
+            disabled={isGenerating}
+            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all"
+          >
+            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            <span>
+              {isGenerating
+                ? `Gemini Director (${directorModel === 'gemini-3.5-flash' ? '3.5 Flash' : '2.5 Pro'}) Generating...`
+                : hasReferences
+                ? `✨ Build ${currentShotCount}-Shot Storyboard Using Visual Keyframes (${project.references.length})`
+                : `✨ Build ${currentShotCount}-Shot Storyboard with ${directorModel === 'gemini-3.5-flash' ? '3.5 Flash ⚡' : 'Gemini 2.5 Pro'}`}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={autoFixProject}
+            className="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all"
+          >
+            <Video className="w-4 h-4 text-cyan-400" />
+            <span>✨ Polish Camera 3D</span>
+          </button>
+        </div>
       </div>
 
       {/* Visual DNA Display Card */}

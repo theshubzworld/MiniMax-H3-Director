@@ -1,35 +1,57 @@
 export type MiniMaxMode = 'T2VA' | 'I2VA' | 'FL2VA' | 'L2VA';
 
-export type AspectRatio = '16:9' | '9:16' | '1:1' | '2.39:1' | '4:3';
+export type AspectRatio =
+  | '16:9'
+  | '9:16'
+  | '1:1'
+  | '2.39:1'
+  | '21:9'
+  | '4:3'
+  | '3:4'
+  | '3:2'
+  | '2:3'
+  | '4:5'
+  | '5:4';
 
-export type VisualStyle =
-  | 'Cinematic'
-  | 'Live-action'
-  | '2D Anime'
-  | '3D CG Animation'
-  | 'Luxury Fashion'
-  | 'Cyberpunk'
-  | 'Film Noir'
-  | 'Claymation'
-  | 'Watercolor'
-  | 'Vintage 35mm'
-  | 'Documentary'
-  | 'Ultra-Realistic Photorealism'
-  | 'Dark Fantasy'
-  | 'Sci-Fi Cyber-Noir'
-  | 'Vaporwave / Synthwave'
-  | 'Retro 80s VHS'
-  | 'Hyper-Detailed 8K Uncut'
-  | 'Isometric Low-Poly'
-  | 'Chibi / Kawaii Anime'
-  | 'Noir Neo-Realism'
-  | 'Watercolor Sketch'
-  | 'Surrealist Dreamscape'
-  | 'Retro Comic Book / Manga'
-  | 'Horror Gothic'
-  | 'Architectural Minimalist'
-  | 'IMAX High-Frame Rate'
-  | 'Unreal Engine 5 Realtime Render';
+export const ALL_VISUAL_STYLES = [
+  'Ultra Realistic Photorealism',
+  'Cinematic 35mm Film',
+  'Raw Smartphone Selfie',
+  'Kodak Portra 400 Color',
+  'Fuji Velvia Chrome',
+  'Polaroid Instant 1990s',
+  'Studio Flash High Fashion',
+  'IMAX High Frame Rate',
+  'Anamorphic Lens Flare Cinema',
+  'Modern 2D Anime',
+  'Retro 80s Cel Shaded Anime',
+  'Makoto Shinkai Sky Aesthetic',
+  'Studio Ghibli Pastoral Style',
+  '3D CG Animation Render',
+  'Arcane Dishonored Oil Painting',
+  'Unreal Engine 5 Render',
+  'Action Sci-Fi Blockbuster',
+  'Cyberpunk Neon Noir',
+  'Sci-Fi Cyber Ethereal Hologram',
+  'Steampunk Industrial Copper',
+  'Dark Fantasy Gothic',
+  'Surrealist Dreamscape',
+  'Vaporwave Synthwave Neon',
+  'Retro 80s VHS Grain',
+  'Film Noir Monochrome',
+  'Claymation Stop Motion',
+  'Retro Comic Book Manga Ink',
+  'Watercolor Sketch',
+  'Isometric Low Poly 3D',
+  'Infrared Spectral Thermal',
+  'GoPro Ultra Wide Action Cam',
+  'CCTV Surveillance Night Vision',
+  'Underwater Bioluminescent Realm',
+  'Architectural Minimalist Glass',
+  'Chibi Kawaii Pastel Anime',
+] as const;
+
+export type VisualStyle = typeof ALL_VISUAL_STYLES[number] | string;
 
 export interface ReferenceImage {
   id: string;
@@ -48,17 +70,14 @@ export interface ReferenceImage {
   };
 }
 
-export type ImageReferenceMode = 'strict' | 'creative';
-
-export interface ProjectSettings {
+export interface StudioProjectSettings {
   mode: MiniMaxMode;
-  referenceMode?: ImageReferenceMode;
   durationSeconds: number;
   aspectRatio: AspectRatio;
   style: VisualStyle;
   fps: number;
-  resolution: string;
-  seed?: number;
+  resolution?: '720p' | '1080p' | '4K' | string;
+  referenceMode?: 'strict' | 'creative';
 }
 
 export interface StudioProject {
@@ -67,9 +86,14 @@ export interface StudioProject {
   description: string;
   createdAt: string;
   updatedAt: string;
-  settings: ProjectSettings;
+  settings: StudioProjectSettings;
   references: ReferenceImage[];
-  shots: Array<any>; // Shot interface will be typed in shot.ts
-  audio: any; // AudioSettings interface in audio.ts
+  shots: import('./shot').Shot[];
+  audio: import('./audio').AudioSettings;
   compiledPrompt: string;
 }
+
+export type SceneGridLayout = 'single' | '2x1_dual' | '2x2_grid' | '3x3_grid';
+
+export type QualityResolution = '1K' | '2K' | '4K' | '0.5K';
+

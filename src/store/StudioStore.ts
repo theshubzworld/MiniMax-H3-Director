@@ -7,6 +7,8 @@ import { PromptCompiler } from '../engine/PromptCompiler';
 import { PromptValidator } from '../engine/PromptValidator';
 import { PromptOptimizer } from '../engine/PromptOptimizer';
 import { TimelineEngine } from '../engine/TimelineEngine';
+import { GeneratedKeyframe } from '../ai/providers/ImageGenProvider';
+import { KeyframeStorageService } from '../utils/KeyframeStorageService';
 
 const DEFAULT_PROJECT: StudioProject = {
   id: 'proj-default-01',
@@ -16,14 +18,14 @@ const DEFAULT_PROJECT: StudioProject = {
   updatedAt: new Date().toISOString(),
   settings: {
     mode: 'T2VA',
-    referenceMode: 'strict',
     durationSeconds: 6,
     aspectRatio: '16:9',
-    style: '2D Anime',
+    style: 'Ultra Realistic Photorealism',
     fps: 24,
     resolution: '1080p',
+    referenceMode: 'strict',
   },
-  references: [], // Clean empty array by default (no hardcoded reference keyframes)
+  references: [],
   shots: [
     {
       id: 'shot-1',
@@ -84,13 +86,30 @@ const DEFAULT_PROJECT: StudioProject = {
   compiledPrompt: '',
 };
 
+export interface DirectorPlanDraft {
+  sharedVisualDNA?: any;
+  sharedSceneDNA?: any;
+  event?: any;
+  frame1: string;
+  frame2: string;
+  gridPrompt?: string;
+  idea: string;
+  mode: 'pair' | 'single';
+}
+
 interface StudioState {
   project: StudioProject;
   currentStep: number;
-  activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy';
+  activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy' | 'scene-creator' | 'scene-gallery';
   diagnostics: DiagnosticsResult;
   proposedPromptDiff: string | null;
   theme: 'dark' | 'light';
+  sceneKeyframes: GeneratedKeyframe[];
+  isGeneratingKeyframes: boolean;
+  isEnhancingPrompt: boolean;
+  generationStatusMessage: string | null;
+  directorPlanDraft: DirectorPlanDraft | null;
+  activeSceneStep: 1 | 2 | 3;
 
   // Actions
   setProject: (project: StudioProject) => void;
@@ -112,14 +131,28 @@ interface StudioState {
   setProposedPromptDiff: (diff: string | null) => void;
   toggleTheme: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
+  addSceneKeyframe: (keyframe: GeneratedKeyframe) => void;
+  removeSceneKeyframe: (id: string) => void;
+  assignKeyframeToAnchor: (keyframe: GeneratedKeyframe, target: 'first_frame' | 'last_frame' | 'character') => void;
+  setGenerationStatus: (status: { isGenerating?: boolean; isEnhancing?: boolean; message?: string | null }) => void;
+  setDirectorPlanDraft: (draft: DirectorPlanDraft | null) => void;
+  setActiveSceneStep: (step: 1 | 2 | 3) => void;
 }
 
 export const useStudioStore = create<StudioState>((set, get) => {
-  // Initial compilation
   const initialCompiled = PromptCompiler.compile(DEFAULT_PROJECT);
   const initialProject = { ...DEFAULT_PROJECT, compiledPrompt: initialCompiled };
   const initialDiag = PromptValidator.validate(initialProject);
   const initialTheme = (localStorage.getItem('minimax_studio_theme') as 'dark' | 'light') || 'dark';
+
+  // Hydrate keyframes asynchronously from IndexedDB
+  if (typeof window !== 'undefined') {
+    KeyframeStorageService.getAllKeyframes().then((loadedKeyframes) => {
+      if (loadedKeyframes && loadedKeyframes.length > 0) {
+        set({ sceneKeyframes: loadedKeyframes });
+      }
+    });
+  }
 
   if (typeof document !== 'undefined') {
     document.documentElement.classList.remove('dark', 'light');
@@ -133,6 +166,23 @@ export const useStudioStore = create<StudioState>((set, get) => {
     diagnostics: initialDiag,
     proposedPromptDiff: null,
     theme: initialTheme,
+    sceneKeyframes: [],
+    isGeneratingKeyframes: false,
+    isEnhancingPrompt: false,
+    generationStatusMessage: null,
+    directorPlanDraft: null,
+    activeSceneStep: 1,
+
+    setDirectorPlanDraft: (draft) => set({ directorPlanDraft: draft }),
+    setActiveSceneStep: (step) => set({ activeSceneStep: step }),
+
+    setGenerationStatus: (status) => {
+      set((state) => ({
+        isGeneratingKeyframes: status.isGenerating !== undefined ? status.isGenerating : state.isGeneratingKeyframes,
+        isEnhancingPrompt: status.isEnhancing !== undefined ? status.isEnhancing : state.isEnhancingPrompt,
+        generationStatusMessage: status.message !== undefined ? status.message : state.generationStatusMessage,
+      }));
+    },
 
     setProject: (project) => {
       const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
@@ -145,7 +195,6 @@ export const useStudioStore = create<StudioState>((set, get) => {
       const updatedSettings = { ...project.settings, ...newSettings };
       const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, updatedSettings.durationSeconds);
 
-      // If switching to T2VA, automatically clear reference keyframes
       let updatedRefs = project.references;
       if (newSettings.mode === 'T2VA') {
         updatedRefs = [];
@@ -226,7 +275,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     addShot: (customShot) => {
       const { project } = get();
-      if (project.shots.length >= 6) return; // Cap at 6 shots max
+      if (project.shots.length >= 6) return;
       const nextNum = project.shots.length + 1;
       const lastShot = project.shots[project.shots.length - 1];
 
@@ -277,7 +326,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     removeShot: (index) => {
       const { project } = get();
-      if (project.shots.length <= 1) return; // Keep at least 1 shot
+      if (project.shots.length <= 1) return;
       const newShots = project.shots.filter((_, idx) => idx !== index);
       const dividedShots = TimelineEngine.divideShotsEvenly(newShots, project.settings.durationSeconds);
       set({ project: { ...project, shots: dividedShots } });
@@ -341,23 +390,72 @@ export const useStudioStore = create<StudioState>((set, get) => {
     setProposedPromptDiff: (diff) => set({ proposedPromptDiff: diff }),
 
     toggleTheme: () => {
-      const current = get().theme;
-      const next = current === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('minimax_studio_theme', next);
-      if (typeof document !== 'undefined') {
-        document.documentElement.classList.remove('dark', 'light');
-        document.documentElement.classList.add(next);
-      }
-      set({ theme: next });
+      const nextTheme = get().theme === 'dark' ? 'light' : 'dark';
+      get().setTheme(nextTheme);
     },
 
-    setTheme: (next) => {
-      localStorage.setItem('minimax_studio_theme', next);
+    setTheme: (theme) => {
+      localStorage.setItem('minimax_studio_theme', theme);
       if (typeof document !== 'undefined') {
         document.documentElement.classList.remove('dark', 'light');
-        document.documentElement.classList.add(next);
+        document.documentElement.classList.add(theme);
       }
-      set({ theme: next });
+      set({ theme });
+    },
+
+    addSceneKeyframe: (keyframe) => {
+      const { sceneKeyframes } = get();
+      const updated = [keyframe, ...sceneKeyframes];
+      KeyframeStorageService.saveKeyframe(keyframe);
+      set({ sceneKeyframes: updated });
+    },
+
+    removeSceneKeyframe: (id) => {
+      const { sceneKeyframes } = get();
+      const updated = sceneKeyframes.filter((k) => k.id !== id);
+      KeyframeStorageService.deleteKeyframe(id);
+      set({ sceneKeyframes: updated });
+    },
+
+    assignKeyframeToAnchor: (keyframe, target) => {
+      const { project, addReference } = get();
+
+      const newRef: ReferenceImage = {
+        id: `ref-${Date.now()}`,
+        name: keyframe.name,
+        url: keyframe.url,
+        type: target,
+        shotIndex: target === 'first_frame' ? 1 : target === 'last_frame' ? project.shots.length : 1,
+        traits: {
+          subject: keyframe.prompt,
+          environment: keyframe.style,
+        },
+      };
+
+      if (target === 'first_frame') {
+        const filtered = project.references.filter((r) => r.type !== 'first_frame');
+        const newMode = project.settings.mode === 'T2VA' ? 'I2VA' : project.settings.mode;
+        set({
+          project: {
+            ...project,
+            references: [newRef, ...filtered],
+            settings: { ...project.settings, mode: newMode },
+          },
+        });
+        get().recompileAndValidate();
+      } else if (target === 'last_frame') {
+        const filtered = project.references.filter((r) => r.type !== 'last_frame');
+        set({
+          project: {
+            ...project,
+            references: [...filtered, newRef],
+            settings: { ...project.settings, mode: 'FL2VA' },
+          },
+        });
+        get().recompileAndValidate();
+      } else {
+        addReference(newRef);
+      }
     },
   };
 });
