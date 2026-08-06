@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { AIEngine } from '../../ai/AIEngine';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
-import { VisualDNA } from '../../types/visualDna';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Check, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu } from 'lucide-react';
+import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu } from 'lucide-react';
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Live-Action Realism',
@@ -47,7 +46,6 @@ export const AIDirectorPanel: React.FC = () => {
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
   const [directorModel, setDirectorModel] = useState<'gemini-2.5-pro' | 'gemini-3.5-flash'>('gemini-2.5-pro');
-  const [visualDna, setVisualDna] = useState<VisualDNA | null>(null);
 
   const activeShots = project.shots;
   const currentShotCount = activeShots.length;
@@ -65,13 +63,7 @@ export const AIDirectorPanel: React.FC = () => {
     const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
     const imageUrls = project.references ? project.references.map((r) => r.url) : [];
 
-    // Step 1: Analyze Visual DNA if keyframe images exist
-    if (imageUrls.length > 0) {
-      const dna = await provider.analyzeVisualDNA(imageUrls, apiKey);
-      setVisualDna(dna);
-    }
-
-    // Step 2: Generate Multimodal Storyboard with selected mode, shot count, duration, presets, & image keyframes
+    // Directly generate Multimodal Storyboard in 1 fast step using direct multimodal image input
     const result = await provider.generateStoryboard(
       {
         idea: idea || project.description || 'Cyberpunk action standoff scene',
@@ -341,29 +333,6 @@ export const AIDirectorPanel: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Visual DNA Display Card */}
-      {visualDna && (
-        <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 space-y-2">
-          <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-            <Check className="w-4 h-4 text-emerald-400" /> Extracted Visual DNA Profile
-          </span>
-          <div className="grid grid-cols-3 gap-2 text-[11px] text-zinc-300">
-            <div>
-              <span className="text-zinc-400 block font-medium">Face & Hair:</span>
-              {visualDna.identity.hairColor} {visualDna.identity.hairStyle}
-            </div>
-            <div>
-              <span className="text-zinc-400 block font-medium">Lighting:</span>
-              {visualDna.environment.lighting}
-            </div>
-            <div>
-              <span className="text-zinc-400 block font-medium">Camera Angle:</span>
-              {visualDna.cinematography.cameraAngle}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

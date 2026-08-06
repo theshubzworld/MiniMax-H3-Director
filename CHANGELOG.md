@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dedicated Spoken Dialogue Section**: `PromptCompiler.ts` now auto-compiles a structured `dialogue:` block with per-shot speaker IDs, dialogue text, and emotional delivery cues (e.g. `S1 (soft, reflective): "..."`).
 
 ### Fixed
+- **Direct 1-Step Gemini Director Storyboard Generation**: Removed redundant `analyzeVisualDNA` text extraction pass in `AIDirectorPanel.tsx`. Gemini now directly inspects multimodal reference images in 1 fast step to create storyboards without extra visual DNA text extraction overhead.
 - **Eliminated Hardcoded "Same Room" Contradiction**: Fixed `PromptCompiler.ts` line 95 which was hardcoding `"preserving the same room"` for shots > 1. Replaced with `"preserving the subject appearance and wardrobe from <Picture 1>"`, allowing multi-location airport/cinematic scenes to flow naturally without contradictions.
 - **Sanitized N/A Environment & Camera Strings**: Filtered out `n/A (indoors)`, `N/A`, and `with N/A at N/A` from camera motion sentences and environment location descriptors.
 - **Gemini Director Engine Selection (Gemini 2.5 Pro vs 3.5 Flash ⚡)**: Added model selection toggles across Scene Creator and AI Director Workstation, letting users choose between Gemini 2.5 Pro (Deep Reasoning) and Gemini 3.5 Flash (Ultra Fast).
