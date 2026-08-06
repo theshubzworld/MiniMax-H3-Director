@@ -320,7 +320,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
     setShotsCount: (count) => {
       const { project, recompileAndValidate } = get();
       const currentShots = [...project.shots];
-      const targetCount = Math.max(1, Math.min(6, count));
+      const targetCount = Math.max(1, Math.min(9, count));
 
       if (currentShots.length === targetCount) return;
 
@@ -367,7 +367,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     addShot: (customShot) => {
       const { project } = get();
-      if (project.shots.length >= 6) return;
+      if (project.shots.length >= 9) return;
       const nextNum = project.shots.length + 1;
       const lastShot = project.shots[project.shots.length - 1];
 
@@ -460,9 +460,6 @@ export const useStudioStore = create<StudioState>((set, get) => {
       set({ project: { ...project, audio: { ...project.audio, ...audio } } });
       get().recompileAndValidate();
     },
-
-    setCurrentStep: (currentStep) => set({ currentStep }),
-    setActiveView: (activeView) => set({ activeView }),
 
     recompileAndValidate: () => {
       const { project } = get();

@@ -37,8 +37,8 @@ export class CameraEngine {
     };
 
     const actionVerb = verbMap[camera.motionType] || 'moves';
-    const amplitudeStr = camera.amplitude ? ` with ${camera.amplitude}` : '';
-    const speedStr = camera.speed ? ` at ${camera.speed}` : '';
+    const amplitudeStr = camera.amplitude && !/^n\/?a$/i.test(camera.amplitude.trim()) ? ` with ${camera.amplitude}` : '';
+    const speedStr = camera.speed && !/^n\/?a$/i.test(camera.speed.trim()) ? ` at ${camera.speed}` : '';
 
     let cleanTarget = (camera.targetSubject || '').trim();
     if (cleanTarget) {

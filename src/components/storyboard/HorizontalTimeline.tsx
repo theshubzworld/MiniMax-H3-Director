@@ -25,10 +25,15 @@ export const HorizontalTimeline: React.FC<HorizontalTimelineProps> = ({
         <button
           type="button"
           onClick={onAddShot}
-          className="bg-cyan-500 hover:bg-cyan-400 text-zinc-950 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 shadow-lg shadow-cyan-500/20 transition-all"
+          disabled={shots.length >= 9}
+          className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 shadow-lg transition-all ${
+            shots.length >= 9
+              ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700'
+              : 'bg-cyan-500 hover:bg-cyan-400 text-zinc-950 shadow-cyan-500/20'
+          }`}
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>Add Shot</span>
+          <span>{shots.length >= 9 ? 'Max 9 Shots' : 'Add Shot'}</span>
         </button>
       </div>
 

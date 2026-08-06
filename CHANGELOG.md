@@ -8,8 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Expanded Storyboard Shot Limit (Up to 9 Shots)**: Expanded maximum storyboard shot capacity from 6 to 9 shots across `StudioStore.ts`, `AIDirectorPanel.tsx`, and `HorizontalTimeline.tsx`.
 - **Live-Action Realism Primary Motion Preset**: Added `Live-Action Realism` as the primary #1 default narrative style preset in `AIDirectorPanel.tsx` for 100% natural real-life human motion, 35mm practical lighting, and authentic physical foley.
 - **Dedicated Spoken Dialogue Section**: `PromptCompiler.ts` now auto-compiles a structured `dialogue:` block with per-shot speaker IDs, dialogue text, and emotional delivery cues (e.g. `S1 (soft, reflective): "..."`).
+
+### Fixed
+- **Eliminated Hardcoded "Same Room" Contradiction**: Fixed `PromptCompiler.ts` line 95 which was hardcoding `"preserving the same room"` for shots > 1. Replaced with `"preserving the subject appearance and wardrobe from <Picture 1>"`, allowing multi-location airport/cinematic scenes to flow naturally without contradictions.
+- **Sanitized N/A Environment & Camera Strings**: Filtered out `n/A (indoors)`, `N/A`, and `with N/A at N/A` from camera motion sentences and environment location descriptors.
 - **Gemini Director Engine Selection (Gemini 2.5 Pro vs 3.5 Flash ⚡)**: Added model selection toggles across Scene Creator and AI Director Workstation, letting users choose between Gemini 2.5 Pro (Deep Reasoning) and Gemini 3.5 Flash (Ultra Fast).
 - **Mode-Aware Keyframe Design & Storyboard Contracts**: Mode-aware system prompt contracts for `I2VA` (First Frame @ 0s), `L2VA` (Last Frame @ Ending), `T2VA` (Text Pre-Vis), and `FL2VA` (First & Last Frame Pair).
 - **FL2VA Keyframe Gallery Picker Modal**: Modal in FL2VA dropzone allowing 1-click keyframe selection directly from generated 4K scene gallery.

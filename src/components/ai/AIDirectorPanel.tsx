@@ -140,7 +140,7 @@ export const AIDirectorPanel: React.FC = () => {
             <label className="text-xs text-zinc-400 font-medium block">
               Active Storyboard Shots ({currentShotCount} Shot{currentShotCount > 1 ? 's' : ''} divided evenly across {totalDuration}s)
             </label>
-            <span className="text-[11px] text-zinc-400">Max 6 Shots</span>
+            <span className="text-[11px] text-cyan-400 font-medium">Max 9 Shots</span>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -163,7 +163,7 @@ export const AIDirectorPanel: React.FC = () => {
               </div>
             ))}
 
-            {currentShotCount < 6 && (
+            {currentShotCount < 9 && (
               <button
                 type="button"
                 onClick={() => addShot()}

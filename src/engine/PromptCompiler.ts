@@ -92,7 +92,7 @@ export class PromptCompiler {
       const timeStamp = TimelineEngine.formatTimestamp(shot.startTimeSeconds);
       const transitionWord = shot.transitionToNext === 'cross-dissolve' ? 'cross-dissolves to' : 'cuts to';
       if (isImageMode && isStrict) {
-        parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord} a new angle while preserving the same room, wardrobe, lighting, and appearance from <Picture 1>.`);
+        parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord} a new angle, preserving the subject appearance and wardrobe from <Picture 1>.`);
       } else {
         parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord} a new framing.`);
       }
@@ -101,7 +101,11 @@ export class PromptCompiler {
     // Environment & Setting (omit in Shot 1 strict mode if reference photo is authoritative)
     if (shot.environment) {
       const env = shot.environment;
-      const rawEnvParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere].filter(Boolean) as string[];
+      const rawEnvParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere]
+        .filter(Boolean)
+        .map((s) => (s || '').trim())
+        .filter((s) => s.length > 0 && !/^n\/?a/i.test(s) && !/^\(.*\)$/.test(s));
+
       if (rawEnvParts.length > 0 && rawEnvParts[0]) {
         const shouldOmitEnv = isStrict && index === 0 && isImageMode;
         if (!shouldOmitEnv) {
@@ -207,9 +211,15 @@ export class PromptCompiler {
     return text
       // Fix "standing in Starting..."
       .replace(/standing in Starting /gi, 'Starting ')
+      // Fix hardcoded "same room" contradiction
+      .replace(/preserving the same room,\s*wardrobe,\s*lighting,\s*and appearance/gi, 'preserving the subject appearance and wardrobe')
       // Fix "set in a setting from <Picture 1>, the lighting from <Picture 1>, as depicted in <Picture 1>, as depicted in <Picture 1>"
       .replace(/(?:as depicted in <Picture 1>|the lighting from <Picture 1>|setting from <Picture 1>)(?:,\s*)?/gi, '')
       .replace(/set in a\s*,?\s*environment\./gi, '')
+      // Fix "n/a" and "n/A (indoors)" fragments
+      .replace(/,\s*n\/?a\b(\s*\([^)]*\))?/gi, '')
+      .replace(/\bwith N\/A\b/gi, '')
+      .replace(/\bat N\/A\b/gi, '')
       // Fix duplicate "as depicted in <Picture 1>"
       .replace(/(<Picture 1>)\s*,\s*as depicted in\s*<Picture 1>/gi, '$1')
       // Fix repetitive camera zoom sentences
