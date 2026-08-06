@@ -139,11 +139,81 @@ interface StudioState {
   setActiveSceneStep: (step: 1 | 2 | 3) => void;
 }
 
+// LocalStorage Persistence Helpers
+const saveProjectStateToLocalStorage = (
+  project: StudioProject,
+  directorPlanDraft?: DirectorPlanDraft | null,
+  activeView?: string,
+  activeSceneStep?: number,
+  currentStep?: number
+) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('minimax_studio_project', JSON.stringify(project));
+    if (directorPlanDraft !== undefined) {
+      if (directorPlanDraft) {
+        localStorage.setItem('minimax_director_draft', JSON.stringify(directorPlanDraft));
+      } else {
+        localStorage.removeItem('minimax_director_draft');
+      }
+    }
+    if (activeView) {
+      localStorage.setItem('minimax_active_view', activeView);
+    }
+    if (activeSceneStep) {
+      localStorage.setItem('minimax_active_scene_step', String(activeSceneStep));
+    }
+    if (currentStep) {
+      localStorage.setItem('minimax_current_step', String(currentStep));
+    }
+  } catch (e) {
+    console.warn('[StudioStore] Failed to save state to localStorage', e);
+  }
+};
+
+const loadHydratedProject = (): StudioProject => {
+  if (typeof window === 'undefined') {
+    const compiled = PromptCompiler.compile(DEFAULT_PROJECT);
+    return { ...DEFAULT_PROJECT, compiledPrompt: compiled };
+  }
+  try {
+    const raw = localStorage.getItem('minimax_studio_project');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.settings && parsed.shots) {
+        const merged: StudioProject = {
+          ...DEFAULT_PROJECT,
+          ...parsed,
+          settings: { ...DEFAULT_PROJECT.settings, ...parsed.settings },
+        };
+        const compiled = PromptCompiler.compile(merged);
+        return { ...merged, compiledPrompt: compiled };
+      }
+    }
+  } catch (e) {
+    console.warn('[StudioStore] Failed to load project state from localStorage', e);
+  }
+  const compiled = PromptCompiler.compile(DEFAULT_PROJECT);
+  return { ...DEFAULT_PROJECT, compiledPrompt: compiled };
+};
+
+const loadHydratedDraft = (): DirectorPlanDraft | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('minimax_director_draft');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+};
+
 export const useStudioStore = create<StudioState>((set, get) => {
-  const initialCompiled = PromptCompiler.compile(DEFAULT_PROJECT);
-  const initialProject = { ...DEFAULT_PROJECT, compiledPrompt: initialCompiled };
+  const initialProject = loadHydratedProject();
   const initialDiag = PromptValidator.validate(initialProject);
   const initialTheme = (localStorage.getItem('minimax_studio_theme') as 'dark' | 'light') || 'dark';
+  const initialDraft = loadHydratedDraft();
+  const initialView = (localStorage.getItem('minimax_active_view') as StudioState['activeView']) || 'wizard';
+  const initialSceneStep = (Number(localStorage.getItem('minimax_active_scene_step') || 1) as 1 | 2 | 3);
+  const initialStep = Number(localStorage.getItem('minimax_current_step') || 1);
 
   // Hydrate keyframes asynchronously from IndexedDB
   if (typeof window !== 'undefined') {
@@ -161,8 +231,8 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
   return {
     project: initialProject,
-    currentStep: 1,
-    activeView: 'wizard',
+    currentStep: initialStep,
+    activeView: initialView,
     diagnostics: initialDiag,
     proposedPromptDiff: null,
     theme: initialTheme,
@@ -170,11 +240,32 @@ export const useStudioStore = create<StudioState>((set, get) => {
     isGeneratingKeyframes: false,
     isEnhancingPrompt: false,
     generationStatusMessage: null,
-    directorPlanDraft: null,
-    activeSceneStep: 1,
+    directorPlanDraft: initialDraft,
+    activeSceneStep: initialSceneStep,
 
-    setDirectorPlanDraft: (draft) => set({ directorPlanDraft: draft }),
-    setActiveSceneStep: (step) => set({ activeSceneStep: step }),
+    setDirectorPlanDraft: (draft) => {
+      set({ directorPlanDraft: draft });
+      const { project, activeView, activeSceneStep, currentStep } = get();
+      saveProjectStateToLocalStorage(project, draft, activeView, activeSceneStep, currentStep);
+    },
+
+    setActiveSceneStep: (step) => {
+      set({ activeSceneStep: step });
+      const { project, directorPlanDraft, activeView, currentStep } = get();
+      saveProjectStateToLocalStorage(project, directorPlanDraft, activeView, step, currentStep);
+    },
+
+    setCurrentStep: (step) => {
+      set({ currentStep: step });
+      const { project, directorPlanDraft, activeView, activeSceneStep } = get();
+      saveProjectStateToLocalStorage(project, directorPlanDraft, activeView, activeSceneStep, step);
+    },
+
+    setActiveView: (view) => {
+      set({ activeView: view });
+      const { project, directorPlanDraft, activeSceneStep, currentStep } = get();
+      saveProjectStateToLocalStorage(project, directorPlanDraft, view, activeSceneStep, currentStep);
+    },
 
     setGenerationStatus: (status) => {
       set((state) => ({
@@ -186,7 +277,8 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     setProject: (project) => {
       const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
-      set({ project: { ...project, shots: dividedShots } });
+      const updated = { ...project, shots: dividedShots };
+      set({ project: updated });
       get().recompileAndValidate();
     },
 
