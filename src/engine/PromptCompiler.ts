@@ -38,8 +38,13 @@ export class PromptCompiler {
       if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText?.trim()) {
         const d = shot.dialogue;
         const speakerId = d.speakerId || 'S1';
-        const rawRole = shot.character?.identity ? shot.character.identity.replace(/^(the|a|an)\s+/i, '').trim() : '';
-        const roleLabel = rawRole ? ` (${rawRole})` : '';
+        const cleanRole = shot.character?.identity
+          ? shot.character.identity
+              .replace(/^(the|a|an)\s+/i, '')
+              .replace(/,?\s*subject from <Picture \d+>/gi, '')
+              .trim()
+          : '';
+        const roleLabel = cleanRole ? ` (${cleanRole})` : '';
         const delivery = d.deliveryTone ? ` (${d.deliveryTone})` : '';
         dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${roleLabel}${delivery}: "${d.dialogueText.trim()}"`);
       } else {
@@ -184,11 +189,14 @@ export class PromptCompiler {
       const speakerId = d.speakerId || 'S1';
       const lang = d.languageTag || 'English';
       
-      const charSubject = shot.character?.identity
-        ? shot.character.identity.trim()
+      let charSubject = shot.character?.identity
+        ? shot.character.identity.replace(/,?\s*subject from <Picture \d+>/gi, '').trim()
         : isImageMode
         ? 'The subject from <Picture 1>'
         : 'The subject';
+      if (!charSubject) {
+        charSubject = isImageMode ? 'The subject from <Picture 1>' : 'The subject';
+      }
 
       if (d.isOffScreenVoiceover) {
         parts.push(

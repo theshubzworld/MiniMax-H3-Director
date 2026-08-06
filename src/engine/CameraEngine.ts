@@ -37,8 +37,34 @@ export class CameraEngine {
     };
 
     const actionVerb = verbMap[camera.motionType] || 'moves';
-    const amplitudeStr = camera.amplitude && !/^(n\/?a|none|null|undefined)$/i.test(camera.amplitude.trim()) ? ` with ${camera.amplitude}` : '';
-    const speedStr = camera.speed && !/^(n\/?a|none|null|undefined)$/i.test(camera.speed.trim()) ? ` at ${camera.speed}` : '';
+    
+    let rawAmp = (camera.amplitude || '').trim().toLowerCase();
+    let amplitudeStr = '';
+    if (rawAmp && !/^(n\/?a|none|null|undefined)$/i.test(rawAmp)) {
+      if (/subtle|small|slight/i.test(rawAmp)) {
+        amplitudeStr = ' with small amplitude';
+      } else if (/large|dramatic|wide/i.test(rawAmp)) {
+        amplitudeStr = ' with large amplitude';
+      } else if (!rawAmp.startsWith('with ')) {
+        amplitudeStr = ` with ${rawAmp}`;
+      } else {
+        amplitudeStr = ` ${rawAmp}`;
+      }
+    }
+
+    let rawSpeed = (camera.speed || '').trim().toLowerCase();
+    let speedStr = '';
+    if (rawSpeed && !/^(n\/?a|none|null|undefined)$/i.test(rawSpeed)) {
+      if (/slow/i.test(rawSpeed)) {
+        speedStr = ' at slow speed';
+      } else if (/fast|rapid|quick/i.test(rawSpeed)) {
+        speedStr = ' at fast speed';
+      } else if (!rawSpeed.startsWith('at ')) {
+        speedStr = ` at ${rawSpeed}`;
+      } else {
+        speedStr = ` ${rawSpeed}`;
+      }
+    }
 
     let cleanTarget = (camera.targetSubject || '').trim();
     if (cleanTarget) {
