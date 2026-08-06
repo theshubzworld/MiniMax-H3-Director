@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dedicated Spoken Dialogue Section**: `PromptCompiler.ts` now auto-compiles a structured `dialogue:` block with per-shot speaker IDs, dialogue text, and emotional delivery cues (e.g. `S1 (soft, reflective): "..."`).
 
 ### Fixed
+- **Camera Target Possessive Noun Phrase Regex Fix**: Fixed `CameraEngine.ts` regex replacement bug where possessive target phrases (e.g. `the subject from <Picture 1>'s energy blade` and `the subject from <Picture 1>'s full body`) were incorrectly truncating noun modifiers, producing glitched output like `"toward the energy of the subject from <Picture 1> blade"`.
+- **Preset Quote & Fallback String Sanitization**: Removed hardcoded quotes `("...")` from `STORY_SEED_PRESETS` in `AIDirectorPanel.tsx` and updated `DEFAULT_PROJECT` in `StudioStore.ts` to prevent Gemini from copying system preset strings.
 - **Gemini 3.5 Flash & 2.5 Pro Multi-Shot Dialogue Flexibility**: Removed artificial 1-2 shot dialogue restrictions in `GeminiProvider.ts` and added anti-copy directives (`<ORIGINAL_UNIQUE_STORY_NARRATION>`). Gemini now composes 100% original, unique 2-4 word voiceover lines tailored to the user's specific story across all requested shots.
 - **Multi-Panel Reference Grid Support**: Instructed Gemini Director to inspect multi-panel composite grids (e.g. 3x3 Wonder Woman panels) to maintain armor, weapon, and pose identity across sequential shots.
 - **Direct 1-Step Gemini Director Storyboard Generation**: Removed redundant `analyzeVisualDNA` text extraction pass in `AIDirectorPanel.tsx`. Gemini now directly inspects multimodal reference images in 1 fast step to create storyboards without extra visual DNA text extraction overhead.

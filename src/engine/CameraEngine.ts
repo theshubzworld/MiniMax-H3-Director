@@ -42,8 +42,8 @@ export class CameraEngine {
 
     let cleanTarget = (camera.targetSubject || '').trim();
     if (cleanTarget) {
-      cleanTarget = cleanTarget.replace(/(the subject from <Picture \d+>)'s\s+(\w+)/gi, 'the $2 of $1');
-      cleanTarget = cleanTarget.replace(/<Picture (\d+)>'s\s+(\w+)/gi, 'the $2 of the subject from <Picture $1>');
+      cleanTarget = cleanTarget.replace(/(the subject from <Picture \d+>)'s\s+(.+)/gi, 'the $2 of $1');
+      cleanTarget = cleanTarget.replace(/<Picture (\d+)>'s\s+(.+)/gi, 'the $2 of the subject from <Picture $1>');
     }
     const targetStr = cleanTarget ? ` toward ${cleanTarget}` : '';
 

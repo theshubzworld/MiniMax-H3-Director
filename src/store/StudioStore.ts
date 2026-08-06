@@ -57,7 +57,7 @@ const DEFAULT_PROJECT: StudioProject = {
         hasDialogue: true,
         speakerId: 'S1',
         languageTag: 'English',
-        dialogueText: 'System online. Objective locked.',
+        dialogueText: 'Objective in sight.',
         isOffScreenVoiceover: false,
         lipsClosedDuringVoiceover: false,
         carriesAcrossCut: false,
