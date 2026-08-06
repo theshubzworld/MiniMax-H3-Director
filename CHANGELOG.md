@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dedicated Spoken Dialogue Section**: `PromptCompiler.ts` now auto-compiles a structured `dialogue:` block with per-shot speaker IDs, dialogue text, and emotional delivery cues (e.g. `S1 (soft, reflective): "..."`).
 
 ### Fixed
-- **Gemini Director Dialogue Schema Binding**: Added explicit `dialogue` object schema to Gemini system prompts and mapped `s.dialogue` in `GeminiProvider.ts`. When users request dialogue/narration in their prompt, Gemini now auto-populates narration dialogue phrases across shots.
+- **Gemini 3.5 Flash & 2.5 Pro Multi-Shot Dialogue Flexibility**: Removed artificial 1-2 shot dialogue restrictions in `GeminiProvider.ts` and added anti-copy directives (`<ORIGINAL_UNIQUE_STORY_NARRATION>`). Gemini now composes 100% original, unique 2-4 word voiceover lines tailored to the user's specific story across all requested shots.
 - **Multi-Panel Reference Grid Support**: Instructed Gemini Director to inspect multi-panel composite grids (e.g. 3x3 Wonder Woman panels) to maintain armor, weapon, and pose identity across sequential shots.
 - **Direct 1-Step Gemini Director Storyboard Generation**: Removed redundant `analyzeVisualDNA` text extraction pass in `AIDirectorPanel.tsx`. Gemini now directly inspects multimodal reference images in 1 fast step to create storyboards without extra visual DNA text extraction overhead.
 - **Eliminated Hardcoded "Same Room" Contradiction**: Fixed `PromptCompiler.ts` line 95 which was hardcoding `"preserving the same room"` for shots > 1. Replaced with `"preserving the subject appearance and wardrobe from <Picture 1>"`, allowing multi-location airport/cinematic scenes to flow naturally without contradictions.

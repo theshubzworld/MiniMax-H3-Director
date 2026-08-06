@@ -308,14 +308,15 @@ Final Shot ${params.shotsCount} ends referencing <Picture 1> at the ending mark 
       : `MINIMAX H3 T2VA MODE CONTRACT:
 Generate a 100% text-driven continuous motion sequence with no reference image dependencies.`;
 
-    const maxWordsPerShot = Math.max(3, Math.floor(shotDuration * 2.5));
-    const dialoguePacingRule = `CRITICAL SPOKEN DIALOGUE & VOICEOVER PACING SAFEGUARD:
+    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
+    const dialoguePacingRule = `CRITICAL SPOKEN DIALOGUE & VOICEOVER PACING GUIDELINES:
 Total video duration is ${params.durationSeconds}s across ${params.shotsCount} shots (${shotDuration.toFixed(2)}s per shot).
-- Human speech speed is ~2.5 words per second.
-- MAXIMUM dialogue per shot: ${maxWordsPerShot} words max.
-- For short shots (${shotDuration.toFixed(1)}s), spoken dialogue MUST be concise (1 to ${maxWordsPerShot} words max).
-- NEVER generate long 10-16 word sentences for short 1-2 second shots — otherwise audio will sound fast-forwarded or unnaturally rushed!
-- Limit spoken dialogue/voiceover to only 1 or 2 shots max across the video. Leave remaining shots clean for visual action and soundscape.`;
+- Human speech speed is ~2.5 to 3.0 words per second.
+- Max dialogue per shot: ${maxWordsPerShot} words max.
+- Keep each shot's dialogue concise (1 to ${maxWordsPerShot} short words max per shot).
+- WHEN DIALOGUE/NARRATION IS REQUESTED OR INTENDED: Generate short, punchy 2-4 word spoken narration lines for shots across the storyboard! Do NOT artificially restrict dialogue to only 1 shot.
+- NEVER generate long 12-16 word monologues for short 1-2s shots. Short, atmospheric 2-4 word lines allow speech to sound 100% natural without audio fast-forwarding!
+- CRITICAL: DO NOT copy example placeholder text strings. ALWAYS compose 100% ORIGINAL, unique narration dialogue lines tailored specifically to the user's story topic ("${params.idea}").`;
 
     const promptText = `You are an AI Video Director for MiniMax H3.
 Generate a complete, structured ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video in ${params.mode} mode based on idea: "${params.idea}".
@@ -328,18 +329,18 @@ You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
 2. character: { speakerId ("S1"), identity, pose, expression, motion }
 3. environment: { location, lighting, weather, timeOfDay, atmosphere }
 4. rawActionDescription: Cinematic, highly descriptive action prose unique for every shot while keeping character identity consistent.
-5. dialogue (OPTIONAL/WHEN REQUESTED): { hasDialogue: true, speakerId: "S1", languageTag: "English", dialogueText: "Short narration phrase", isOffScreenVoiceover: true } — If idea requests narration/voiceover/dialogue, populate dialogueText with short phrases (1-4 words max per short shot).
+5. dialogue (OPTIONAL/WHEN REQUESTED): { hasDialogue: true, speakerId: "S1", languageTag: "English", dialogueText: "Original unique narration phrase matching user idea", isOffScreenVoiceover: true } — If idea requests narration/voiceover/dialogue, populate dialogueText with short phrases (1-4 words max per short shot).
 6. audio: Soundscape layers and background music score.
 
 Return JSON format:
 {
   "shots": [
     {
-      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her glowing cybernetic eyes" },
-      "character": { "speakerId": "S1", "identity": "The cyborg warrior", "pose": "low combat stance", "expression": "intense glare", "motion": "slowly raises plasma katana" },
-      "environment": { "location": "rain-soaked alleyway", "lighting": "cyan neon signs", "weather": "heavy rain", "timeOfDay": "midnight", "atmosphere": "gritty suspense" },
-      "rawActionDescription": "Raindrops sizzle as they strike her energized katana edge.",
-      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "System online.", "isOffScreenVoiceover": true }
+      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her eyes" },
+      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "combat stance", "expression": "intense glare", "motion": "slowly raises weapon" },
+      "environment": { "location": "cinematic setting", "lighting": "atmospheric lighting", "weather": "clear", "timeOfDay": "twilight", "atmosphere": "cinematic tension" },
+      "rawActionDescription": "Action prose unique to user story idea.",
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "<ORIGINAL_UNIQUE_STORY_NARRATION>", "isOffScreenVoiceover": true }
     }
   ],
   "audio": {
