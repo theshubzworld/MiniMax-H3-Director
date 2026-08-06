@@ -34,7 +34,26 @@ export class PromptOptimizer {
       };
     });
 
-    // 3. Clean Soundscape Text
+    // 3. Dialogue Pacing Auto-Fix (Trim dialogue exceeding human speech rate)
+    updatedProject.shots = updatedProject.shots.map((shot) => {
+      if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText) {
+        const words = shot.dialogue.dialogueText.trim().split(/\s+/);
+        const maxWords = Math.max(3, Math.floor((shot.durationSeconds || 1.67) * 2.8));
+        if (words.length > maxWords) {
+          const trimmedText = words.slice(0, maxWords).join(' ') + '...';
+          return {
+            ...shot,
+            dialogue: {
+              ...shot.dialogue,
+              dialogueText: trimmedText,
+            },
+          };
+        }
+      }
+      return shot;
+    });
+
+    // 4. Clean Soundscape Text
     if (updatedProject.audio && updatedProject.audio.customSoundscape) {
       updatedProject.audio.customSoundscape = updatedProject.audio.customSoundscape
         .replace(/says:.*$/gi, '')
@@ -42,7 +61,7 @@ export class PromptOptimizer {
         .trim();
     }
 
-    // 4. Re-compile
+    // 5. Re-compile
     updatedProject.compiledPrompt = PromptCompiler.compile(updatedProject);
     return updatedProject;
   }

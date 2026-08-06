@@ -308,10 +308,20 @@ Final Shot ${params.shotsCount} ends referencing <Picture 1> at the ending mark 
       : `MINIMAX H3 T2VA MODE CONTRACT:
 Generate a 100% text-driven continuous motion sequence with no reference image dependencies.`;
 
+    const maxWordsPerShot = Math.max(3, Math.floor(shotDuration * 2.5));
+    const dialoguePacingRule = `CRITICAL SPOKEN DIALOGUE & VOICEOVER PACING SAFEGUARD:
+Total video duration is ${params.durationSeconds}s across ${params.shotsCount} shots (${shotDuration.toFixed(2)}s per shot).
+- Human speech speed is ~2.5 words per second.
+- MAXIMUM dialogue per shot: ${maxWordsPerShot} words max.
+- For short shots (${shotDuration.toFixed(1)}s), spoken dialogue MUST be concise (1 to ${maxWordsPerShot} words max).
+- NEVER generate long 10-16 word sentences for short 1-2 second shots — otherwise audio will sound fast-forwarded or unnaturally rushed!
+- Limit spoken dialogue/voiceover to only 1 or 2 shots max across the video. Leave remaining shots clean for visual action and soundscape.`;
+
     const promptText = `You are an AI Video Director for MiniMax H3.
 Generate a complete, structured ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video in ${params.mode} mode based on idea: "${params.idea}".
 ${modeDirective}
 ${imageRuleText}
+${dialoguePacingRule}
 
 You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
 1. camera: { motionType (Push In/Pull Out/Arc Shot/Tracking Shot/etc), amplitude (small amplitude/medium amplitude/large amplitude), speed (slow speed/normal speed/fast speed), targetSubject }

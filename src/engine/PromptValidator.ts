@@ -154,6 +154,26 @@ export class PromptValidator {
             affectedShotIndex: index,
           });
         }
+
+        // Pacing & Speech Rate Safeguard Check
+        if (d.dialogueText && d.dialogueText.trim().length > 0) {
+          const wordCount = d.dialogueText.trim().split(/\s+/).length;
+          const shotDur = shot.durationSeconds || 1.67;
+          const maxRecommendedWords = Math.max(3, Math.floor(shotDur * 3.0));
+
+          if (wordCount > maxRecommendedWords) {
+            issues.push({
+              id: `diag-pace-${shotNum}`,
+              category: 'Dialogue Syntax',
+              severity: 'WARNING',
+              ruleName: 'Fast-Forwarded Dialogue Speech Speed',
+              message: `Shot ${shotNum} dialogue is ${wordCount} words for a ${shotDur.toFixed(1)}s shot (max recommended: ${maxRecommendedWords} words). Speech may sound rushed or fast-forwarded.`,
+              suggestion: `Shorten dialogue to ${maxRecommendedWords} words max to maintain natural human speaking speed.`,
+              autoFixable: true,
+              affectedShotIndex: index,
+            });
+          }
+        }
       }
     });
 

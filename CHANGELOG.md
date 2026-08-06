@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Spoken Dialogue Pacing & Speech Rate Safeguard**: Implemented speech rate duration safeguards across `GeminiProvider.ts`, `PromptValidator.ts`, and `PromptOptimizer.ts`. Spoken dialogue is strictly scaled to shot duration ($\le \lfloor \text{durationSeconds} \times 2.5 \rfloor$ words) to prevent fast-forwarded/chipmunk audio artifacts.
 - **Expanded Storyboard Shot Limit (Up to 9 Shots)**: Expanded maximum storyboard shot capacity from 6 to 9 shots across `StudioStore.ts`, `AIDirectorPanel.tsx`, and `HorizontalTimeline.tsx`.
 - **Live-Action Realism Primary Motion Preset**: Added `Live-Action Realism` as the primary #1 default narrative style preset in `AIDirectorPanel.tsx` for 100% natural real-life human motion, 35mm practical lighting, and authentic physical foley.
 - **Dedicated Spoken Dialogue Section**: `PromptCompiler.ts` now auto-compiles a structured `dialogue:` block with per-shot speaker IDs, dialogue text, and emotional delivery cues (e.g. `S1 (soft, reflective): "..."`).
