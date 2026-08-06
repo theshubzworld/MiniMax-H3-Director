@@ -55,6 +55,7 @@ export interface DialogueConfig {
   speakerId: string; // e.g. "S1"
   languageTag: string; // e.g. "English", "Japanese"
   dialogueText: string;
+  deliveryTone?: string; // e.g. "soft, reflective", "urgent", "whispering"
   isOffScreenVoiceover: boolean;
   lipsClosedDuringVoiceover: boolean;
   carriesAcrossCut: boolean;

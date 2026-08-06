@@ -30,6 +30,8 @@ const CHARACTER_POSE_MATRIX = [
 ];
 
 const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
+  'Live-Action Realism': ['natural soft window light', 'authentic 35mm practical lamp glow', 'subtle realistic golden hour sun falloff'],
+  'Cinematic Film': ['dramatic 35mm anamorphic key light', 'moody chiaroscuro shadow falloff', 'soft warm tungsten fill'],
   Anime: ['neon cyan and magenta key backlight', 'dramatic high-contrast rim light', 'volumetric atmospheric sunbeams'],
   Fashion: ['soft diffuse studio lighting', 'warm golden hour glow', 'high-key minimalist backlight'],
   Action: ['strobing emergency alert lights', 'fiery orange and deep shadow contrast', 'harsh industrial spotlight'],

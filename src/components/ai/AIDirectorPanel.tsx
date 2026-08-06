@@ -7,6 +7,8 @@ import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
 import { Sparkles, Video, Loader2, Check, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu } from 'lucide-react';
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
+  'Live-Action Realism',
+  'Cinematic Film',
   'Commercial',
   'Fashion',
   'Action',
@@ -15,7 +17,6 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Product',
   'Travel',
   'Anime',
-  'Cinematic Film',
   'Sci-Fi Thriller',
   'Dark Fantasy',
   'Horror Suspense',
@@ -43,7 +44,7 @@ const STORY_SEED_PRESETS = [
 export const AIDirectorPanel: React.FC = () => {
   const { project, setProject, updateSettings, addShot, removeShot, autoFixProject } = useStudioStore();
   const [idea, setIdea] = useState('');
-  const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Anime');
+  const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
   const [directorModel, setDirectorModel] = useState<'gemini-2.5-pro' | 'gemini-3.5-flash'>('gemini-2.5-pro');
   const [visualDna, setVisualDna] = useState<VisualDNA | null>(null);
@@ -219,7 +220,10 @@ export const AIDirectorPanel: React.FC = () => {
 
         {/* Narrative Style Selector (Expanded Presets) */}
         <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1.5 block">Narrative Genre Style Presets (20 Presets)</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs text-zinc-300 font-bold block">Narrative & Motion Style Presets ({NARRATIVE_STYLES.length} Presets)</label>
+            <span className="text-[10px] text-cyan-400 font-mono">Select "Live-Action Realism" for 100% natural human motion & real-world physics</span>
+          </div>
           <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
             {NARRATIVE_STYLES.map((style) => {
               const isSelected = narrativeStyle === style;

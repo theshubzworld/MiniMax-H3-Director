@@ -27,17 +27,38 @@ export class PromptCompiler {
       return PromptCompiler.compileSingleShot(shot, index, settings.style, settings.mode, referenceMode);
     });
 
-    const multimodalDescription = `integrated_multimodal_description: ${compiledShots.join(' ')}`;
+    const multimodalDescription = `integrated_multimodal_description:\n\n${compiledShots.join('\n\n')}`;
 
-    // 3. Compile Soundscape & Non-Diegetic Music unless Audio is Silent
+    // 3. Compile Dialogue Section (if any shot has spoken dialogue)
+    let dialogueBlock = '';
+    const dialogueShots: string[] = [];
+
+    shots.forEach((shot, idx) => {
+      const shotNum = idx + 1;
+      if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText?.trim()) {
+        const d = shot.dialogue;
+        const speakerId = d.speakerId || 'S1';
+        const delivery = d.deliveryTone ? ` (${d.deliveryTone})` : '';
+        dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${delivery}: "${d.dialogueText.trim()}"`);
+      } else {
+        dialogueShots.push(`[Shot ${shotNum}]\n(No dialogue.)`);
+      }
+    });
+
+    const hasAnyDialogue = shots.some(s => s.dialogue && s.dialogue.hasDialogue && s.dialogue.dialogueText?.trim());
+    if (hasAnyDialogue) {
+      dialogueBlock = `\n\ndialogue:\n\n${dialogueShots.join('\n\n')}`;
+    }
+
+    // 4. Compile Soundscape & Non-Diegetic Music unless Audio is Silent
     if (audio?.isSilent) {
-      return `${header}${multimodalDescription}`;
+      return `${header}${multimodalDescription}${dialogueBlock}`;
     }
 
     const soundscape = AudioEngine.compileSoundscape(audio);
     const music = AudioEngine.compileNonDiegeticMusic(audio);
 
-    return `${header}${multimodalDescription}\n\n${soundscape}\n\n${music}`;
+    return `${header}${multimodalDescription}${dialogueBlock}\n\n${soundscape}\n\n${music}`;
   }
 
   /**
@@ -47,36 +68,42 @@ export class PromptCompiler {
     const shotNum = index + 1;
     const parts: string[] = [];
     const isStrict = referenceMode === 'strict';
+    const isImageMode = mode === 'I2VA' || mode === 'FL2VA' || mode === 'L2VA';
 
     // Shot Header & Cut Timing
     if (index === 0) {
-      parts.push(`[Shot 1] ${style},`);
+      parts.push(`[Shot 1] ${style}.`);
       if (mode === 'I2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original environment shown in the reference image, preserving the existing location, lighting, wardrobe, and composition.`);
+          parts.push(`The opening frame begins exactly from <Picture 1>, preserving the original subject appearance, hairstyle, wardrobe, environment, lighting, and composition shown in the reference image.`);
         } else {
-          parts.push(`referencing character facial identity from <Picture 1>,`);
+          parts.push(`The opening frame references character facial identity from <Picture 1>.`);
         }
       } else if (mode === 'FL2VA') {
         if (isStrict) {
-          parts.push(`the opening frame begins exactly from <Picture 1>. The subject from <Picture 1> remains in the original starting environment, preserving the existing location, lighting, wardrobe, and composition.`);
+          parts.push(`The opening frame begins exactly from <Picture 1>, preserving the original starting subject appearance, environment, lighting, wardrobe, and composition.`);
         } else {
-          parts.push(`referencing starting character features from <Picture 1>,`);
+          parts.push(`The opening frame references starting character features from <Picture 1>.`);
         }
+      } else if (mode === 'L2VA') {
+        parts.push(`The scene builds toward the final frame which resolves into <Picture 1>.`);
       }
     } else {
       const timeStamp = TimelineEngine.formatTimestamp(shot.startTimeSeconds);
       const transitionWord = shot.transitionToNext === 'cross-dissolve' ? 'cross-dissolves to' : 'cuts to';
-      parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord}`);
+      if (isImageMode && isStrict) {
+        parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord} a new angle while preserving the same room, wardrobe, lighting, and appearance from <Picture 1>.`);
+      } else {
+        parts.push(`[Shot ${shotNum}] At ${timeStamp}, the camera ${transitionWord} a new framing.`);
+      }
     }
 
-    // Environment & Setting
+    // Environment & Setting (omit in Shot 1 strict mode if reference photo is authoritative)
     if (shot.environment) {
       const env = shot.environment;
       const rawEnvParts = [env.location, env.lighting, env.weather, env.timeOfDay, env.atmosphere].filter(Boolean) as string[];
       if (rawEnvParts.length > 0 && rawEnvParts[0]) {
-        // In Strict Mode for Shot 1, omit invented location text that overrides Picture 1
-        const shouldOmitEnv = isStrict && index === 0 && (mode === 'I2VA' || mode === 'FL2VA');
+        const shouldOmitEnv = isStrict && index === 0 && isImageMode;
         if (!shouldOmitEnv) {
           const cleanLocation = rawEnvParts[0].replace(/^(a|an|the)\s+/i, '');
           const cleanedParts = [cleanLocation, ...rawEnvParts.slice(1)].map((p, idx) => {
@@ -87,18 +114,19 @@ export class PromptCompiler {
             return s;
           });
           const joinedEnv = cleanedParts.join(', ');
-          parts.push(`set in a ${joinedEnv} environment.`);
+          if (!joinedEnv.toLowerCase().includes('picture 1') && !joinedEnv.toLowerCase().includes('setting from')) {
+            parts.push(`Set in a ${joinedEnv} environment.`);
+          }
         }
       }
     }
 
-    // Character & Identity
+    // Character Staging & Identity
     if (shot.character) {
       const char = shot.character;
       let charDesc = char.identity || 'the subject';
 
-      // In Strict Mode for image-based generations, sanitize visual attribute text that contradicts Picture 1
-      if (isStrict && (mode === 'I2VA' || mode === 'FL2VA' || mode === 'L2VA')) {
+      if (isStrict && isImageMode) {
         if (/hair|eyes|skin|sweater|shirt|top|jacket|dress|pants|jeans|hoodie|outfit|wearing|tied back|blonde|brunette|loungewear|camisole|clothing|apparel|robe|vest|coat|attire/i.test(charDesc)) {
           charDesc = 'the subject from <Picture 1>';
         }
@@ -106,44 +134,45 @@ export class PromptCompiler {
 
       const speakerTag = char.speakerId ? ` (${char.speakerId})` : '';
 
-      const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim().replace(/\.+$/, '');
-      let poseStr = '';
-      if (rawPose) {
-        if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing|backing|pressing|standing|shoulders|body|head|arms|hands)\b/i.test(rawPose)) {
-          poseStr = ` ${rawPose}`;
-        } else if (/^(at|on|in|near|by|under|over|beside|facing)\b/i.test(rawPose)) {
-          poseStr = ` standing ${rawPose}`;
-        } else {
-          poseStr = ` standing in ${rawPose}`;
-        }
-      }
+      // Check if rawActionDescription already contains full sentence prose
+      const hasActionProse = shot.rawActionDescription && shot.rawActionDescription.trim().length > 15;
 
-      const rawExpr = (char.expression || '').replace(/^(a|an|the)\s+/i, '').trim().replace(/\.+$/, '');
-      let exprStr = '';
-      if (rawExpr) {
-        if (/\bexpression\b/i.test(rawExpr) || /\beyes\b/i.test(rawExpr) || /\bgasp\b/i.test(rawExpr) || /\bintensifies\b/i.test(rawExpr) || /\bwelling\b/i.test(rawExpr)) {
-          exprStr = `, ${rawExpr}`;
-        } else if (/^[aeiou]/i.test(rawExpr)) {
-          exprStr = ` with an ${rawExpr} expression`;
-        } else {
-          exprStr = ` with a ${rawExpr} expression`;
+      if (!hasActionProse) {
+        const rawPose = (char.pose || '').replace(/^standing\s+(in\s+|on\s+|at\s+)?/i, '').trim().replace(/\.+$/, '');
+        let poseStr = '';
+        if (rawPose && !rawPose.toLowerCase().includes('starting exactly from') && !rawPose.toLowerCase().includes('picture 1')) {
+          if (/^(kneeling|sitting|perched|crouched|lying|leaning|walking|running|drawn|facing|backing|pressing|standing|shoulders|body|head|arms|hands)\b/i.test(rawPose)) {
+            poseStr = ` ${rawPose}`;
+          } else if (/^(at|on|in|near|by|under|over|beside|facing)\b/i.test(rawPose)) {
+            poseStr = ` standing ${rawPose}`;
+          } else {
+            poseStr = ` standing in ${rawPose}`;
+          }
         }
-      }
 
-      const motionStr = char.motion ? `, ${char.motion}` : '';
-      parts.push(`${charDesc}${speakerTag}${poseStr}${exprStr}${motionStr}.`);
+        const rawExpr = (char.expression || '').replace(/^(a|an|the)\s+/i, '').trim().replace(/\.+$/, '');
+        let exprStr = '';
+        if (rawExpr) {
+          if (/\bexpression\b/i.test(rawExpr) || /\beyes\b/i.test(rawExpr) || /\bgasp\b/i.test(rawExpr) || /\bintensifies\b/i.test(rawExpr) || /\bwelling\b/i.test(rawExpr)) {
+            exprStr = `, ${rawExpr}`;
+          } else if (/^[aeiou]/i.test(rawExpr)) {
+            exprStr = ` with an ${rawExpr} expression`;
+          } else {
+            exprStr = ` with a ${rawExpr} expression`;
+          }
+        }
+
+        const motionStr = char.motion && !char.motion.toLowerCase().includes('starting exactly') ? `, ${char.motion}` : '';
+        parts.push(`${charDesc}${speakerTag}${poseStr}${exprStr}${motionStr}.`);
+      }
     }
 
-    // Action Description
+    // Action Prose
     if (shot.rawActionDescription && shot.rawActionDescription.trim().length > 0) {
       parts.push(shot.rawActionDescription.trim());
     }
 
-    // Camera Motion
-    const cameraSentence = CameraEngine.compileCameraSentence(shot.camera);
-    parts.push(cameraSentence);
-
-    // Spoken Dialogue Tagging: <d>[Language] Dialogue</d>
+    // Spoken Dialogue Inline Tagging: says: <d>[Language] Dialogue</d>
     if (shot.dialogue && shot.dialogue.hasDialogue && shot.dialogue.dialogueText.trim().length > 0) {
       const d = shot.dialogue;
       const speakerId = d.speakerId || 'S1';
@@ -160,6 +189,36 @@ export class PromptCompiler {
       }
     }
 
-    return parts.join(' ').replace(/,\s*,/g, ',').replace(/\.\./g, '.').replace(/,\s*\./g, '.');
+    // Camera Motion (One clean sentence at the end of the shot)
+    const cameraSentence = CameraEngine.compileCameraSentence(shot.camera);
+    if (cameraSentence && cameraSentence.trim()) {
+      parts.push(cameraSentence);
+    }
+
+    // Sanitize and deduplicate
+    const rawJoined = parts.join(' ');
+    return PromptCompiler.sanitizeShotProse(rawJoined);
+  }
+
+  /**
+   * Sanitizes shot prose to remove repetitive template fragments and stuttering phrases.
+   */
+  private static sanitizeShotProse(text: string): string {
+    return text
+      // Fix "standing in Starting..."
+      .replace(/standing in Starting /gi, 'Starting ')
+      // Fix "set in a setting from <Picture 1>, the lighting from <Picture 1>, as depicted in <Picture 1>, as depicted in <Picture 1>"
+      .replace(/(?:as depicted in <Picture 1>|the lighting from <Picture 1>|setting from <Picture 1>)(?:,\s*)?/gi, '')
+      .replace(/set in a\s*,?\s*environment\./gi, '')
+      // Fix duplicate "as depicted in <Picture 1>"
+      .replace(/(<Picture 1>)\s*,\s*as depicted in\s*<Picture 1>/gi, '$1')
+      // Fix repetitive camera zoom sentences
+      .replace(/(The camera [^.]+?\.)\s*The camera \1/gi, '$1')
+      // Fix duplicate periods & whitespace
+      .replace(/\s+,\s+/g, ', ')
+      .replace(/,\s*\./g, '.')
+      .replace(/\.\s*\./g, '.')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 }
