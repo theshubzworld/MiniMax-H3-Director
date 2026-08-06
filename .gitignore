@@ -55,6 +55,7 @@ ehthumbs.db
 # Agent / AI local workspace caches
 .agents/
 .gemini/
+.planning/
 
 # Workflow Reference JSON files
 workflow reference/
