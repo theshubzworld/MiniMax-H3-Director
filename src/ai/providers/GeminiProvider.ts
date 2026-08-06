@@ -280,82 +280,55 @@ export class GeminiProvider implements AIProvider {
     const imageParts = await this.prepareImageParts(params.images);
 
     const isCreative = params.referenceMode === 'creative';
-    const imageRuleText = params.images && params.images.length > 0
+    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
+
+    const imageInstruction = params.images && params.images.length > 0
       ? isCreative
-        ? `CRITICAL I2V CREATIVE IDENTITY MODE RULES:
-Inspect the attached keyframe image(s) (Picture 1).
-- Picture 1 is used STRICTLY for character identity, face shape, and hair style.
-- You ARE ALLOWED to re-place the character into a NEW environment, wardrobe, and lighting requested by the user's idea ("${params.idea}") and style ("${params.narrativeStyle}").`
-        : `CRITICAL I2V STRICT KEYFRAME MODE RULES:
-Inspect the attached keyframe image(s) (Picture 1).
-- Picture 1 is the AUTHORITATIVE SOURCE OF TRUTH for location, environment, room, lighting, wardrobe, pose, and subject appearance.
-- If Picture 1 is a composite/grid containing multiple panels or angles (e.g. 3x3 grid or multiple photo panels), inspect ALL panels to maintain 100% visual identity (armor, tiara, bracelets, sword, shield, leather straps) and draw shot action/poses directly from the grid!
-- Shot 1 MUST begin EXACTLY from Picture 1's starting pose and setting.
-- DO NOT rename clothing or invent conflicting locations.
-- Refer to the subject strictly as "the subject from <Picture 1>".
-- IF THE USER IDEA REQUESTS NARRATION, DIALOGUE, OR VOICEOVER (e.g., "add narration dialogue"), YOU MUST POPULATE THE dialogue OBJECT FOR 1 OR MORE SHOTS WITH CONCISE SPOKEN NARRATION PHRASES (1-4 words max per short shot).`
+        ? `Reference Image (<Picture 1>): Use <Picture 1> for character identity. You may place the character into a new setting or outfit requested by the idea ("${params.idea}").`
+        : `Reference Image (<Picture 1>): Use <Picture 1> for character appearance, outfit, and starting location. Refer to the character as "the subject from <Picture 1>". If <Picture 1> is a multi-panel grid image, draw character poses and action beats directly from the panels.`
       : '';
 
-    const modeDirective = params.mode === 'I2VA'
-      ? `MINIMAX H3 I2VA MODE CONTRACT:
-Shot 1 begins EXACTLY referencing <Picture 1> at 0.00 seconds into the target video. Focus Shot 1 on initial starting posture and immediate opening motion evolving forward from <Picture 1>.`
+    const modeInstruction = params.mode === 'I2VA'
+      ? `Mode: Image-to-Video. Shot 1 starts from <Picture 1> at 0.00s.`
       : params.mode === 'FL2VA'
-      ? `MINIMAX H3 FL2VA MODE CONTRACT:
-Shot 1 aligns referencing <Picture 1> at 0.00 seconds, and final Shot ${params.shotsCount} aligns referencing <Picture 2> at the ending mark (${params.durationSeconds}s). Ensure physical motion and narrative progression continuously connect Picture 1 to Picture 2.`
+      ? `Mode: First-Last Keyframe. Shot 1 aligns with <Picture 1>, and Shot ${params.shotsCount} ends at <Picture 2>.`
       : params.mode === 'L2VA'
-      ? `MINIMAX H3 L2VA MODE CONTRACT:
-Final Shot ${params.shotsCount} ends referencing <Picture 1> at the ending mark (${params.durationSeconds}s). Staging and action across shots build toward the exact closing posture of <Picture 1>.`
-      : `MINIMAX H3 T2VA MODE CONTRACT:
-Generate a 100% text-driven continuous motion sequence with no reference image dependencies.`;
+      ? `Mode: Last-Frame. Shot ${params.shotsCount} ends at <Picture 1>.`
+      : `Mode: Text-to-Video. Continuous motion sequence.`;
 
-    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
-    const dialoguePacingRule = `CRITICAL SPOKEN DIALOGUE & VOICEOVER PACING GUIDELINES:
-Total video duration is ${params.durationSeconds}s across ${params.shotsCount} shots (${shotDuration.toFixed(2)}s per shot).
-- Human speech speed is ~2.5 to 3.0 words per second.
-- Max dialogue per shot: ${maxWordsPerShot} words max.
-- Keep each shot's dialogue concise (1 to ${maxWordsPerShot} short words max per shot).
-- WHEN DIALOGUE/NARRATION IS REQUESTED OR INTENDED: Generate short, punchy 2-4 word spoken narration lines for shots across the storyboard! Do NOT artificially restrict dialogue to only 1 shot.
-- NEVER generate long 12-16 word monologues for short 1-2s shots. Short, atmospheric 2-4 word lines allow speech to sound 100% natural without audio fast-forwarding!
-- CRITICAL: DO NOT copy example placeholder text strings. ALWAYS compose 100% ORIGINAL, unique narration dialogue lines tailored specifically to the user's story topic ("${params.idea}").`;
+    const promptText = `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video based on: "${params.idea}".
 
-    const promptText = `You are an AI Video Director for MiniMax H3.
-Generate a complete, structured ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video in ${params.mode} mode based on idea: "${params.idea}".
-${modeDirective}
-${imageRuleText}
-${dialoguePacingRule}
+${modeInstruction}
+${imageInstruction}
 
-You MUST auto-generate ALL fields for ALL ${params.shotsCount} shots:
-1. camera: { motionType (Push In/Pull Out/Arc Shot/Tracking Shot/etc), amplitude (small amplitude/medium amplitude/large amplitude), speed (slow speed/normal speed/fast speed), targetSubject }
-2. character: { speakerId ("S1"), identity, pose, expression, motion }
-3. environment: { location, lighting, weather, timeOfDay, atmosphere }
-4. rawActionDescription: Cinematic, highly descriptive action prose unique for every shot while keeping character identity consistent.
-5. dialogue (OPTIONAL/WHEN REQUESTED): { hasDialogue: true, speakerId: "S1", languageTag: "English", dialogueText: "Original unique narration phrase matching user idea", isOffScreenVoiceover: true } — If idea requests narration/voiceover/dialogue, populate dialogueText with short phrases (1-4 words max per short shot).
-6. audio: Soundscape layers and background music score.
+Audio & Dialogue Guidelines:
+- If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
+- Include realistic foley soundscape layers and a matching background music score.
 
 Return JSON format:
 {
   "shots": [
     {
       "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her eyes" },
-      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "combat stance", "expression": "intense glare", "motion": "slowly raises weapon" },
-      "environment": { "location": "cinematic setting", "lighting": "atmospheric lighting", "weather": "clear", "timeOfDay": "twilight", "atmosphere": "cinematic tension" },
-      "rawActionDescription": "Action prose unique to user story idea.",
-      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "<ORIGINAL_UNIQUE_STORY_NARRATION>", "isOffScreenVoiceover": true }
+      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "standing stance", "expression": "focused glare", "motion": "slowly turns head" },
+      "environment": { "location": "cinematic setting", "lighting": "dramatic lighting", "weather": "clear", "timeOfDay": "twilight", "atmosphere": "tense" },
+      "rawActionDescription": "Action prose tailored to story idea.",
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": true }
     }
   ],
   "audio": {
     "isSilent": false,
     "soundscapeLayers": [
-      { "category": "weather", "description": "Heavy rain drumming on metal walkways.", "enabled": true }
+      { "category": "weather", "description": "Atmospheric ambient soundscape.", "enabled": true }
     ],
     "music": {
       "hasMusic": true,
       "genreStyle": "${params.narrativeStyle}",
-      "instrumentation": ["analog synth", "industrial drums"],
-      "tempo": "fast",
-      "dynamics": "building crescendo",
-      "rhythmPattern": "driving rhythm",
-      "layeringDescription": "Sub-bass pad pulsating underneath."
+      "instrumentation": ["piano", "strings"],
+      "tempo": "normal",
+      "dynamics": "building",
+      "rhythmPattern": "flowing",
+      "layeringDescription": "Ambient pad underneath."
     }
   }
 }`;
