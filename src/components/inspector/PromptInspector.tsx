@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2 } from 'lucide-react';
+import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2, Bookmark } from 'lucide-react';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 import { AIEngine } from '../../ai/AIEngine';
 
 export const PromptInspector: React.FC = () => {
-  const { project, diagnostics, autoFixProject, setProject } = useStudioStore();
+  const { project, diagnostics, autoFixProject, setProject, savePromptToLibrary } = useStudioStore();
   const [copied, setCopied] = useState(false);
   const [fixed, setFixed] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [isPolishingCam, setIsPolishingCam] = useState(false);
   const [isEnhancingAudio, setIsEnhancingAudio] = useState(false);
   const [activeTab, setActiveTab] = useState<'prompt' | 'health' | 'json'>('prompt');
@@ -17,6 +18,12 @@ export const PromptInspector: React.FC = () => {
     navigator.clipboard.writeText(project.compiledPrompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveToLibrary = () => {
+    savePromptToLibrary();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   const handleAutoFix = () => {
@@ -84,6 +91,20 @@ export const PromptInspector: React.FC = () => {
           >
             {fixed ? <Check className="w-3.5 h-3.5" /> : <Wrench className="w-3.5 h-3.5" />}
             <span>{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSaveToLibrary}
+            className={`px-2.5 py-1 border text-xs font-semibold rounded-lg flex items-center gap-1 transition-all ${
+              saved
+                ? 'bg-purple-500 text-zinc-950 border-purple-400 font-bold shadow-md'
+                : 'bg-purple-950/60 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
+            }`}
+            title="Save Prompt to Library"
+          >
+            {saved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+            <span>{saved ? 'Saved!' : 'Save'}</span>
           </button>
 
           <button

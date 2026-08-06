@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Saved Prompt Library System (`PromptLibraryPanel.tsx`)**: Created a dedicated Prompt Library view and local storage persistence engine (`savedPrompts`). Includes instant search/filtering, category tabs (`All`, `Favorites ⭐`, `I2VA`, `T2VA`, `FL2VA`, `L2VA`), 1-click prompt copying, single-click scene rehydrating into the studio editor, and 💾 **Save to Library** buttons across `PromptInspector` and `AIDirectorPanel`.
 - **Couple Romance Story Seed Presets**: Added 6 dedicated romantic couple story seeds in `AIDirectorPanel.tsx` covering bedroom linen sunbeams, candlelit marble bath spa, sun-drenched kitchen morning coffee, sunset beach stroll, rainy window blanket snuggle, and wildflower meadow picnic.
 - **30+ Audio-Equipped Story Seed Presets**: Expanded `STORY_SEED_PRESETS` in `AIDirectorPanel.tsx` to 30+ rich cinematic presets containing explicit spoken dialogue/narration, foley soundscape cues, and musical scoring instructions across diverse genres.
 - **Spoken Dialogue Pacing & Speech Rate Safeguard**: Implemented speech rate duration safeguards across `GeminiProvider.ts`, `PromptValidator.ts`, and `PromptOptimizer.ts`. Spoken dialogue is strictly scaled to shot duration ($\le \lfloor \text{durationSeconds} \times 2.5 \rfloor$ words) to prevent fast-forwarded/chipmunk audio artifacts.

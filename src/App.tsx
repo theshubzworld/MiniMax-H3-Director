@@ -14,6 +14,7 @@ import { AudioBuilder } from './components/builders/AudioBuilder';
 import { MusicBuilder } from './components/builders/MusicBuilder';
 import { SceneCreatorPanel } from './components/scene/SceneCreatorPanel';
 import { SceneGalleryView } from './components/gallery/SceneGalleryView';
+import { PromptLibraryPanel } from './components/library/PromptLibraryPanel';
 import { useStudioStore } from './store/StudioStore';
 
 export const App: React.FC = () => {
@@ -36,6 +37,8 @@ export const App: React.FC = () => {
           {activeView === 'scene-creator' && <SceneCreatorPanel />}
 
           {activeView === 'scene-gallery' && <SceneGalleryView />}
+
+          {activeView === 'prompt-library' && <PromptLibraryPanel />}
 
           {activeView === 'storyboard' && (
             <div className="space-y-4 max-w-5xl mx-auto">

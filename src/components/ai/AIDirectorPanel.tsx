@@ -107,10 +107,21 @@ export const AIDirectorPanel: React.FC = () => {
     );
 
     if (result.shots && result.shots.length > 0) {
-      setProject({
+      const updatedProj = {
         ...project,
         shots: result.shots as any,
         audio: result.audio ? { ...project.audio, ...result.audio } : project.audio,
+      };
+      setProject(updatedProj);
+
+      // Auto-save generated storyboard prompt to Prompt Library
+      useStudioStore.getState().savePromptToLibrary({
+        title: idea ? (idea.length > 45 ? `${idea.substring(0, 45)}...` : idea) : `${narrativeStyle} Scene`,
+        idea: idea || project.description || `${narrativeStyle} Scene`,
+        narrativeStyle,
+        mode: project.settings.mode,
+        shotsCount: currentShotCount,
+        durationSeconds: totalDuration,
       });
     }
 

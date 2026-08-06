@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { StudioProject, MiniMaxMode, AspectRatio, VisualStyle, ReferenceImage } from '../types/project';
+import { StudioProject, MiniMaxMode, AspectRatio, VisualStyle, ReferenceImage, SavedPrompt } from '../types/project';
 import { Shot } from '../types/shot';
 import { AudioSettings } from '../types/audio';
 import { DiagnosticsResult } from '../types/validation';
@@ -100,11 +100,12 @@ export interface DirectorPlanDraft {
 interface StudioState {
   project: StudioProject;
   currentStep: number;
-  activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy' | 'scene-creator' | 'scene-gallery';
+  activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy' | 'scene-creator' | 'scene-gallery' | 'prompt-library';
   diagnostics: DiagnosticsResult;
   proposedPromptDiff: string | null;
   theme: 'dark' | 'light';
   sceneKeyframes: GeneratedKeyframe[];
+  savedPrompts: SavedPrompt[];
   isGeneratingKeyframes: boolean;
   isEnhancingPrompt: boolean;
   generationStatusMessage: string | null;
@@ -137,6 +138,12 @@ interface StudioState {
   setGenerationStatus: (status: { isGenerating?: boolean; isEnhancing?: boolean; message?: string | null }) => void;
   setDirectorPlanDraft: (draft: DirectorPlanDraft | null) => void;
   setActiveSceneStep: (step: 1 | 2 | 3) => void;
+  
+  // Prompt Library Actions
+  savePromptToLibrary: (customPrompt?: Partial<SavedPrompt>) => void;
+  deleteSavedPrompt: (id: string) => void;
+  toggleFavoritePrompt: (id: string) => void;
+  loadSavedPromptIntoStudio: (savedPrompt: SavedPrompt) => void;
 }
 
 // LocalStorage Persistence Helpers
@@ -206,11 +213,30 @@ const loadHydratedDraft = (): DirectorPlanDraft | null => {
   return null;
 };
 
+const loadHydratedSavedPrompts = (): SavedPrompt[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem('minimax_saved_prompts');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return [];
+};
+
+const saveSavedPromptsToLocalStorage = (prompts: SavedPrompt[]) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('minimax_saved_prompts', JSON.stringify(prompts));
+  } catch (e) {
+    console.warn('[StudioStore] Failed to save savedPrompts to localStorage', e);
+  }
+};
+
 export const useStudioStore = create<StudioState>((set, get) => {
   const initialProject = loadHydratedProject();
   const initialDiag = PromptValidator.validate(initialProject);
   const initialTheme = (localStorage.getItem('minimax_studio_theme') as 'dark' | 'light') || 'dark';
   const initialDraft = loadHydratedDraft();
+  const initialSavedPrompts = loadHydratedSavedPrompts();
   const initialView = (localStorage.getItem('minimax_active_view') as StudioState['activeView']) || 'wizard';
   const initialSceneStep = (Number(localStorage.getItem('minimax_active_scene_step') || 1) as 1 | 2 | 3);
   const initialStep = Number(localStorage.getItem('minimax_current_step') || 1);
@@ -237,6 +263,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
     proposedPromptDiff: null,
     theme: initialTheme,
     sceneKeyframes: [],
+    savedPrompts: initialSavedPrompts,
     isGeneratingKeyframes: false,
     isEnhancingPrompt: false,
     generationStatusMessage: null,
@@ -545,6 +572,81 @@ export const useStudioStore = create<StudioState>((set, get) => {
       } else {
         addReference(newRef);
       }
+    },
+
+    savePromptToLibrary: (customPromptData) => {
+      const { project, directorPlanDraft, savedPrompts } = get();
+      const compiled = customPromptData?.compiledPrompt || project.compiledPrompt || PromptCompiler.compile(project);
+      
+      if (!compiled || compiled.trim().length === 0) return;
+
+      const title = customPromptData?.title || directorPlanDraft?.idea || project.name || `${project.settings.style} Scene`;
+      const idea = customPromptData?.idea || directorPlanDraft?.idea || project.description || 'Custom Director Scene Prompt';
+
+      // Deduplicate if identical compiled prompt already exists
+      const existingIdx = savedPrompts.findIndex((p) => p.compiledPrompt.trim() === compiled.trim());
+      if (existingIdx !== -1) {
+        // Already saved, move to top
+        const existing = savedPrompts[existingIdx];
+        const updatedList = [existing, ...savedPrompts.filter((_, i) => i !== existingIdx)];
+        set({ savedPrompts: updatedList });
+        saveSavedPromptsToLocalStorage(updatedList);
+        return;
+      }
+
+      const newSavedPrompt: SavedPrompt = {
+        id: `prompt-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        title,
+        idea,
+        compiledPrompt: compiled,
+        narrativeStyle: customPromptData?.narrativeStyle || project.settings.style,
+        mode: customPromptData?.mode || project.settings.mode,
+        shotsCount: customPromptData?.shotsCount || project.shots.length,
+        durationSeconds: customPromptData?.durationSeconds || project.settings.durationSeconds,
+        aspectRatio: customPromptData?.aspectRatio || project.settings.aspectRatio,
+        createdAt: new Date().toISOString(),
+        isFavorite: false,
+        tags: [project.settings.mode, project.settings.style],
+      };
+
+      const updated = [newSavedPrompt, ...savedPrompts];
+      set({ savedPrompts: updated });
+      saveSavedPromptsToLocalStorage(updated);
+    },
+
+    deleteSavedPrompt: (id) => {
+      const { savedPrompts } = get();
+      const updated = savedPrompts.filter((p) => p.id !== id);
+      set({ savedPrompts: updated });
+      saveSavedPromptsToLocalStorage(updated);
+    },
+
+    toggleFavoritePrompt: (id) => {
+      const { savedPrompts } = get();
+      const updated = savedPrompts.map((p) => (p.id === id ? { ...p, isFavorite: !p.isFavorite } : p));
+      set({ savedPrompts: updated });
+      saveSavedPromptsToLocalStorage(updated);
+    },
+
+    loadSavedPromptIntoStudio: (savedPrompt) => {
+      const { project } = get();
+      set({
+        project: {
+          ...project,
+          name: savedPrompt.title,
+          description: savedPrompt.idea,
+          compiledPrompt: savedPrompt.compiledPrompt,
+          settings: {
+            ...project.settings,
+            mode: savedPrompt.mode,
+            style: savedPrompt.narrativeStyle,
+            durationSeconds: savedPrompt.durationSeconds || project.settings.durationSeconds,
+            aspectRatio: (savedPrompt.aspectRatio as any) || project.settings.aspectRatio,
+          },
+        },
+        activeView: 'studio',
+      });
+      get().recompileAndValidate();
     },
   };
 });

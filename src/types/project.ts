@@ -93,6 +93,21 @@ export interface StudioProject {
   compiledPrompt: string;
 }
 
+export interface SavedPrompt {
+  id: string;
+  title: string;
+  idea: string;
+  compiledPrompt: string;
+  narrativeStyle: string;
+  mode: MiniMaxMode;
+  shotsCount: number;
+  durationSeconds: number;
+  aspectRatio: string;
+  createdAt: string;
+  tags?: string[];
+  isFavorite?: boolean;
+}
+
 export type SceneGridLayout = 'single' | '2x1_dual' | '2x2_grid' | '3x3_grid';
 
 export type QualityResolution = '1K' | '2K' | '4K' | '0.5K';

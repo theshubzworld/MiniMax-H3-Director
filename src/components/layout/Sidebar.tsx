@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus, Coffee } from 'lucide-react';
+import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus, Coffee, Bookmark } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const { activeView, setActiveView, addShot, sceneKeyframes, setActiveSceneStep } = useStudioStore();
@@ -83,6 +83,24 @@ export const Sidebar: React.FC = () => {
             >
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>Diagnostics Engine</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveView('prompt-library')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                activeView === 'prompt-library'
+                  ? 'bg-gradient-to-r from-purple-500/20 to-indigo-500/10 text-purple-300 border border-purple-500/40 font-bold'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Bookmark className="w-4 h-4 text-purple-400" />
+                <span>Saved Prompt Library</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-mono font-extrabold border border-purple-500/40">
+                {useStudioStore().savedPrompts?.length || 0}
+              </span>
             </button>
 
             <button
