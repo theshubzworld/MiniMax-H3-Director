@@ -23,3 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - **Zero Secret Leakage Verification**: Verified all API key resolutions resolve from `localStorage` or `import.meta.env`. Zero hardcoded credentials committed.
+
+### Governance
+- **Persisted 3 Prompt Engineering Rules**: Added double-newline section layout, dedicated dialogue section, and zero template stuttering rules to `.agents/AGENTS.md`.
