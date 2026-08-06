@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **30+ Audio-Equipped Story Seed Presets**: Expanded `STORY_SEED_PRESETS` in `AIDirectorPanel.tsx` to 30 rich cinematic presets containing explicit spoken dialogue/narration, foley soundscape cues, and musical scoring instructions across diverse genres.
+- **Couple Romance Story Seed Presets**: Added 6 dedicated romantic couple story seeds in `AIDirectorPanel.tsx` covering bedroom linen sunbeams, candlelit marble bath spa, sun-drenched kitchen morning coffee, sunset beach stroll, rainy window blanket snuggle, and wildflower meadow picnic.
+- **30+ Audio-Equipped Story Seed Presets**: Expanded `STORY_SEED_PRESETS` in `AIDirectorPanel.tsx` to 30+ rich cinematic presets containing explicit spoken dialogue/narration, foley soundscape cues, and musical scoring instructions across diverse genres.
 - **Spoken Dialogue Pacing & Speech Rate Safeguard**: Implemented speech rate duration safeguards across `GeminiProvider.ts`, `PromptValidator.ts`, and `PromptOptimizer.ts`. Spoken dialogue is strictly scaled to shot duration ($\le \lfloor \text{durationSeconds} \times 2.5 \rfloor$ words) to prevent fast-forwarded/chipmunk audio artifacts.
 - **Expanded Storyboard Shot Limit (Up to 9 Shots)**: Expanded maximum storyboard shot capacity from 6 to 9 shots across `StudioStore.ts`, `AIDirectorPanel.tsx`, and `HorizontalTimeline.tsx`.
 - **Live-Action Realism Primary Motion Preset**: Added `Live-Action Realism` as the primary #1 default narrative style preset in `AIDirectorPanel.tsx` for 100% natural real-life human motion, 35mm practical lighting, and authentic physical foley.

@@ -30,6 +30,12 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
 ];
 
 const STORY_SEED_PRESETS = [
+  { label: '🛏️ Bedroom Sunbeam Romance', prompt: 'A romantic couple waking up in white linen sheets as warm morning sunbeams stream through linen curtains. Include whispered intimate dialogue ("Good morning."), soft sheet rustle foley, and acoustic guitar score.' },
+  { label: '🛁 Candlelit Bath Spa Romance', prompt: 'A romantic couple relaxing in a steamy freestanding marble bathtub surrounded by glowing candles and rose petals. Include soft whispered dialogue ("So peaceful."), gentle water splash foley, and ambient piano music.' },
+  { label: '🏡 Kitchen Morning Coffee Romance', prompt: 'A couple laughing together in a sun-drenched modern kitchen while making morning coffee in silk loungewear. Include playful dialogue ("My turn to cook."), clinking coffee cups foley, and warm lo-fi lounge beats.' },
+  { label: '🌊 Sunset Beach Couple Romance', prompt: 'A couple strolling hand-in-hand along the shoreline during a vibrant golden-hour sunset as ocean waves lap their bare feet. Include romantic whispered voiceover ("Forever with you."), ocean waves foley, and ambient piano orchestra.' },
+  { label: '🌧️ Rainy Window Blanket Snuggle', prompt: 'A couple wrapped in a plush knit blanket on a window seat watching rain drum against glass with steaming mugs. Include cozy dialogue ("Stay right here."), rain drumming on glass foley, and acoustic folk music.' },
+  { label: '🌳 Wildflower Meadow Picnic', prompt: 'A couple lounging on a checkered blanket in a sun-dappled wildflower meadow under a large oak tree. Include happy shared laughter, warm summer breeze foley, and romantic acoustic guitar music.' },
   { label: '🏛️ Amazonian Battle & Narration', prompt: 'An Amazonian warrior princess in bronze armor standing before Greek temple pillars as sunlight glints off her sword. Include inspiring warrior narration, metal armor clanking foley, and orchestral brass music.' },
   { label: '🌅 Beach Sunset Waves & Voiceover', prompt: 'A serene woman walking along a wet sand shoreline during golden-hour sunset, her wrap catching sea breeze. Include soft reflective voiceover ("So peaceful here."), gentle ocean waves, and ambient piano music.' },
   { label: '🗡️ Cyborg Katana Rain & Dialogue', prompt: 'A female cyborg warrior drawing a glowing plasma katana in a rain-soaked neon Neo-Tokyo alleyway. Include spoken battle dialogue ("System online."), sizzle rain foley, and heavy dark synthwave music.' },
