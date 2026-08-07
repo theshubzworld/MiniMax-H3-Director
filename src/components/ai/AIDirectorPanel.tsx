@@ -10,6 +10,40 @@ export interface NarrativePresetItem {
   category: 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic';
 }
 
+export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
+  'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
+  'Raw Third-Person Mobile': 'Candid 3rd-person handheld mobile camera tracking, natural depth of field, subtle handheld micro-shake, and authentic unpolished room lighting.',
+  'Candid Third-Person Sensual': 'Soft 3rd-person handheld camera tracking around subject contours, backlit golden sunbeams through translucent fabrics, and warm tungsten lamp falloff.',
+  'Raw Smartphone Amateur': 'Direct mobile phone flash glow, slight sensor grain noise, casual unpolished indoor lighting, and authentic everyday Instagram story video physics.',
+  'Amateur Mobile Vlog': 'Arm-length handheld selfie angle, natural outdoor daylight glare, subtle focus hunting, and casual conversational vlog movement.',
+  'Candid Selfie Motion': 'Dim mobile screen glow, Instagram story flash highlights, subtle facial micro-expressions, and authentic front-camera mobile noise.',
+  'Cinematic Film': 'Dramatic 35mm anamorphic widescreen framing, moody chiaroscuro shadow falloff, cinematic depth of field, and soft warm tungsten key lighting.',
+  'Sultry Romance': 'Soft warm candlelit glow, sensual low-key side lighting, slow intimate camera tracking, and elegant silk/velvet aesthetic.',
+  'Sensual Intimacy': 'Dim romantic lamplight, soft warm rim light tracing subject contours, gentle breathing motion, and moody twilight bedroom atmosphere.',
+  'Steamy Thriller': 'Steamy neon magenta backlight, wet skin reflections, high-contrast low-key shadows, and intense dramatic camera push-in.',
+  'Velvet Boudoir': 'Soft velvet lamp diffusion, golden amber key lighting, warm shadow falloff, and luxurious boudoir camera movements.',
+  'Erotic Romance': 'Dim candlelit silhouette glow, warm intimate side lighting, soft atmospheric twilight key, and lingering romantic camera pans.',
+  'Commercial': 'Crisp 3-point daylight studio lighting, vibrant color fidelity, high-contrast product rim light, and smooth motorized gimbal pans.',
+  'Fashion': 'High-key studio flash lighting, glossy editorial reflections, obsidian mirror runway floor, and dramatic high-fashion posing dynamics.',
+  'Action': 'Fast-paced kinetic camera tracking, strobing emergency alert spotlights, fiery explosion contrast, and high-impact physical stunt beats.',
+  'Music Video': 'Rhythmic camera cuts, energetic lens flares, neon cyan and magenta backlighting, and stylised slow-motion performance beats.',
+  'Documentary': 'Authentic ambient golden sunlight, handheld observational camera tracking, natural overcast diffusion, and unscripted real-world atmosphere.',
+  'Product': 'Macro close-up lens detail, soft studio lightbox diffusion, 360-degree turntable motion, and pristine surface texture highlights.',
+  'Travel': 'Sweeping 4K drone aerials, vibrant golden hour sunbeams, immersive environmental soundscapes, and panoramic landscape vistas.',
+  'Anime': '2D cel-shaded artwork, dramatic high-contrast rim light, volumetric atmospheric sunbeams, and expressive anime action keyframes.',
+  'Sci-Fi Thriller': 'Cold blue neon telemetry lights, volumetric smoke diffusion, metallic reflections, and suspenseful slow dolly tracking.',
+  'Dark Fantasy': 'Gothic chiaroscuro key lighting, ancient stone architecture, atmospheric fog diffusion, and eerie moonlit shadows.',
+  'Horror Suspense': 'Harsh flickering low-key spotlights, deep pitch-black shadows, slow creeping camera zooms, and unsettling atmospheric tension.',
+  'Romance Drama': 'Golden hour sunset rim light, warm lens flares, emotional close-up framing, and soft shallow depth-of-field blur.',
+  'Gaming Trailer': 'Unreal Engine 5 volumetric lighting, high-contrast particle effects, hyper-detailed metallic shaders, and cinematic gaming cuts.',
+  'Sports Hype': 'High-speed 120fps slow-motion tracking, intense stadium floodlights, sweat droplet reflections, and explosive athletic kinetic motion.',
+  'Automotive Showcase': 'Low-angle chassis tracking, dynamic rolling wheel blur, specular chrome reflections, and sleek aerodynamic light trails.',
+  'Comedy Sketch': 'Bright even sitcom lighting, wide-angle static framing, clear character visibility, and expressive comedic timing beats.',
+  'Historical Epic': 'Authentic torchlight glow, sweeping period wardrobe details, natural outdoor overcast skies, and grand orchestral scale.',
+  'Superhero Origin': 'Dramatic low-angle hero framing, lightning arc rim lights, billowing cape dynamics, and epic cinematic scale.',
+  'Experimental Surrealism': 'Dreamlike liquid distortions, glowing color shifts, gravity-defying camera angles, and abstract optical light leaks.',
+};
+
 const NARRATIVE_PRESETS: NarrativePresetItem[] = [
   // 📱 Raw & Amateur Realism
   { id: 'Live-Action Realism', category: 'raw' },
@@ -433,6 +467,22 @@ export const AIDirectorPanel: React.FC = () => {
               );
             })}
           </div>
+
+          {/* Live Narrative Style Prompt Directive Preview Box */}
+          {NARRATIVE_STYLE_PREVIEWS[narrativeStyle] && (
+            <div className="mt-2.5 p-3 bg-zinc-950/80 border border-cyan-500/30 rounded-xl text-xs space-y-1 animate-fade-in shadow-sm">
+              <div className="flex items-center justify-between text-cyan-400 font-bold font-mono text-[11px] uppercase tracking-wider">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  Active Style Directive: {narrativeStyle}
+                </span>
+                <span className="text-[10px] text-zinc-500 font-sans font-normal">AI Physics & Camera Injection Preview</span>
+              </div>
+              <p className="text-zinc-300 font-mono leading-relaxed text-[11px]">
+                "{NARRATIVE_STYLE_PREVIEWS[narrativeStyle]}"
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Story Vision Seed Quick Presets */}
