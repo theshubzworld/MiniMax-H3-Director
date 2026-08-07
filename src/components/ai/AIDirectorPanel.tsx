@@ -5,39 +5,55 @@ import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
 import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
 
-const NARRATIVE_STYLES: NarrativeStyle[] = [
-  'Live-Action Realism',
-  'Raw Third-Person Mobile',
-  'Candid Third-Person Sensual',
-  'Raw Smartphone Amateur',
-  'Amateur Mobile Vlog',
-  'Candid Selfie Motion',
-  'Cinematic Film',
-  'Sultry Romance',
-  'Sensual Intimacy',
-  'Steamy Thriller',
-  'Velvet Boudoir',
-  'Erotic Romance',
-  'Commercial',
-  'Fashion',
-  'Action',
-  'Music Video',
-  'Documentary',
-  'Product',
-  'Travel',
-  'Anime',
-  'Sci-Fi Thriller',
-  'Dark Fantasy',
-  'Horror Suspense',
-  'Romance Drama',
-  'Gaming Trailer',
-  'Sports Hype',
-  'Automotive Showcase',
-  'Comedy Sketch',
-  'Historical Epic',
-  'Superhero Origin',
-  'Experimental Surrealism',
+export interface NarrativePresetItem {
+  id: NarrativeStyle;
+  category: 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic';
+}
+
+const NARRATIVE_PRESETS: NarrativePresetItem[] = [
+  // 📱 Raw & Amateur Realism
+  { id: 'Live-Action Realism', category: 'raw' },
+  { id: 'Raw Third-Person Mobile', category: 'raw' },
+  { id: 'Candid Third-Person Sensual', category: 'raw' },
+  { id: 'Raw Smartphone Amateur', category: 'raw' },
+  { id: 'Amateur Mobile Vlog', category: 'raw' },
+  { id: 'Candid Selfie Motion', category: 'raw' },
+
+  // 💋 Sultry & Romance
+  { id: 'Sultry Romance', category: 'sultry' },
+  { id: 'Sensual Intimacy', category: 'sultry' },
+  { id: 'Steamy Thriller', category: 'sultry' },
+  { id: 'Velvet Boudoir', category: 'sultry' },
+  { id: 'Erotic Romance', category: 'sultry' },
+  { id: 'Romance Drama', category: 'sultry' },
+
+  // 🎬 Cinema & Drama
+  { id: 'Cinematic Film', category: 'cinema' },
+  { id: 'Fashion', category: 'cinema' },
+  { id: 'Commercial', category: 'cinema' },
+  { id: 'Documentary', category: 'cinema' },
+  { id: 'Product', category: 'cinema' },
+  { id: 'Travel', category: 'cinema' },
+  { id: 'Historical Epic', category: 'cinema' },
+  { id: 'Comedy Sketch', category: 'cinema' },
+  { id: 'Experimental Surrealism', category: 'cinema' },
+
+  // ⚔️ Action & Sci-Fi
+  { id: 'Action', category: 'action' },
+  { id: 'Sci-Fi Thriller', category: 'action' },
+  { id: 'Dark Fantasy', category: 'action' },
+  { id: 'Horror Suspense', category: 'action' },
+  { id: 'Gaming Trailer', category: 'action' },
+  { id: 'Sports Hype', category: 'action' },
+  { id: 'Automotive Showcase', category: 'action' },
+  { id: 'Superhero Origin', category: 'action' },
+  { id: 'Music Video', category: 'action' },
+
+  // 🎨 Anime & Artistic
+  { id: 'Anime', category: 'artistic' },
 ];
+
+const NARRATIVE_STYLES: NarrativeStyle[] = NARRATIVE_PRESETS.map((p) => p.id);
 
 const STORY_SEED_PRESETS = [
   // 💃 Raw Third-Person Sensual & Sheer Fabrics (Single Person S1)
@@ -118,6 +134,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
   const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action' | 'cinematic'>('all');
+  const [narrativeCategoryFilter, setNarrativeCategoryFilter] = useState<'all' | 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic'>('all');
 
   const activeShots = project.shots;
   const currentShotCount = activeShots.length;
@@ -358,27 +375,60 @@ export const AIDirectorPanel: React.FC = () => {
           </div>
         </div>
 
-        {/* Narrative Style Selector (Expanded Presets) */}
+        {/* Narrative Style Selector (Categorized Presets) */}
         <div>
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center justify-between mb-2">
             <label className="text-xs text-zinc-300 font-bold block">Narrative & Motion Style Presets ({NARRATIVE_STYLES.length} Presets)</label>
             <span className="text-[10px] text-cyan-400 font-mono">Select "Live-Action Realism" for 100% natural human motion & real-world physics</span>
           </div>
-          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
-            {NARRATIVE_STYLES.map((style) => {
-              const isSelected = narrativeStyle === style;
+
+          {/* Narrative Category Tabs */}
+          <div className="flex flex-wrap gap-1.5 mb-2.5">
+            {[
+              { id: 'all', label: `✨ All (${NARRATIVE_PRESETS.length})` },
+              { id: 'raw', label: '📱 Raw & Amateur' },
+              { id: 'sultry', label: '💋 Sultry & Romance' },
+              { id: 'cinema', label: '🎬 Cinema & Drama' },
+              { id: 'action', label: '⚔️ Action & Sci-Fi' },
+              { id: 'artistic', label: '🎨 Anime & Art' },
+            ].map((cat) => {
+              const isActive = narrativeCategoryFilter === cat.id;
               return (
                 <button
-                  key={style}
+                  key={cat.id}
                   type="button"
-                  onClick={() => setNarrativeStyle(style)}
+                  onClick={() => setNarrativeCategoryFilter(cat.id as any)}
+                  className={`px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all ${
+                    isActive
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-xs'
+                      : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+            {(
+              narrativeCategoryFilter === 'all'
+                ? NARRATIVE_PRESETS
+                : NARRATIVE_PRESETS.filter((p) => p.category === narrativeCategoryFilter)
+            ).map((preset) => {
+              const isSelected = narrativeStyle === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => setNarrativeStyle(preset.id)}
                   className={`px-3 py-1.5 text-xs rounded-xl font-semibold transition-all ${
                     isSelected
                       ? 'bg-cyan-500 text-zinc-950 shadow-lg shadow-cyan-500/20'
                       : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
                   }`}
                 >
-                  {style}
+                  {preset.id}
                 </button>
               );
             })}
