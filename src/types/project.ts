@@ -78,6 +78,7 @@ export interface StudioProjectSettings {
   fps: number;
   resolution?: '720p' | '1080p' | '4K' | string;
   referenceMode?: 'strict' | 'creative';
+  subjectComposition?: 'solo' | 'couple' | 'ensemble';
 }
 
 export interface StudioProject {

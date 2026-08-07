@@ -44,6 +44,7 @@ export interface StoryboardParams {
   thinkingLevel?: 'off' | 'low' | 'medium' | 'high';
   temperature?: number;
   directorMode?: 'strict' | 'balanced' | 'creative';
+  subjectComposition?: 'solo' | 'couple' | 'ensemble';
 }
 
 export interface AIProvider {

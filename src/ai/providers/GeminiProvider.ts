@@ -311,10 +311,17 @@ export class GeminiProvider implements AIProvider {
       ? `Mode: Last-Frame. Shot ${params.shotsCount} ends at <Picture 1>.`
       : `Mode: Text-to-Video. Continuous motion sequence.`;
 
+    const compositionInstruction = params.subjectComposition === 'solo'
+      ? `STRICT COMPOSITION REQUIREMENT: SINGLE PERSON / SOLO CHARACTER ONLY. Focus strictly on 1 solo protagonist (S1). Do NOT introduce any secondary couple, romance partner, or S2 character. All dialogue or narration must belong strictly to S1 or an off-screen narrator.`
+      : params.subjectComposition === 'ensemble'
+      ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE. Multi-character interaction with S1, S2, S3.`
+      : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION. Focus on 2 main characters (S1 and S2).`;
+
     const promptText = `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video based on: "${params.idea}".
 
 ${modeInstruction}
 ${imageInstruction}
+${compositionInstruction}
 
 Audio & Dialogue Guidelines:
 - If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
