@@ -116,10 +116,12 @@ interface StudioState {
   directorMode: 'strict' | 'balanced' | 'creative';
   isInspectorOpen: boolean;
   isInspectorExpanded: boolean;
+  inspectorWidth: number;
 
   // Actions
   toggleInspectorOpen: () => void;
   toggleInspectorExpanded: () => void;
+  setInspectorWidth: (width: number) => void;
   setProject: (project: StudioProject) => void;
   updateSettings: (settings: Partial<StudioProject['settings']>) => void;
   setMode: (mode: MiniMaxMode) => void;
@@ -284,6 +286,13 @@ export const useStudioStore = create<StudioState>((set, get) => {
     directorMode: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_mode') as any) : null) || 'balanced',
     isInspectorOpen: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_open') !== 'false' : true,
     isInspectorExpanded: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_expanded') === 'true' : false,
+    inspectorWidth: typeof window !== 'undefined' && localStorage.getItem('minimax_inspector_width') ? Number(localStorage.getItem('minimax_inspector_width')) : 480,
+
+    setInspectorWidth: (width) => {
+      const clamped = Math.max(320, Math.min(850, width));
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_inspector_width', String(clamped));
+      set({ inspectorWidth: clamped });
+    },
 
     toggleInspectorOpen: () => {
       const nextState = !get().isInspectorOpen;
