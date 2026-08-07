@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { AIEngine } from '../../ai/AIEngine';
+import { NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
 import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
@@ -186,6 +187,46 @@ export const AIDirectorPanel: React.FC = () => {
   const totalDuration = project.settings.durationSeconds;
   const isImageMode = project.settings.mode !== 'T2VA';
   const hasReferences = project.references && project.references.length > 0;
+
+  const compiledGeminiPrompt = useMemo(() => {
+    const shotDuration = Math.max(1, Number((totalDuration / currentShotCount).toFixed(2)));
+    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
+    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[narrativeStyle] || narrativeStyle;
+
+    const isCreative = project.settings.referenceMode === 'creative';
+    const hasImages = project.references && project.references.length > 0;
+    const imageInstruction = hasImages
+      ? isCreative
+        ? `Reference Image (<Picture 1>): Use <Picture 1> for character identity. You may place the character into a new setting or outfit requested by the idea.`
+        : `Reference Image (<Picture 1>): Use <Picture 1> for character appearance, outfit, and starting location.`
+      : '';
+
+    const modeInstruction = project.settings.mode === 'I2VA'
+      ? `Mode: Image-to-Video. Shot 1 starts from <Picture 1> at 0.00s.`
+      : project.settings.mode === 'FL2VA'
+      ? `Mode: First-Last Keyframe interpolation.`
+      : project.settings.mode === 'L2VA'
+      ? `Mode: Last-Frame anchor.`
+      : `Mode: Text-to-Video. Continuous motion sequence.`;
+
+    const compositionInstruction = (project.settings.subjectComposition || 'solo') === 'solo'
+      ? `STRICT COMPOSITION REQUIREMENT: SINGLE PERSON / SOLO CHARACTER ONLY (S1). Zero secondary character/couple.`
+      : project.settings.subjectComposition === 'ensemble'
+      ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE (S1, S2, S3).`
+      : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION (S1 + S2).`;
+
+    return `You are an AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON for a ${narrativeStyle} video.
+STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
+AESTHETIC VISUAL STYLE: "${project.settings.style || 'Ultra Realistic Photorealism'}"
+STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
+
+${modeInstruction}
+${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+
+Audio & Dialogue Guidelines:
+- Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot).
+- Assign speakerId (S1, S2) with character identity labels. Include soundscape layers and music score.`;
+  }, [project, narrativeStyle, idea, currentShotCount, totalDuration]);
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
@@ -786,6 +827,21 @@ export const AIDirectorPanel: React.FC = () => {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Live Gemini Director System Prompt Delivery Preview Box */}
+        <div className="space-y-1.5 pt-3 border-t border-zinc-800/80">
+          <div className="flex items-center justify-between">
+            <label className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Brain className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              Final Gemini System Prompt Delivery Preview
+            </label>
+            <span className="text-[10px] text-zinc-500 font-mono">Exact Compiled Payload sent to {directorModel}</span>
+          </div>
+
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 font-mono text-[11px] text-cyan-200/90 leading-relaxed max-h-48 overflow-y-auto shadow-inner select-all">
+            <pre className="whitespace-pre-wrap font-mono">{compiledGeminiPrompt}</pre>
           </div>
         </div>
 
