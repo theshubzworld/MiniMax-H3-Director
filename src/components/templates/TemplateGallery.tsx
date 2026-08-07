@@ -109,9 +109,9 @@ export const TemplateGallery: React.FC = () => {
       <div>
         <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-amber-400" />
-          20+ Category MiniMax H3 Template Library
+          140+ MiniMax H3 Production Template Library
         </h2>
-        <p className="text-xs text-zinc-400">Select a production-grade preset to instantly pre-fill studio workspace.</p>
+        <p className="text-xs text-zinc-400">10 high-quality production templates per category across 14 viral genres (140 templates total).</p>
       </div>
 
       {/* Category Pills */}

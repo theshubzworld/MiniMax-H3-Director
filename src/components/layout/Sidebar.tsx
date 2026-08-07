@@ -113,7 +113,7 @@ export const Sidebar: React.FC = () => {
               }`}
             >
               <Grid className="w-4 h-4 text-amber-400" />
-              <span>20+ Template Library</span>
+              <span>140+ Template Library</span>
             </button>
 
             <button

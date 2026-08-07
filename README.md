@@ -19,7 +19,7 @@
 - **🔊 Audio & Music Orchestration**: Native support for overall stereo soundscapes (`overall_soundscape`) and non-diegetic background music pacing (`non_diegetic_music`).
 - **💬 Dialogue Tag Parser**: Supports character spoken dialogue tags (`<d>[Language] Spoken Text</d>`) with off-screen voiceover lip-sync controls.
 - **🔬 Diagnostics & Auto-Fix Engine**: Evaluates 50+ compliance rules across 15 diagnostic categories with a live health score (0–100%) and a **1-click Auto-Fix** button.
-- **🎨 20+ Production Template Library**: Instant pre-fills for Cyberpunk Anime, Fashion, High-Octane Action, Commercial, Documentary, Sci-Fi, and Cinematic styles.
+- **🎨 140+ Production Template Library**: Instant pre-fills across 14 categories (10 templates per category) including Raw & Amateur, Sultry & Romance, Boudoir, Social Media, Cyberpunk Anime, Fashion, High-Octane Action, Commercial, Sci-Fi, and Cinematic styles.
 - **🔌 ComfyUI Payload Exporter**: Generates 1-click JSON payloads pre-formatted for `MINIMAX H3 3in1` nodes and API ingestion.
 - **🌗 Universal Light & Dark Mode**: High-contrast workstation themes with instant switching and local storage persistence.
 
