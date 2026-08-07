@@ -178,6 +178,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [idea, setIdea] = useState('');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
   const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action' | 'cinematic'>('all');
   const [narrativeCategoryFilter, setNarrativeCategoryFilter] = useState<'all' | 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic'>('all');
@@ -239,48 +240,54 @@ Audio & Dialogue Guidelines:
 
   const handleAutoBuild = async () => {
     setIsGenerating(true);
+    setProgressState({ step: 1, totalSteps: 4, percent: 10, message: `Initializing ${directorModel}...` });
     const provider = AIEngine.getActiveProvider();
     const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
     const imageUrls = project.references ? project.references.map((r) => r.url) : [];
 
-    // Directly generate Multimodal Storyboard in 1 fast step using direct multimodal image input
-    const result = await provider.generateStoryboard(
-      {
-        idea: idea || project.description || 'Cyberpunk action standoff scene',
-        images: imageUrls,
-        mode: project.settings.mode,
-        referenceMode: project.settings.referenceMode || 'strict',
-        subjectComposition: project.settings.subjectComposition || 'solo',
-        durationSeconds: totalDuration,
-        shotsCount: currentShotCount,
-        narrativeStyle,
-        directorModel,
-        thinkingBudget: directorThinkingBudget,
-        directorMode,
-      },
-      apiKey
-    );
+    try {
+      const result = await provider.generateStoryboard(
+        {
+          idea: idea || project.description || 'Cyberpunk action standoff scene',
+          images: imageUrls,
+          mode: project.settings.mode,
+          referenceMode: project.settings.referenceMode || 'strict',
+          subjectComposition: project.settings.subjectComposition || 'solo',
+          durationSeconds: totalDuration,
+          shotsCount: currentShotCount,
+          narrativeStyle,
+          directorModel,
+          thinkingBudget: directorThinkingBudget,
+          directorMode,
+          onProgress: (prog) => setProgressState(prog),
+        },
+        apiKey
+      );
 
-    if (result.shots && result.shots.length > 0) {
-      const updatedProj = {
-        ...project,
-        shots: result.shots as any,
-        audio: result.audio ? { ...project.audio, ...result.audio } : project.audio,
-      };
-      setProject(updatedProj);
+      if (result.shots && result.shots.length > 0) {
+        const updatedProj = {
+          ...project,
+          shots: result.shots as any,
+          audio: result.audio ? { ...project.audio, ...result.audio } : project.audio,
+        };
+        setProject(updatedProj);
 
-      // Auto-save generated storyboard prompt to Prompt Library
-      useStudioStore.getState().savePromptToLibrary({
-        title: idea ? (idea.length > 45 ? `${idea.substring(0, 45)}...` : idea) : `${narrativeStyle} Scene`,
-        idea: idea || project.description || `${narrativeStyle} Scene`,
-        narrativeStyle,
-        mode: project.settings.mode,
-        shotsCount: currentShotCount,
-        durationSeconds: totalDuration,
-      });
+        // Auto-save generated storyboard prompt to Prompt Library
+        useStudioStore.getState().savePromptToLibrary({
+          title: idea ? (idea.length > 45 ? `${idea.substring(0, 45)}...` : idea) : `${narrativeStyle} Scene`,
+          idea: idea || project.description || `${narrativeStyle} Scene`,
+          narrativeStyle,
+          mode: project.settings.mode,
+          shotsCount: currentShotCount,
+          durationSeconds: totalDuration,
+        });
+      }
+    } catch (err) {
+      console.error('[Gemini Director] Auto build error', err);
+    } finally {
+      setIsGenerating(false);
+      setProgressState(null);
     }
-
-    setIsGenerating(false);
   };
 
   return (
@@ -844,6 +851,29 @@ Audio & Dialogue Guidelines:
             <pre className="whitespace-pre-wrap font-mono text-cyan-400 font-semibold">{compiledGeminiPrompt}</pre>
           </div>
         </div>
+
+        {/* Live Real-Time Gemini Progress Status Tracker */}
+        {isGenerating && progressState && (
+          <div className="bg-cyan-950/80 border border-cyan-500/50 rounded-xl p-3.5 space-y-2 shadow-lg shadow-cyan-500/10">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-cyan-300 flex items-center gap-2 font-mono">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400 shrink-0" />
+                <span>Step {progressState.step}/{progressState.totalSteps}: {progressState.message}</span>
+              </span>
+              <span className="text-[11px] text-cyan-400 font-mono font-bold bg-cyan-900/60 px-2 py-0.5 rounded-md border border-cyan-500/30">
+                {progressState.percent}%
+              </span>
+            </div>
+
+            {/* Live Progress Bar Track */}
+            <div className="w-full bg-zinc-900 rounded-full h-2 overflow-hidden border border-zinc-800 p-0.5">
+              <div
+                className="bg-gradient-to-r from-cyan-500 via-blue-500 to-emerald-400 h-full rounded-full transition-all duration-300 shadow-sm shadow-cyan-400/50"
+                style={{ width: `${progressState.percent}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Action Button Bar */}
         <div className="flex flex-wrap gap-2 pt-2 border-t border-zinc-800/60">

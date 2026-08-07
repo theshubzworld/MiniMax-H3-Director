@@ -329,8 +329,11 @@ export class GeminiProvider implements AIProvider {
   }
 
   public async generateStoryboard(params: StoryboardParams, apiKey?: string): Promise<Partial<StudioProject>> {
+    params.onProgress?.({ step: 1, totalSteps: 4, percent: 15, message: 'Connecting to Vertex AI Express API...' });
     const key = this.getEffectiveApiKey(apiKey);
     const shotDuration = Math.max(1, Number((params.durationSeconds / params.shotsCount).toFixed(2)));
+
+    params.onProgress?.({ step: 2, totalSteps: 4, percent: 35, message: `Preparing keyframe images & ${params.narrativeStyle} directives...` });
     const imageParts = await this.prepareImageParts(params.images);
 
     const isCreative = params.referenceMode === 'creative';
@@ -424,7 +427,9 @@ Return JSON format:
     };
 
     try {
+      params.onProgress?.({ step: 3, totalSteps: 4, percent: 65, message: `Reasoning with ${params.directorModel || 'Gemini 2.5 Pro'} to compile ${params.shotsCount} shots...` });
       const data = await this.callVertexExpress(payload, key, params.directorModel);
+      params.onProgress?.({ step: 4, totalSteps: 4, percent: 95, message: 'Parsing structured H3 JSON payload & audio soundscape...' });
       const allParts = data.candidates?.[0]?.content?.parts || [];
       const rawText = allParts.map((p: any) => p.text || '').join('\n').trim();
       const parsed = this.extractJsonObject(rawText);

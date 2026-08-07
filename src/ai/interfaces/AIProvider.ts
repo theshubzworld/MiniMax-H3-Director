@@ -50,6 +50,7 @@ export interface StoryboardParams {
   temperature?: number;
   directorMode?: 'strict' | 'balanced' | 'creative';
   subjectComposition?: 'solo' | 'couple' | 'ensemble';
+  onProgress?: (progress: { step: number; totalSteps: number; percent: number; message: string }) => void;
 }
 
 export interface AIProvider {
