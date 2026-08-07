@@ -15,6 +15,11 @@ export type AspectRatio =
 
 export const ALL_VISUAL_STYLES = [
   'Ultra Realistic Photorealism',
+  'Sultry Boudoir Tungsten Glow',
+  'Sensual Candlelit Intimacy',
+  'Steamy Bathroom Glass Reflection',
+  'Erotic Low-Key Shadow Contours',
+  'Raw Third-Person Sensual Handheld',
   'Cinematic 35mm Film',
   'Raw Smartphone Selfie',
   'Kodak Portra 400 Color',
