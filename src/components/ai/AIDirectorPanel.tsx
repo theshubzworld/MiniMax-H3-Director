@@ -7,6 +7,8 @@ import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, 
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Live-Action Realism',
+  'Raw Third-Person Mobile',
+  'Candid Third-Person Sensual',
   'Raw Smartphone Amateur',
   'Amateur Mobile Vlog',
   'Candid Selfie Motion',
@@ -38,7 +40,10 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
 ];
 
 const STORY_SEED_PRESETS = [
-  // 📱 Raw Smartphone & Amateur Motion
+  // 💃 Raw Third-Person Sensual & Sheer Fabrics (Single Person S1)
+  { category: 'solo-sultry', label: '💃 Raw 3rd-Person Sheer Chiffon Walk', prompt: 'A raw handheld third-person mobile video of a solo woman in a sheer, translucent white chiffon robe walking gracefully across a sunlit room towards a window. In a candid 3/4 camera tracking shot, golden sunbeams backlight her silhouette through the delicate translucent fabric. Include soft footsteps foley, gentle breeze, and ambient lo-fi piano.' },
+  { category: 'solo-sultry', label: '🕯️ Raw 3rd-Person Translucent Silk', prompt: 'A raw handheld third-person video of a solo woman in a translucent silk loungewear gown relaxing on a velvet chaise lounge under warm tungsten lamplight. The camera tracks slowly around her in an unpolished mobile motion as she turns her head with a seductive gaze. Include quiet breathing foley, silk rustle, and sultry jazz saxophone.' },
+  { category: 'solo-sultry', label: '🌊 Raw 3rd-Person Wet Sheer Sunset', prompt: 'A raw third-person mobile camera tracking a solo woman walking along wet beach sand in a translucent white sundress backlit by golden-hour sunset. Handheld micro-shake optics and soft lens flare illuminating the sheer fabric contours. Include gentle ocean waves foley, sea breeze, and acoustic guitar score.' },
   { category: 'solo-sultry', label: '📱 Raw Smartphone Mirror Selfie', prompt: 'A casual vertical iPhone mirror selfie of a solo woman in a fitted top standing in a modern bathroom under warm vanity lighting. In a raw handheld mobile motion, she leans slightly against the marble counter with a candid smile as the phone flash creates soft rim blowout. Include slight mobile sensor noise foley, quiet breath, and authentic Instagram story aesthetic.' },
   { category: 'solo-sultry', label: '🤳 Raw Mobile Vlog Walk & Talk', prompt: 'A solo woman holding her smartphone at arm length walking down a sunny city sidewalk talking directly into the camera. Natural handheld micro-shake and focus hunt optics. Include ambient street traffic foley, natural wind in hair, and candid amateur video physics.' },
   { category: 'solo-sultry', label: '📱 Raw Mobile Bedroom Flash', prompt: 'A candid handheld smartphone video of a solo woman in silk loungewear sitting on white linen sheets under dim bedroom lamp light. Direct phone flash glow causing slight shadow noise. Include soft laughter foley, sheet rustle, and authentic mobile sensor grain.' },

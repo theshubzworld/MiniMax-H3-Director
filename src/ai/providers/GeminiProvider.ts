@@ -45,6 +45,8 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
   'Raw Smartphone Amateur': ['direct mobile phone flash blowout', 'natural unpolished ambient room light', 'casual indoor window light with slight overexposure'],
   'Amateur Mobile Vlog': ['handheld daylight selfie lighting', 'casual outdoor golden sun flare', 'everyday ambient room light'],
   'Candid Selfie Motion': ['dim mobile phone screen glow', 'soft ambient bedroom lamp light', 'authentic Instagram story flash'],
+  'Raw Third-Person Mobile': ['backlit golden hour window illumination illuminating sheer fabric', 'natural unpolished handheld 3rd-person tracking light', 'soft ambient room illumination'],
+  'Candid Third-Person Sensual': ['translucent silhouette rim lighting', 'warm low-key tungsten side light tracing sheer wardrobe contours', 'candlelit boudoir glow'],
 };
 
 export class GeminiProvider implements AIProvider {

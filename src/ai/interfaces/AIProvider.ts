@@ -32,7 +32,9 @@ export type NarrativeStyle =
   | 'Erotic Romance'
   | 'Raw Smartphone Amateur'
   | 'Amateur Mobile Vlog'
-  | 'Candid Selfie Motion';
+  | 'Candid Selfie Motion'
+  | 'Raw Third-Person Mobile'
+  | 'Candid Third-Person Sensual';
 
 export interface StoryboardParams {
   idea: string;
