@@ -195,96 +195,57 @@ export const PromptInspector: React.FC = () => {
 
   return (
     <div
-      style={{ width: `${effectiveWidth}px` }}
-      className="h-full bg-zinc-950 border-l border-zinc-800/80 flex flex-col flex-shrink-0 relative transition-all duration-75"
+      className="w-[560px] h-full bg-zinc-950 border-l border-zinc-800 flex flex-col flex-shrink-0 relative transition-all"
     >
-      {/* Draggable Resizer Left Edge Handle */}
-      <div
-        onMouseDown={handleMouseDown}
-        className={`absolute -left-1 top-0 bottom-0 w-2 cursor-col-resize hover:bg-cyan-500/60 z-30 transition-colors flex items-center justify-center group ${
-          isResizing ? 'bg-cyan-400 shadow-lg shadow-cyan-500/50' : 'bg-transparent'
-        }`}
-        title="Click and drag left or right to adjust Prompt Inspector width"
-      >
-        <div className="w-0.5 h-8 bg-zinc-700 group-hover:bg-cyan-300 rounded-full" />
-      </div>
-
-      {/* Header */}
-      <div className="p-3 border-b border-zinc-800/80 flex items-center justify-between gap-2">
+      {/* Sleek Recreated Header without resize controls */}
+      <div className="p-3.5 border-b border-zinc-800 flex items-center justify-between gap-3 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-20">
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggleInspectorExpanded}
-            className="p-1.5 text-zinc-400 hover:text-cyan-400 hover:bg-zinc-900 rounded-lg transition-all"
-            title={isInspectorExpanded ? 'Normal Width' : 'Widescreen (680px)'}
-          >
-            {isInspectorExpanded ? <Minimize2 className="w-4 h-4 text-purple-400" /> : <Maximize2 className="w-4 h-4 text-cyan-400" />}
-          </button>
-
+          <div className="w-7 h-7 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <Sparkles className="w-4 h-4" />
+          </div>
           <div>
-            <h3 className="font-bold text-xs sm:text-sm text-zinc-100 flex items-center gap-1.5">
+            <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-2">
               <span>Prompt Inspector</span>
-              <span className="text-[10px] text-cyan-400 font-mono">({effectiveWidth}px)</span>
+              <span className="text-[10px] bg-cyan-950 border border-cyan-500/30 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold">
+                Live H3
+              </span>
             </h3>
           </div>
         </div>
 
-        {/* Width Quick Preset Pills */}
-        <div className="hidden xl:flex items-center gap-1 bg-zinc-900 p-0.5 rounded-lg border border-zinc-800">
-          {[
-            { w: 400, label: '400' },
-            { w: 500, label: '500' },
-            { w: 600, label: '600' },
-            { w: 700, label: '700' },
-          ].map((preset) => (
-            <button
-              key={preset.w}
-              type="button"
-              onClick={() => setInspectorWidth(preset.w)}
-              className={`px-1.5 py-0.5 text-[10px] font-mono font-bold rounded transition-all ${
-                inspectorWidth === preset.w && !isInspectorExpanded
-                  ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-500/50'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              {preset.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleAutoFix}
-            className={`px-2 py-1 border text-xs font-semibold rounded-lg flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all ${
               fixed
-                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md'
-                : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60'
+                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md font-bold'
+                : 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60'
             }`}
             title="Auto-Fix Formatting & Compliance"
           >
             {fixed ? <Check className="w-3.5 h-3.5" /> : <Wrench className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
+            <span>{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
           </button>
 
           <button
             type="button"
             onClick={handleSaveToLibrary}
-            className={`px-2 py-1 border text-xs font-semibold rounded-lg flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all ${
               saved
                 ? 'bg-purple-500 text-zinc-950 border-purple-400 font-bold shadow-md'
-                : 'bg-purple-950/60 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
+                : 'bg-purple-950/50 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
             }`}
             title="Save Prompt to Library"
           >
             {saved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{saved ? 'Saved!' : 'Save'}</span>
+            <span>{saved ? 'Saved!' : 'Save'}</span>
           </button>
 
           <button
             type="button"
             onClick={handleCopy}
-            className="px-2.5 py-1 bg-cyan-500 hover:bg-cyan-400 text-zinc-950 rounded-lg text-xs font-semibold flex items-center gap-1 shadow-lg shadow-cyan-500/20 transition-all"
+            className="px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-cyan-500/20 transition-all"
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copied!' : 'Copy'}</span>
@@ -293,7 +254,7 @@ export const PromptInspector: React.FC = () => {
           <button
             type="button"
             onClick={toggleInspectorOpen}
-            className="p-1 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900 rounded-lg transition-all"
+            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-xl transition-all ml-1"
             title="Close Inspector Panel"
           >
             <X className="w-4 h-4" />
