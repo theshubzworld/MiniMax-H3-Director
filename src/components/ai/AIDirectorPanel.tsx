@@ -3,7 +3,7 @@ import { useStudioStore } from '../../store/StudioStore';
 import { AIEngine } from '../../ai/AIEngine';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu } from 'lucide-react';
+import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Live-Action Realism',
@@ -69,11 +69,24 @@ const STORY_SEED_PRESETS = [
 ];
 
 export const AIDirectorPanel: React.FC = () => {
-  const { project, setProject, updateSettings, addShot, removeShot, autoFixProject } = useStudioStore();
+  const {
+    project,
+    setProject,
+    updateSettings,
+    addShot,
+    removeShot,
+    autoFixProject,
+    directorModel,
+    setDirectorModel,
+    directorThinkingBudget,
+    setDirectorThinkingBudget,
+    directorMode,
+    setDirectorMode,
+  } = useStudioStore();
+
   const [idea, setIdea] = useState('');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [directorModel, setDirectorModel] = useState<'gemini-2.5-pro' | 'gemini-3.5-flash'>('gemini-2.5-pro');
 
   const activeShots = project.shots;
   const currentShotCount = activeShots.length;
@@ -102,6 +115,8 @@ export const AIDirectorPanel: React.FC = () => {
         shotsCount: currentShotCount,
         narrativeStyle,
         directorModel,
+        thinkingBudget: directorThinkingBudget,
+        directorMode,
       },
       apiKey
     );
@@ -311,54 +326,143 @@ export const AIDirectorPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Director Model Selection & Action Buttons */}
-      <div className="space-y-3 pt-2 border-t border-zinc-800">
-        <div className="flex items-center gap-2">
-          <Cpu className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-          <span className="text-xs text-zinc-300 font-semibold">Director AI Model:</span>
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => setDirectorModel('gemini-2.5-pro')}
-              className={`px-3 py-1 text-xs font-bold rounded-lg border transition-all ${
-                directorModel === 'gemini-2.5-pro'
-                  ? 'bg-violet-500/30 border-violet-500/60 text-violet-300 shadow-md shadow-violet-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              Gemini 2.5 Pro
-            </button>
-            <button
-              type="button"
-              onClick={() => setDirectorModel('gemini-3.5-flash')}
-              className={`px-3 py-1 text-xs font-bold rounded-lg border transition-all ${
-                directorModel === 'gemini-3.5-flash'
-                  ? 'bg-cyan-500/30 border-cyan-500/60 text-cyan-300 shadow-md shadow-cyan-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              3.5 Flash ⚡
-            </button>
+      {/* Advanced AI Director Controls (Model, Thinking Level & Director Mode) */}
+      <div className="space-y-4 pt-4 border-t border-zinc-800/80 bg-zinc-950/60 p-4 rounded-2xl border border-zinc-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* 1. AI Director Model */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+              Director AI Model
+            </label>
+            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+              <button
+                type="button"
+                onClick={() => setDirectorModel('gemini-2.5-pro')}
+                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                  directorModel === 'gemini-2.5-pro'
+                    ? 'bg-violet-500/30 text-violet-300 border border-violet-500/50 shadow-md'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                2.5 Pro 🧠
+              </button>
+              <button
+                type="button"
+                onClick={() => setDirectorModel('gemini-3.5-flash')}
+                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                  directorModel === 'gemini-3.5-flash'
+                    ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-500/50 shadow-md'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                3.5 Flash ⚡
+              </button>
+              <button
+                type="button"
+                onClick={() => setDirectorModel('gemini-2.5-flash')}
+                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                  directorModel === 'gemini-2.5-flash'
+                    ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50 shadow-md'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                2.5 Flash
+              </button>
+            </div>
           </div>
-          <span className="text-[11px] text-zinc-500 hidden sm:inline font-mono">
-            {directorModel === 'gemini-2.5-pro' ? '(Highest Quality & Deep Reasoning)' : '(Ultra Fast Generation)'}
-          </span>
+
+          {/* 2. Thinking Level / Reasoning Budget */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Brain className="w-3.5 h-3.5 text-purple-400" />
+                Thinking Level
+              </span>
+              <span className="text-[10px] text-purple-300 font-mono font-bold">
+                {directorThinkingBudget >= 8192
+                  ? 'Deep (8k)'
+                  : directorThinkingBudget >= 4096
+                  ? 'Standard (4k)'
+                  : directorThinkingBudget >= 1024
+                  ? 'Fast (1k)'
+                  : 'Off (0)'}
+              </span>
+            </label>
+
+            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+              {[
+                { budget: 8192, label: 'Deep 🧠' },
+                { budget: 4096, label: 'Std ⚖️' },
+                { budget: 1024, label: 'Fast ⚡' },
+                { budget: 0, label: 'Off 🚀' },
+              ].map((t) => (
+                <button
+                  key={t.budget}
+                  type="button"
+                  onClick={() => setDirectorThinkingBudget(t.budget)}
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                    directorThinkingBudget === t.budget
+                      ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50 shadow-md'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Director Creative Mode */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Gauge className="w-3.5 h-3.5 text-amber-400" />
+                Director Creative Mode
+              </span>
+              <span className="text-[10px] text-amber-300 font-mono font-bold">
+                {directorMode === 'strict' ? 'Temp 0.2' : directorMode === 'creative' ? 'Temp 0.8' : 'Temp 0.5'}
+              </span>
+            </label>
+
+            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+              {[
+                { mode: 'strict', label: 'Strict 🎯' },
+                { mode: 'balanced', label: 'Balanced 🎬' },
+                { mode: 'creative', label: 'Creative 🎨' },
+              ].map((m) => (
+                <button
+                  key={m.mode}
+                  type="button"
+                  onClick={() => setDirectorMode(m.mode as any)}
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                    directorMode === m.mode
+                      ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50 shadow-md'
+                      : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        {/* Action Button Bar */}
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-zinc-800/60">
           <button
             type="button"
             onClick={handleAutoBuild}
             disabled={isGenerating}
-            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all"
+            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all flex-1 justify-center"
           >
             {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             <span>
               {isGenerating
-                ? `Gemini Director (${directorModel === 'gemini-3.5-flash' ? '3.5 Flash' : '2.5 Pro'}) Generating...`
+                ? `Gemini Director (${directorModel}) Generating...`
                 : hasReferences
                 ? `✨ Build ${currentShotCount}-Shot Storyboard Using Visual Keyframes (${project.references.length})`
-                : `✨ Build ${currentShotCount}-Shot Storyboard with ${directorModel === 'gemini-3.5-flash' ? '3.5 Flash ⚡' : 'Gemini 2.5 Pro'}`}
+                : `✨ Build ${currentShotCount}-Shot Storyboard with ${directorModel}`}
             </span>
           </button>
 

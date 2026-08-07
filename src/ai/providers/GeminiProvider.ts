@@ -344,6 +344,20 @@ Return JSON format:
   }
 }`;
 
+    const temp = params.temperature ?? (params.directorMode === 'strict' ? 0.2 : params.directorMode === 'creative' ? 0.8 : 0.4);
+    const thinkingBudget = params.thinkingBudget !== undefined ? params.thinkingBudget : 4096;
+
+    const generationConfig: any = {
+      temperature: temp,
+      responseMimeType: 'application/json',
+    };
+
+    if (thinkingBudget > 0) {
+      generationConfig.thinkingConfig = {
+        thinkingBudget,
+      };
+    }
+
     const payload = {
       contents: [
         {
@@ -351,10 +365,7 @@ Return JSON format:
           parts: [...imageParts, { text: promptText }],
         },
       ],
-      generationConfig: {
-        temperature: 0.4,
-        responseMimeType: 'application/json',
-      },
+      generationConfig,
     };
 
     try {

@@ -34,7 +34,11 @@ export interface StoryboardParams {
   durationSeconds: number;
   shotsCount: number;
   narrativeStyle: NarrativeStyle;
-  directorModel?: 'gemini-2.5-pro' | 'gemini-3.5-flash';
+  directorModel?: 'gemini-2.5-pro' | 'gemini-3.5-flash' | 'gemini-2.5-flash';
+  thinkingBudget?: number;
+  thinkingLevel?: 'off' | 'low' | 'medium' | 'high';
+  temperature?: number;
+  directorMode?: 'strict' | 'balanced' | 'creative';
 }
 
 export interface AIProvider {

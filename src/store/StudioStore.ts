@@ -111,6 +111,9 @@ interface StudioState {
   generationStatusMessage: string | null;
   directorPlanDraft: DirectorPlanDraft | null;
   activeSceneStep: 1 | 2 | 3;
+  directorModel: 'gemini-2.5-pro' | 'gemini-3.5-flash' | 'gemini-2.5-flash';
+  directorThinkingBudget: number;
+  directorMode: 'strict' | 'balanced' | 'creative';
 
   // Actions
   setProject: (project: StudioProject) => void;
@@ -138,6 +141,9 @@ interface StudioState {
   setGenerationStatus: (status: { isGenerating?: boolean; isEnhancing?: boolean; message?: string | null }) => void;
   setDirectorPlanDraft: (draft: DirectorPlanDraft | null) => void;
   setActiveSceneStep: (step: 1 | 2 | 3) => void;
+  setDirectorModel: (model: 'gemini-2.5-pro' | 'gemini-3.5-flash' | 'gemini-2.5-flash') => void;
+  setDirectorThinkingBudget: (budget: number) => void;
+  setDirectorMode: (mode: 'strict' | 'balanced' | 'creative') => void;
   
   // Prompt Library Actions
   savePromptToLibrary: (customPrompt?: Partial<SavedPrompt>) => void;
@@ -269,6 +275,24 @@ export const useStudioStore = create<StudioState>((set, get) => {
     generationStatusMessage: null,
     directorPlanDraft: initialDraft,
     activeSceneStep: initialSceneStep,
+    directorModel: (localStorage.getItem('minimax_director_model') as any) || 'gemini-2.5-pro',
+    directorThinkingBudget: Number(localStorage.getItem('minimax_thinking_budget') || 4096),
+    directorMode: (localStorage.getItem('minimax_director_mode') as any) || 'balanced',
+
+    setDirectorModel: (model) => {
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_director_model', model);
+      set({ directorModel: model });
+    },
+
+    setDirectorThinkingBudget: (budget) => {
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_thinking_budget', String(budget));
+      set({ directorThinkingBudget: budget });
+    },
+
+    setDirectorMode: (mode) => {
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_director_mode', mode);
+      set({ directorMode: mode });
+    },
 
     setDirectorPlanDraft: (draft) => {
       set({ directorPlanDraft: draft });
