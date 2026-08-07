@@ -275,9 +275,9 @@ export const useStudioStore = create<StudioState>((set, get) => {
     generationStatusMessage: null,
     directorPlanDraft: initialDraft,
     activeSceneStep: initialSceneStep,
-    directorModel: (localStorage.getItem('minimax_director_model') as any) || 'gemini-2.5-pro',
-    directorThinkingBudget: Number(localStorage.getItem('minimax_thinking_budget') || 4096),
-    directorMode: (localStorage.getItem('minimax_director_mode') as any) || 'balanced',
+    directorModel: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_model') as any) : null) || 'gemini-2.5-pro',
+    directorThinkingBudget: typeof window !== 'undefined' && localStorage.getItem('minimax_thinking_budget') !== null ? Number(localStorage.getItem('minimax_thinking_budget')) : 4096,
+    directorMode: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_mode') as any) : null) || 'balanced',
 
     setDirectorModel: (model) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_director_model', model);
@@ -513,11 +513,12 @@ export const useStudioStore = create<StudioState>((set, get) => {
     },
 
     recompileAndValidate: () => {
-      const { project } = get();
+      const { project, directorPlanDraft, activeView, activeSceneStep, currentStep } = get();
       const compiled = PromptCompiler.compile(project);
       const updatedProject = { ...project, compiledPrompt: compiled };
       const diag = PromptValidator.validate(updatedProject);
       set({ project: updatedProject, diagnostics: diag });
+      saveProjectStateToLocalStorage(updatedProject, directorPlanDraft, activeView, activeSceneStep, currentStep);
     },
 
     autoFixProject: () => {
