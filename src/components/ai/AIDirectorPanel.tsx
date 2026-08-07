@@ -8,6 +8,11 @@ import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Live-Action Realism',
   'Cinematic Film',
+  'Sultry Romance',
+  'Sensual Intimacy',
+  'Steamy Thriller',
+  'Velvet Boudoir',
+  'Erotic Romance',
   'Commercial',
   'Fashion',
   'Action',
@@ -30,6 +35,9 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
 ];
 
 const STORY_SEED_PRESETS = [
+  { label: '💋 Velvet Bedside Caress', prompt: 'A sultry romantic couple relaxing on a plush velvet bed under soft golden candle glow. In a slow tracking close-up, his fingers gently trace down her shoulder as she exhales with eyes fluttering closed. Include whispered passionate dialogue, soft breathing foley, and sultry ambient piano score.' },
+  { label: '🔥 Steamy Mirror Silhouette', prompt: 'A sensual couple in a mist-covered bathroom after a hot shower under warm backlight. Her fingers trace patterns on the steamy mirror as he embraces her from behind, resting his chin on her shoulder. Include whispered romantic commentary, water droplet foley, and deep atmospheric lo-fi synth beats.' },
+  { label: '🌹 Silk Loungewear Sunset', prompt: 'A couple in a high-rise penthouse suite overlooking a glowing city sunset, dressed in silk loungewear. She arches her back gently as he pulls her close in a lingering intimate embrace. Include whispered dialogue cues, rustling silk foley, and slow sensual acoustic guitar.' },
   { label: '🛏️ Bedroom Sunbeam Romance', prompt: 'A romantic couple waking up in white linen sheets as warm morning sunbeams stream through linen curtains. Include whispered intimate dialogue, soft sheet rustle foley, and acoustic guitar score.' },
   { label: '🛁 Candlelit Bath Spa Romance', prompt: 'A romantic couple relaxing in a steamy freestanding marble bathtub surrounded by glowing candles and rose petals. Include soft whispered dialogue, gentle water splash foley, and ambient piano music.' },
   { label: '🏡 Kitchen Morning Coffee Romance', prompt: 'A couple laughing together in a sun-drenched modern kitchen while making morning coffee in silk loungewear. Include playful dialogue, clinking coffee cups foley, and warm lo-fi lounge beats.' },

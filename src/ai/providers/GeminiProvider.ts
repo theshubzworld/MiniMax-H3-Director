@@ -37,6 +37,11 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
   Action: ['strobing emergency alert lights', 'fiery orange and deep shadow contrast', 'harsh industrial spotlight'],
   Commercial: ['clean balanced 3-point daylight', 'crisp product rim lighting', 'soft natural window fill'],
   Documentary: ['authentic ambient golden sunlight', 'overcast moody diffusion', 'soft morning mist light'],
+  'Sultry Romance': ['soft warm candlelit glow', 'sensual low-key tungsten side lighting', 'intimate golden hour window falloff with soft shadows'],
+  'Sensual Intimacy': ['dim romantic lamplight', 'soft warm rim light tracing contours', 'moody bedroom twilight with candle glow'],
+  'Steamy Thriller': ['steamy neon magenta backlight', 'intimate low-key shadow contrast', 'wet skin golden key reflections'],
+  'Velvet Boudoir': ['soft velvet boudoir lamp diffusion', 'golden amber key lighting', 'warm shadow falloff'],
+  'Erotic Romance': ['dim candlelit silhouette glow', 'warm intimate side lighting', 'soft atmospheric twilight key'],
 };
 
 export class GeminiProvider implements AIProvider {

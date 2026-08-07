@@ -24,7 +24,12 @@ export type NarrativeStyle =
   | 'Comedy Sketch'
   | 'Historical Epic'
   | 'Superhero Origin'
-  | 'Experimental Surrealism';
+  | 'Experimental Surrealism'
+  | 'Sultry Romance'
+  | 'Sensual Intimacy'
+  | 'Steamy Thriller'
+  | 'Velvet Boudoir'
+  | 'Erotic Romance';
 
 export interface StoryboardParams {
   idea: string;
