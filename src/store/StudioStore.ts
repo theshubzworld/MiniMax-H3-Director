@@ -114,8 +114,12 @@ interface StudioState {
   directorModel: 'gemini-2.5-pro' | 'gemini-3.5-flash' | 'gemini-2.5-flash';
   directorThinkingBudget: number;
   directorMode: 'strict' | 'balanced' | 'creative';
+  isInspectorOpen: boolean;
+  isInspectorExpanded: boolean;
 
   // Actions
+  toggleInspectorOpen: () => void;
+  toggleInspectorExpanded: () => void;
   setProject: (project: StudioProject) => void;
   updateSettings: (settings: Partial<StudioProject['settings']>) => void;
   setMode: (mode: MiniMaxMode) => void;
@@ -278,6 +282,20 @@ export const useStudioStore = create<StudioState>((set, get) => {
     directorModel: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_model') as any) : null) || 'gemini-2.5-pro',
     directorThinkingBudget: typeof window !== 'undefined' && localStorage.getItem('minimax_thinking_budget') !== null ? Number(localStorage.getItem('minimax_thinking_budget')) : 4096,
     directorMode: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_mode') as any) : null) || 'balanced',
+    isInspectorOpen: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_open') !== 'false' : true,
+    isInspectorExpanded: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_expanded') === 'true' : false,
+
+    toggleInspectorOpen: () => {
+      const nextState = !get().isInspectorOpen;
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_inspector_open', String(nextState));
+      set({ isInspectorOpen: nextState });
+    },
+
+    toggleInspectorExpanded: () => {
+      const nextState = !get().isInspectorExpanded;
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_inspector_expanded', String(nextState));
+      set({ isInspectorExpanded: nextState });
+    },
 
     setDirectorModel: (model) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_director_model', model);

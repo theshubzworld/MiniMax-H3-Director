@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2, Bookmark } from 'lucide-react';
+import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2, Bookmark, X, Maximize2, Minimize2 } from 'lucide-react';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 import { AIEngine } from '../../ai/AIEngine';
 
 export const PromptInspector: React.FC = () => {
-  const { project, diagnostics, autoFixProject, setProject, savePromptToLibrary } = useStudioStore();
+  const {
+    project,
+    diagnostics,
+    autoFixProject,
+    setProject,
+    savePromptToLibrary,
+    isInspectorOpen,
+    toggleInspectorOpen,
+    isInspectorExpanded,
+    toggleInspectorExpanded,
+  } = useStudioStore();
   const [copied, setCopied] = useState(false);
   const [fixed, setFixed] = useState(false);
   const [saved, setSaved] = useState(false);
   const [isPolishingCam, setIsPolishingCam] = useState(false);
   const [isEnhancingAudio, setIsEnhancingAudio] = useState(false);
   const [activeTab, setActiveTab] = useState<'prompt' | 'health' | 'json'>('prompt');
+
+  if (!isInspectorOpen) return null;
+
+  const widthClass = isInspectorExpanded ? 'w-full md:w-[560px] lg:w-[620px]' : 'w-80 md:w-96 lg:w-[420px] xl:w-[460px]';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(project.compiledPrompt);
@@ -67,15 +81,24 @@ export const PromptInspector: React.FC = () => {
   };
 
   return (
-    <div className="h-full bg-zinc-950 border-l border-zinc-800/80 flex flex-col w-80 lg:w-96 flex-shrink-0">
+    <div className={`h-full bg-zinc-950 border-l border-zinc-800/80 flex flex-col flex-shrink-0 transition-all duration-300 ${widthClass}`}>
       {/* Header */}
-      <div className="p-4 border-b border-zinc-800/80 flex items-center justify-between">
-        <div>
-          <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-2">
-            <Code className="w-4 h-4 text-cyan-400" />
-            Prompt Inspector
-          </h3>
-          <p className="text-[11px] text-zinc-400">Live compiled MiniMax H3 prompt</p>
+      <div className="p-3.5 border-b border-zinc-800/80 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleInspectorExpanded}
+            className="p-1.5 text-zinc-400 hover:text-cyan-400 hover:bg-zinc-900 rounded-lg transition-all"
+            title={isInspectorExpanded ? 'Normal Width (420px)' : 'Expand Widescreen (620px)'}
+          >
+            {isInspectorExpanded ? <Minimize2 className="w-4 h-4 text-purple-400" /> : <Maximize2 className="w-4 h-4 text-cyan-400" />}
+          </button>
+          <div>
+            <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-1.5">
+              <span>Prompt Inspector</span>
+            </h3>
+            <p className="text-[10px] text-zinc-400 font-mono">Live Compiled MiniMax H3 Prompt</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-1.5">
@@ -84,13 +107,13 @@ export const PromptInspector: React.FC = () => {
             onClick={handleAutoFix}
             className={`px-2 py-1 border text-xs font-semibold rounded-lg flex items-center gap-1 transition-all ${
               fixed
-                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md'
                 : 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60'
             }`}
             title="Auto-Fix Formatting & Compliance"
           >
             {fixed ? <Check className="w-3.5 h-3.5" /> : <Wrench className="w-3.5 h-3.5" />}
-            <span>{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
+            <span className="hidden sm:inline">{fixed ? 'Fixed!' : 'Auto-Fix'}</span>
           </button>
 
           <button
@@ -104,7 +127,7 @@ export const PromptInspector: React.FC = () => {
             title="Save Prompt to Library"
           >
             {saved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
-            <span>{saved ? 'Saved!' : 'Save'}</span>
+            <span className="hidden sm:inline">{saved ? 'Saved!' : 'Save'}</span>
           </button>
 
           <button
@@ -114,6 +137,15 @@ export const PromptInspector: React.FC = () => {
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copied!' : 'Copy'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleInspectorOpen}
+            className="p-1 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900 rounded-lg transition-all ml-1"
+            title="Close Inspector Panel"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -160,7 +192,7 @@ export const PromptInspector: React.FC = () => {
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {activeTab === 'prompt' && (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 font-mono text-xs text-zinc-200 leading-relaxed whitespace-pre-wrap select-all">
+          <div className="bg-zinc-900/90 border border-zinc-800/90 rounded-2xl p-4 font-mono text-[13px] text-zinc-100 leading-relaxed whitespace-pre-wrap select-all shadow-inner tracking-wide overflow-x-auto border-t-2 border-t-cyan-500/50">
             {project.compiledPrompt}
           </div>
         )}

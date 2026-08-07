@@ -1,12 +1,25 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { useHistoryStore } from '../../store/HistoryStore';
-import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film, Coffee } from 'lucide-react';
+import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film, Coffee, PanelRight, Maximize2, Minimize2 } from 'lucide-react';
 import { MiniMaxMode } from '../../types/project';
 import { PromptFormatter } from '../../engine/PromptFormatter';
 
 export const Header: React.FC = () => {
-  const { project, setProject, updateSettings, setMode, activeView, setActiveView, theme, toggleTheme } = useStudioStore();
+  const {
+    project,
+    setProject,
+    updateSettings,
+    setMode,
+    activeView,
+    setActiveView,
+    theme,
+    toggleTheme,
+    isInspectorOpen,
+    toggleInspectorOpen,
+    isInspectorExpanded,
+    toggleInspectorExpanded,
+  } = useStudioStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
 
   const handleModeChange = (mode: MiniMaxMode) => {
@@ -155,6 +168,37 @@ export const Header: React.FC = () => {
           <Coffee className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
           <span className="hidden sm:inline">Buy Me a Coffee</span>
         </a>
+
+        {/* Toggle Prompt Inspector & Expand Widescreen Buttons */}
+        <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+          <button
+            type="button"
+            onClick={toggleInspectorOpen}
+            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              isInspectorOpen
+                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+            title={isInspectorOpen ? 'Hide Prompt Inspector' : 'Show Prompt Inspector'}
+          >
+            <PanelRight className="w-4 h-4" />
+          </button>
+
+          {isInspectorOpen && (
+            <button
+              type="button"
+              onClick={toggleInspectorExpanded}
+              className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+                isInspectorExpanded
+                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              title={isInspectorExpanded ? 'Normal Width Inspector (384px)' : 'Widescreen Inspector (560px)'}
+            >
+              {isInspectorExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
 
         {/* Export Button */}
         <button

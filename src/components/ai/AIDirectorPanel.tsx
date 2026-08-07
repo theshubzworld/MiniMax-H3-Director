@@ -87,6 +87,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [idea, setIdea] = useState('');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showAllSeeds, setShowAllSeeds] = useState(false);
 
   const activeShots = project.shots;
   const currentShotCount = activeShots.length;
@@ -293,12 +294,22 @@ export const AIDirectorPanel: React.FC = () => {
 
         {/* Story Vision Seed Quick Presets */}
         <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1.5 flex items-center gap-1.5">
-            <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-            Quick Story Seed Presets (Click to Load Idea)
-          </label>
-          <div className="flex flex-wrap gap-1.5">
-            {STORY_SEED_PRESETS.map((seed) => (
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs text-zinc-400 font-medium flex items-center gap-1.5">
+              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <span>Quick Story Seed Presets (Click to Load Idea)</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowAllSeeds(!showAllSeeds)}
+              className="text-[11px] text-cyan-400 hover:text-cyan-300 font-bold transition-all flex items-center gap-1"
+            >
+              <span>{showAllSeeds ? 'Show Less ▴' : `Browse All (${STORY_SEED_PRESETS.length}) ▾`}</span>
+            </button>
+          </div>
+
+          <div className={`flex flex-wrap gap-1.5 transition-all ${showAllSeeds ? 'max-h-56 overflow-y-auto pr-1 p-2 bg-zinc-950/80 rounded-xl border border-zinc-800' : ''}`}>
+            {(showAllSeeds ? STORY_SEED_PRESETS : STORY_SEED_PRESETS.slice(0, 6)).map((seed) => (
               <button
                 key={seed.label}
                 type="button"
