@@ -103,7 +103,7 @@ export const SceneCreatorPanel: React.FC = () => {
   } = useStudioStore();
 
   const [activeTab, setActiveTab] = useState<'pair' | 'single'>('pair');
-  const [prompt, setPrompt] = useState(directorPlanDraft?.idea || '');
+  const [prompt, setPrompt] = useState(() => localStorage.getItem('minimax_h3_scene_prompt') || (directorPlanDraft?.idea || ''));
   const [model, setModel] = useState<NanoBananaModel>('gemini-3.1-flash-image');
   const style = project.settings.style || 'Ultra Realistic Photorealism';
   const aspectRatio = project.settings.aspectRatio || '16:9';
@@ -780,7 +780,10 @@ export const SceneCreatorPanel: React.FC = () => {
                 <button
                   key={seed.label}
                   type="button"
-                  onClick={() => setPrompt(seed.prompt)}
+                  onClick={() => {
+                    setPrompt(seed.prompt);
+                    localStorage.setItem('minimax_h3_scene_prompt', seed.prompt);
+                  }}
                   className="px-2.5 py-1 text-[11px] bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-amber-500/40 text-zinc-300 rounded-lg transition-all"
                 >
                   {seed.label}
@@ -791,18 +794,38 @@ export const SceneCreatorPanel: React.FC = () => {
 
           {/* Prompt Textarea */}
           <div>
-            <label className="text-xs text-zinc-400 font-medium mb-1.5 block flex items-center justify-between">
-              <span>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs text-zinc-400 font-medium block">
                 {activeTab === 'pair'
                   ? 'Scene Transformation Arc Idea (Frame 1 -> Action -> Frame 2 Resolution)'
                   : 'Visual Keyframe Description Prompt'}
-              </span>
-              <span className="text-[10px] text-zinc-500 font-mono">{prompt.length} chars</span>
-            </label>
+              </label>
+              <div className="flex items-center gap-2">
+                {prompt.trim() && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPrompt('');
+                      localStorage.removeItem('minimax_h3_scene_prompt');
+                    }}
+                    className="text-[11px] text-red-400 hover:text-red-300 font-semibold px-2.5 py-0.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                    title="Clear Prompt Idea"
+                  >
+                    <Trash2 className="w-3 h-3 text-red-400" />
+                    <span>Clear Prompt</span>
+                  </button>
+                )}
+                <span className="text-[10px] text-zinc-500 font-mono">{prompt.length} chars</span>
+              </div>
+            </div>
             <textarea
               rows={3}
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setPrompt(val);
+                localStorage.setItem('minimax_h3_scene_prompt', val);
+              }}
               placeholder={
                 activeTab === 'pair'
                   ? 'e.g. Corporate executive inside glass atrium transforms into futuristic superhero during a sudden explosion...'

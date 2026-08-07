@@ -175,7 +175,7 @@ export const AIDirectorPanel: React.FC = () => {
     setDirectorMode,
   } = useStudioStore();
 
-  const [idea, setIdea] = useState('');
+  const [idea, setIdea] = useState(() => localStorage.getItem('minimax_h3_prompt_idea') || '');
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
@@ -231,6 +231,7 @@ Audio & Dialogue Guidelines:
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
+    localStorage.setItem('minimax_h3_prompt_idea', seed.prompt);
     if (seed.category === 'solo-sultry' || seed.category === 'solo' || seed.prompt.toLowerCase().includes('solo ')) {
       updateSettings({ subjectComposition: 'solo' });
     } else if (seed.category === 'couple-sultry' || seed.prompt.toLowerCase().includes('couple') || seed.prompt.toLowerCase().includes('two ')) {
@@ -651,13 +652,33 @@ Audio & Dialogue Guidelines:
 
         {/* Vision Prompt Hints Textbox */}
         <div className="space-y-2">
-          <label className="text-xs text-zinc-400 font-medium block">
-            Creative Vision Story Hints & Prompt Idea
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs text-zinc-400 font-medium block">
+              Creative Vision Story Hints & Prompt Idea
+            </label>
+            {idea.trim() && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIdea('');
+                  localStorage.removeItem('minimax_h3_prompt_idea');
+                }}
+                className="text-[11px] text-red-400 hover:text-red-300 font-semibold px-2.5 py-0.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                title="Clear Prompt Idea"
+              >
+                <Trash2 className="w-3 h-3 text-red-400" />
+                <span>Clear Prompt</span>
+              </button>
+            )}
+          </div>
           <textarea
             rows={3}
             value={idea}
-            onChange={(e) => setIdea(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setIdea(val);
+              localStorage.setItem('minimax_h3_prompt_idea', val);
+            }}
             placeholder="e.g. A young female cyborg warrior drawing her katana in a rain-soaked neon Neo-Tokyo alleyway..."
             className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50 font-mono"
           />
