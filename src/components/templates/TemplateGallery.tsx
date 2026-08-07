@@ -8,15 +8,17 @@ import { Shot } from '../../types/shot';
 
 const CATEGORIES: Array<TemplateCategory | 'All'> = [
   'All',
-  'Anime',
+  'Raw & Amateur',
+  'Sultry & Romance',
+  'Boudoir',
+  'Cinematic Film',
   'Fashion',
-  'Cars',
-  'Sci-Fi',
-  'Food',
   'Luxury',
-  'Commercial',
   'Action',
-  'Music Video',
+  'Sci-Fi',
+  'Anime',
+  'Cars',
+  'Food',
 ];
 
 export const TemplateGallery: React.FC = () => {
@@ -39,6 +41,25 @@ export const TemplateGallery: React.FC = () => {
       character: s.character || { identity: 'The primary subject' },
       environment: s.environment || { location: 'Cinematic environment' },
       rawActionDescription: s.rawActionDescription || 'Performs cinematic movement.',
+      dialogue: s.dialogue
+        ? {
+            hasDialogue: s.dialogue.hasDialogue ?? false,
+            speakerId: s.dialogue.speakerId || 'S1',
+            languageTag: s.dialogue.languageTag || 'English',
+            dialogueText: s.dialogue.dialogueText || '',
+            isOffScreenVoiceover: s.dialogue.isOffScreenVoiceover ?? false,
+            lipsClosedDuringVoiceover: s.dialogue.lipsClosedDuringVoiceover ?? false,
+            carriesAcrossCut: s.dialogue.carriesAcrossCut ?? false,
+          }
+        : {
+            hasDialogue: false,
+            speakerId: 'S1',
+            languageTag: 'English',
+            dialogueText: '',
+            isOffScreenVoiceover: false,
+            lipsClosedDuringVoiceover: false,
+            carriesAcrossCut: false,
+          },
     }));
 
     const projectToSet = {

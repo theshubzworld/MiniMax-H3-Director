@@ -1,8 +1,11 @@
 import { MiniMaxMode, AspectRatio, VisualStyle } from './project';
-import { Shot } from './shot';
+import { Shot, DialogueConfig } from './shot';
 import { AudioSettings } from './audio';
 
 export type TemplateCategory =
+  | 'Raw & Amateur'
+  | 'Sultry & Romance'
+  | 'Boudoir'
   | 'Fashion'
   | 'Commercial'
   | 'Luxury'
@@ -37,6 +40,6 @@ export interface PromptTemplate {
     aspectRatio: AspectRatio;
     style: VisualStyle;
   };
-  presetShots: Partial<Shot>[];
+  presetShots: Array<Omit<Partial<Shot>, 'dialogue'> & { dialogue?: Partial<DialogueConfig> }>;
   presetAudio: Partial<AudioSettings>;
 }
