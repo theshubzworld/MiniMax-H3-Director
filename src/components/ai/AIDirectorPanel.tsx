@@ -109,8 +109,13 @@ export const AIDirectorPanel: React.FC = () => {
   const isImageMode = project.settings.mode !== 'T2VA';
   const hasReferences = project.references && project.references.length > 0;
 
-  const handleSelectSeed = (seedPrompt: string) => {
-    setIdea(seedPrompt);
+  const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
+    setIdea(seed.prompt);
+    if (seed.category === 'solo' || seed.prompt.toLowerCase().includes('solo ')) {
+      updateSettings({ subjectComposition: 'solo' });
+    } else if (seed.category === 'sultry' || seed.prompt.toLowerCase().includes('couple') || seed.prompt.toLowerCase().includes('two ')) {
+      updateSettings({ subjectComposition: 'couple' });
+    }
   };
 
   const handleAutoBuild = async () => {
@@ -416,7 +421,7 @@ export const AIDirectorPanel: React.FC = () => {
               <button
                 key={seed.label}
                 type="button"
-                onClick={() => handleSelectSeed(seed.prompt)}
+                onClick={() => handleSelectSeed(seed)}
                 className="px-2.5 py-1 text-[11px] bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-zinc-300 rounded-lg transition-all"
               >
                 {seed.label}
@@ -426,8 +431,8 @@ export const AIDirectorPanel: React.FC = () => {
         </div>
 
         {/* Vision Prompt Hints Textbox */}
-        <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1.5 block">
+        <div className="space-y-2">
+          <label className="text-xs text-zinc-400 font-medium block">
             Creative Vision Story Hints & Prompt Idea
           </label>
           <textarea
@@ -437,6 +442,57 @@ export const AIDirectorPanel: React.FC = () => {
             placeholder="e.g. A young female cyborg warrior drawing her katana in a rain-soaked neon Neo-Tokyo alleyway..."
             className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50 font-mono"
           />
+
+          {/* Smart Contradiction Warning Alert */}
+          {(() => {
+            const isSoloSelected = (project.settings.subjectComposition || 'solo') === 'solo';
+            const hasCoupleKeywords = /\b(couple|lovers|husband|wife|together|embrace her|his fingers|two friends|dual|pair)\b/i.test(idea);
+            const isContradiction = isSoloSelected && hasCoupleKeywords;
+
+            if (isContradiction) {
+              return (
+                <div className="p-3 bg-amber-500/15 border border-amber-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-amber-300 shadow-sm animate-fade-in">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">⚠️</span>
+                    <span>
+                      <strong>Setting Contradiction Detected:</strong> Your prompt describes a couple, but <strong>Solo Character</strong> is selected.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => updateSettings({ subjectComposition: 'couple' })}
+                    className="px-3 py-1 bg-amber-500 text-zinc-950 font-bold rounded-lg hover:bg-amber-400 transition-all text-xs shrink-0 shadow-sm"
+                  >
+                    Switch to Couple Mode
+                  </button>
+                </div>
+              );
+            }
+
+            const isCoupleSelected = project.settings.subjectComposition === 'couple';
+            const hasSoloKeywords = /\b(solo woman|solo female|solo male|solo protagonist|lone traveler|single person)\b/i.test(idea);
+            if (isCoupleSelected && hasSoloKeywords) {
+              return (
+                <div className="p-3 bg-cyan-500/15 border border-cyan-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-cyan-300 shadow-sm animate-fade-in">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">💡</span>
+                    <span>
+                      <strong>Setting Notice:</strong> Your prompt describes a solo person, but <strong>Couple Mode</strong> is selected.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => updateSettings({ subjectComposition: 'solo' })}
+                    className="px-3 py-1 bg-cyan-500 text-zinc-950 font-bold rounded-lg hover:bg-cyan-400 transition-all text-xs shrink-0 shadow-sm"
+                  >
+                    Switch to Solo Mode
+                  </button>
+                </div>
+              );
+            }
+
+            return null;
+          })()}
         </div>
       </div>
 
