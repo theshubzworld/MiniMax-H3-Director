@@ -840,8 +840,8 @@ Audio & Dialogue Guidelines:
             <span className="text-[10px] text-zinc-500 font-mono">Exact Compiled Payload sent to {directorModel}</span>
           </div>
 
-          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 font-mono text-[11px] text-cyan-200/90 leading-relaxed max-h-48 overflow-y-auto shadow-inner select-all">
-            <pre className="whitespace-pre-wrap font-mono">{compiledGeminiPrompt}</pre>
+          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 font-mono text-[11px] text-zinc-100 dark:text-cyan-300 leading-relaxed max-h-48 overflow-y-auto shadow-inner select-all">
+            <pre className="whitespace-pre-wrap font-mono text-cyan-400 font-semibold">{compiledGeminiPrompt}</pre>
           </div>
         </div>
 
