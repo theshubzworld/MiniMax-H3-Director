@@ -35,27 +35,31 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
 ];
 
 const STORY_SEED_PRESETS = [
-  // 💋 Sultry & Romance
-  { category: 'sultry', label: '💋 Velvet Bedside Caress', prompt: 'A sultry romantic couple relaxing on a plush velvet bed under soft golden candle glow. In a slow tracking close-up, his fingers gently trace down her shoulder as she exhales with eyes fluttering closed. Include whispered passionate dialogue, soft breathing foley, and sultry ambient piano score.' },
-  { category: 'sultry', label: '🔥 Steamy Mirror Silhouette', prompt: 'A sensual couple in a mist-covered bathroom after a hot shower under warm backlight. Her fingers trace patterns on the steamy mirror as he embraces her from behind, resting his chin on her shoulder. Include whispered romantic commentary, water droplet foley, and deep atmospheric lo-fi synth beats.' },
-  { category: 'sultry', label: '🌹 Silk Loungewear Sunset', prompt: 'A couple in a high-rise penthouse suite overlooking a glowing city sunset, dressed in silk loungewear. She arches her back gently as he pulls her close in a lingering intimate embrace. Include whispered dialogue cues, rustling silk foley, and slow sensual acoustic guitar.' },
-  { category: 'sultry', label: '🛏️ Bedroom Sunbeam Romance', prompt: 'A romantic couple waking up in white linen sheets as warm morning sunbeams stream through linen curtains. Include whispered intimate dialogue, soft sheet rustle foley, and acoustic guitar score.' },
-  { category: 'sultry', label: '🛁 Candlelit Bath Spa Romance', prompt: 'A romantic couple relaxing in a steamy freestanding marble bathtub surrounded by glowing candles and rose petals. Include soft whispered dialogue, gentle water splash foley, and ambient piano music.' },
-  { category: 'sultry', label: '🏡 Kitchen Morning Coffee Romance', prompt: 'A couple laughing together in a sun-drenched modern kitchen while making morning coffee in silk loungewear. Include playful dialogue, clinking coffee cups foley, and warm lo-fi lounge beats.' },
-  { category: 'sultry', label: '🌊 Sunset Beach Couple Romance', prompt: 'A couple strolling hand-in-hand along the shoreline during a vibrant golden-hour sunset as ocean waves lap their bare feet. Include romantic whispered voiceover, ocean waves foley, and ambient piano orchestra.' },
-  { category: 'sultry', label: '🌧️ Rainy Window Blanket Snuggle', prompt: 'A couple wrapped in a plush knit blanket on a window seat watching rain drum against glass with steaming mugs. Include cozy dialogue, rain drumming on glass foley, and acoustic folk music.' },
-  { category: 'sultry', label: '🌳 Wildflower Meadow Picnic', prompt: 'A couple lounging on a checkered blanket in a sun-dappled wildflower meadow under a large oak tree. Include happy shared laughter, warm summer breeze foley, and romantic acoustic guitar music.' },
+  // 💃 Solo Sultry & Boudoir (Single Person S1)
+  { category: 'solo-sultry', label: '💃 Solo Velvet Chaise Lounge', prompt: 'A solo woman in a blush-pink satin slip dress lounging on a plush velvet chaise under soft golden candlelight. In a slow tracking close-up, she runs her fingers through her hair while exhaling softly with eyes half-closed. Include whispered solo reflection voiceover, silk rustle foley, and sultry lo-fi piano score.' },
+  { category: 'solo-sultry', label: '🔥 Solo Steamy Mirror Caress', prompt: 'A solo woman in a steamy, mist-covered bathroom after a hot shower under warm tungsten backlight. She slowly traces a pattern on the foggy mirror before turning to look back over her bare shoulder with a soft smile. Include whispered inner monologue, water droplet foley, and deep atmospheric lo-fi synth.' },
+  { category: 'solo-sultry', label: '🌹 Solo Silk Robe Sunset', prompt: 'A solo woman in a flowing silk robe standing on a penthouse balcony overlooking a glowing city sunset. The gentle breeze rustles her robe as she arches her back slightly and gazes reflectively into the horizon. Include soft solo voiceover, breeze rustle foley, and slow sensual acoustic guitar.' },
+  { category: 'solo-sultry', label: '🕯️ Solo Candlelit Vanity', prompt: 'A solo female model seated before a gilded vanity mirror surrounded by warm candle glow and tungsten bulbs. She applies perfume to her collarbone as the camera slowly dollies in tight. Include reflective solo narration, glass clink foley, and sultry saxophone.' },
+  { category: 'solo-sultry', label: '🛁 Solo Candlelit Bath Spa', prompt: 'A solo woman relaxing in a steamy freestanding marble bathtub covered in floating rose petals under dim candle glow. Include whispered solo reflection, gentle water splash foley, and ambient piano.' },
+  { category: 'solo-sultry', label: '🛋️ Solo Bedside Sunbeam', prompt: 'A solo woman waking up in white linen sheets as warm morning sunbeams stream through linen curtains, stretching luxuriously. Include soft breathing foley, sheet rustle, and warm lo-fi beats.' },
 
-  // 👤 Solo Protagonist
-  { category: 'solo', label: '💃 Solo Sultry Silk Boudoir', prompt: 'A solo woman in a blush-pink silk slip dress relaxing on a velvet chaise lounge in a sun-drenched penthouse. In a slow tracking close-up, she runs her fingers through her hair while gazing softly into the camera. Include whispered solo reflection voiceover, silk rustle foley, and sultry lo-fi piano score.' },
-  { category: 'solo', label: '🕯️ Solo Candlelit Mirror Glamour', prompt: 'A solo female model seated before a gilded vanity mirror surrounded by soft candle glow and warm tungsten bulbs. She applies perfume to her collarbone as the camera slowly dollies closer. Include reflective inner monologue narration, glass perfume bottle clink foley, and ambient jazz saxophone.' },
+  // 👩‍❤️‍💋‍👨 Couple Sultry & Romance (Dual S1 + S2)
+  { category: 'couple-sultry', label: '💋 Couple Velvet Bedside', prompt: 'A sultry romantic couple relaxing on a plush velvet bed under soft golden candle glow. In a slow tracking close-up, his fingers gently trace down her shoulder as she exhales with eyes fluttering closed. Include whispered passionate dialogue, soft breathing foley, and sultry ambient piano score.' },
+  { category: 'couple-sultry', label: '🔥 Couple Steamy Mirror', prompt: 'A sensual couple in a mist-covered bathroom after a hot shower under warm backlight. Her fingers trace patterns on the steamy mirror as he embraces her from behind, resting his chin on her shoulder. Include whispered romantic commentary, water droplet foley, and deep atmospheric lo-fi synth beats.' },
+  { category: 'couple-sultry', label: '🌹 Couple Silk Sunset', prompt: 'A couple in a high-rise penthouse suite overlooking a glowing city sunset, dressed in silk loungewear. She arches her back gently as he pulls her close in a lingering intimate embrace. Include whispered dialogue cues, rustling silk foley, and slow sensual acoustic guitar.' },
+  { category: 'couple-sultry', label: '🛏️ Couple Bedroom Sunbeams', prompt: 'A romantic couple waking up in white linen sheets as warm morning sunbeams stream through linen curtains. Include whispered intimate dialogue, soft sheet rustle foley, and acoustic guitar score.' },
+  { category: 'couple-sultry', label: '🛁 Couple Bath Spa Romance', prompt: 'A romantic couple relaxing in a steamy freestanding marble bathtub surrounded by glowing candles and rose petals. Include soft whispered dialogue, gentle water splash foley, and ambient piano music.' },
+  { category: 'couple-sultry', label: '🏡 Couple Morning Coffee', prompt: 'A couple laughing together in a sun-drenched modern kitchen while making morning coffee in silk loungewear. Include playful dialogue, clinking coffee cups foley, and warm lo-fi lounge beats.' },
+  { category: 'couple-sultry', label: '🌊 Couple Sunset Beach Walk', prompt: 'A couple strolling hand-in-hand along the shoreline during a vibrant golden-hour sunset as ocean waves lap their bare feet. Include romantic whispered voiceover, ocean waves foley, and ambient piano orchestra.' },
+
+  // 👤 Solo General & Action
   { category: 'solo', label: '🌅 Solo Golden Hour Shoreline', prompt: 'A solo woman walking gracefully along wet sand during a vibrant golden-hour ocean sunset, her white linen dress catching the sea breeze. Include soft reflective monologue narration, gentle ocean waves, and acoustic guitar score.' },
   { category: 'solo', label: '☕ Solo Cozy Rain Window', prompt: 'A solo woman wrapped in an oversized knit sweater sitting on a window seat sipping tea while watching raindrops stream down glass. Include cozy solo voiceover, rain drumming foley, and acoustic guitar music.' },
   { category: 'solo', label: '👗 Fashion Runway Spotlights', prompt: 'A haute couture supermodel walking an obsidian mirror runway surrounded by spotlights. Include camera shutter clicks foley, director voiceover cues, and deep house electronic music.' },
   { category: 'solo', label: '🍷 Solo Penthouse Fireside', prompt: 'A solo protagonist swirling a glass of red wine in a cozy penthouse lounge by a roaring stone fireplace. Include quiet reflective monologue, crackling fire foley, and smooth ambient jazz piano.' },
+  { category: 'solo', label: '🗡️ Cyborg Katana Rain', prompt: 'A female cyborg warrior drawing a glowing plasma katana in a rain-soaked neon Neo-Tokyo alleyway. Include spoken battle dialogue, sizzle rain foley, and heavy dark synthwave music.' },
 
   // ⚔️ Action & Sci-Fi
-  { category: 'action', label: '🗡️ Cyborg Katana Rain & Dialogue', prompt: 'A female cyborg warrior drawing a glowing plasma katana in a rain-soaked neon Neo-Tokyo alleyway. Include spoken battle dialogue, sizzle rain foley, and heavy dark synthwave music.' },
   { category: 'action', label: '🏎️ Cyberpunk Tunnel Drift', prompt: 'A matte-black hypercar drifting through a neon highway tunnel with light trails. Include a roaring V12 engine turbo blowoff foley, futuristic radio chatter, and driving synthwave music.' },
   { category: 'action', label: '⚡ Superhero Rooftop Vigil', prompt: 'An armored heroine standing on a skyscraper ledge overseeing a stormy metropolis as lightning strikes. Include heroic voiceover, thunder rumble foley, and swelling cinematic brass score.' },
   { category: 'action', label: '🐉 Dragon Siege & Battle Cry', prompt: 'A warrior riding an armored crimson dragon soaring through stormy clouds above a mountain fortress. Include dragon roar and wind howl foley, warrior shout, and epic orchestral drums.' },
@@ -63,9 +67,8 @@ const STORY_SEED_PRESETS = [
   { category: 'action', label: '🤖 Mecha Power-Up & System Voice', prompt: 'A 50-foot military mecha powering up its shoulder cannons as alarm strobes illuminate a hangar bay. Include robotic AI voice, heavy hydraulic servo foley, and industrial metal beat.' },
   { category: 'action', label: '🥋 Bamboo Forest Sword Duel', prompt: 'Two martial arts masters facing off in a mist-covered bamboo forest at twilight as cherry blossom petals swirl. Include a sharp battle kiai shout, katana steel clashing foley, and traditional koto flute music.' },
   { category: 'action', label: '🧪 Cyber Lab Awakening', prompt: 'A bio-android opening glowing blue eyes inside a glass fluid chamber as wires disconnect. Include synthetic female voice, glass hiss foley, and pulsing ambient electronic beat.' },
-  { category: 'action', label: '⚔️ Gladiator Arena Entrance', prompt: 'A warrior stepping into a sun-drenched Roman arena through heavy iron gates. Include gladiator battle cry, roaring stadium crowd and clanging iron gates foley, and epic cinematic percussion.' },
 
-  // 🌿 Nature & Cinematic
+  // 🌿 Nature & Cinema
   { category: 'cinematic', label: '🏛️ Amazonian Battle & Narration', prompt: 'An Amazonian warrior princess in bronze armor standing before Greek temple pillars as sunlight glints off her sword. Include inspiring warrior narration, metal armor clanking foley, and orchestral brass music.' },
   { category: 'cinematic', label: '🕵️ Noir Rain Investigation', prompt: 'A weary detective in a trenchcoat under a streetlamp smoking in rain-drenched 1950s Tokyo. Include gritty noir voiceover, rain drumming foley, and slow melancholy jazz trumpet.' },
   { category: 'cinematic', label: '🌌 Deep Space Monolith', prompt: 'An astronaut discovering a glowing crystalline monolith on an alien moon under a purple nebula sky. Include static radio voiceover, helmet breathing foley, and dark atmospheric synth pads.' },
@@ -101,7 +104,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
-  const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo' | 'sultry' | 'action' | 'cinematic'>('all');
+  const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action' | 'cinematic'>('all');
 
   const activeShots = project.shots;
   const currentShotCount = activeShots.length;
@@ -111,9 +114,9 @@ export const AIDirectorPanel: React.FC = () => {
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
-    if (seed.category === 'solo' || seed.prompt.toLowerCase().includes('solo ')) {
+    if (seed.category === 'solo-sultry' || seed.category === 'solo' || seed.prompt.toLowerCase().includes('solo ')) {
       updateSettings({ subjectComposition: 'solo' });
-    } else if (seed.category === 'sultry' || seed.prompt.toLowerCase().includes('couple') || seed.prompt.toLowerCase().includes('two ')) {
+    } else if (seed.category === 'couple-sultry' || seed.prompt.toLowerCase().includes('couple') || seed.prompt.toLowerCase().includes('two ')) {
       updateSettings({ subjectComposition: 'couple' });
     }
   };
@@ -389,8 +392,9 @@ export const AIDirectorPanel: React.FC = () => {
           <div className="flex flex-wrap gap-1.5 mb-2.5">
             {[
               { id: 'all', label: `✨ All (${STORY_SEED_PRESETS.length})` },
-              { id: 'solo', label: '👤 Solo Protagonist' },
-              { id: 'sultry', label: '💋 Sultry & Romance' },
+              { id: 'solo-sultry', label: '💃 Solo Sultry & Boudoir' },
+              { id: 'couple-sultry', label: '👩‍❤️‍💋‍👨 Couple Sultry & Romance' },
+              { id: 'solo', label: '👤 Solo General' },
               { id: 'action', label: '⚔️ Action & Sci-Fi' },
               { id: 'cinematic', label: '🌿 Nature & Cinema' },
             ].map((cat) => {
