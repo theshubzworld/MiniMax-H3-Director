@@ -16,6 +16,8 @@ import {
   Volume2,
   Clapperboard,
   Layers,
+  Download,
+  FileText,
 } from 'lucide-react';
 
 export const PromptLibraryPanel: React.FC = () => {
@@ -40,6 +42,80 @@ export const PromptLibraryPanel: React.FC = () => {
     savePromptToLibrary();
     setJustSavedCurrent(true);
     setTimeout(() => setJustSavedCurrent(false), 2500);
+  };
+
+  const handleExportSingleTxt = (p: SavedPrompt) => {
+    const safeTitle = p.title.replace(/[^a-z0-9_-]/gi, '_').substring(0, 40) || 'minimax_h3_prompt';
+    const filename = `${safeTitle}_${p.mode}.txt`;
+
+    const content = `================================================================================
+MINIMAX H3 PROMPT: ${p.title}
+================================================================================
+MODE: ${p.mode} | SHOTS: ${p.shotsCount} (${p.durationSeconds}s) | ASPECT: ${p.aspectRatio}
+NARRATIVE STYLE: ${p.narrativeStyle}
+CREATED DATE: ${new Date(p.createdAt).toLocaleString()}
+================================================================================
+
+STORY IDEA:
+${p.idea}
+
+================================================================================
+COMPILED MINIMAX H3 PRODUCTION PROMPT
+================================================================================
+
+${p.compiledPrompt}
+`;
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportAllTxt = () => {
+    if (!prompts || prompts.length === 0) return;
+    const filename = `minimax_h3_all_prompts_${new Date().toISOString().slice(0, 10)}.txt`;
+
+    const sections = prompts
+      .map(
+        (p, idx) => `================================================================================
+PROMPT #${idx + 1}: ${p.title}
+MODE: ${p.mode} | SHOTS: ${p.shotsCount} (${p.durationSeconds}s) | ASPECT: ${p.aspectRatio}
+NARRATIVE STYLE: ${p.narrativeStyle}
+CREATED: ${new Date(p.createdAt).toLocaleString()}
+================================================================================
+
+STORY IDEA:
+${p.idea}
+
+COMPILED PROMPT:
+${p.compiledPrompt}`
+      )
+      .join('\n\n\n');
+
+    const content = `================================================================================
+MINIMAX H3 PROMPT STUDIO - SAVED PROMPTS LIBRARY EXPORT
+TOTAL SAVED PROMPTS: ${prompts.length}
+EXPORT DATE: ${new Date().toLocaleString()}
+================================================================================
+
+${sections}
+`;
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const filteredPrompts = prompts.filter((p) => {
@@ -74,22 +150,35 @@ export const PromptLibraryPanel: React.FC = () => {
               <h2 className="text-xl font-extrabold text-zinc-100 tracking-tight">Saved Prompt Library</h2>
             </div>
             <p className="text-xs text-zinc-400 max-w-xl">
-              Access all your saved MiniMax H3 video prompts, 1-click reload scenes into the studio editor, or copy production prompts directly to your clipboard.
+              Access all your saved MiniMax H3 video prompts, 1-click reload scenes into the studio editor, or export prompts directly as TXT files.
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={handleSaveCurrent}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg ${
-              justSavedCurrent
-                ? 'bg-emerald-500 text-zinc-950 font-extrabold shadow-emerald-500/20 scale-105'
-                : 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white shadow-purple-500/20'
-            }`}
-          >
-            {justSavedCurrent ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-            <span>{justSavedCurrent ? 'Saved Current Scene!' : 'Save Active Scene to Library'}</span>
-          </button>
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              onClick={handleExportAllTxt}
+              disabled={prompts.length === 0}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-bold transition-all shadow-md disabled:opacity-40"
+              title="Export all saved prompts into a single TXT file"
+            >
+              <Download className="w-4 h-4 text-cyan-400" />
+              <span>Export All ({prompts.length}) .TXT</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSaveCurrent}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg ${
+                justSavedCurrent
+                  ? 'bg-emerald-500 text-zinc-950 font-extrabold shadow-emerald-500/20 scale-105'
+                  : 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white shadow-purple-500/20'
+              }`}
+            >
+              {justSavedCurrent ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+              <span>{justSavedCurrent ? 'Saved Current Scene!' : 'Save Active Scene to Library'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -244,18 +333,30 @@ export const PromptLibraryPanel: React.FC = () => {
                       <span>{isExpanded ? 'Hide Compiled Prompt' : 'View Full MiniMax H3 Prompt'}</span>
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(p.id, p.compiledPrompt)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                        isCopied
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                          : 'bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-800 hover:bg-zinc-800'
-                      }`}
-                    >
-                      {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-purple-400" />}
-                      <span>{isCopied ? 'Copied!' : 'Copy Prompt'}</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleExportSingleTxt(p)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-950 text-cyan-300 hover:text-white border border-zinc-800 hover:border-cyan-500/40 hover:bg-zinc-800 transition-all"
+                        title="Export this prompt as a .txt file"
+                      >
+                        <Download className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Export TXT</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(p.id, p.compiledPrompt)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                          isCopied
+                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
+                            : 'bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-800 hover:bg-zinc-800'
+                        }`}
+                      >
+                        {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-purple-400" />}
+                        <span>{isCopied ? 'Copied!' : 'Copy Prompt'}</span>
+                      </button>
+                    </div>
                   </div>
 
                   {isExpanded && (
