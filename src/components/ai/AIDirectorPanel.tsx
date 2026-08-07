@@ -4,6 +4,7 @@ import { AIEngine } from '../../ai/AIEngine';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
 import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
+import { ALL_VISUAL_STYLES, VisualStyle, AspectRatio } from '../../types/project';
 
 export interface NarrativePresetItem {
   id: NarrativeStyle;
@@ -275,6 +276,49 @@ export const AIDirectorPanel: React.FC = () => {
           <ReferenceImageDropzone />
         </div>
       )}
+
+      {/* Aesthetic Visual Style, Duration & Aspect Ratio Bar (Positioned directly below Reference Images) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-zinc-950/60 p-4 rounded-xl border border-zinc-800">
+        <div>
+          <label className="text-xs text-zinc-400 font-medium mb-1 block">Aesthetic Visual Style</label>
+          <select
+            value={project.settings.style}
+            onChange={(e) => updateSettings({ style: e.target.value as VisualStyle })}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
+          >
+            {ALL_VISUAL_STYLES.map((st) => (
+              <option key={st} value={st}>
+                {st}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs text-zinc-400 font-medium mb-1 block">Effective Video Duration (Seconds)</label>
+          <input
+            type="number"
+            value={project.settings.durationSeconds}
+            onChange={(e) => updateSettings({ durationSeconds: parseFloat(e.target.value) || 6 })}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs text-zinc-400 font-medium mb-1 block">Aspect Ratio</label>
+          <select
+            value={project.settings.aspectRatio}
+            onChange={(e) => updateSettings({ aspectRatio: e.target.value as AspectRatio })}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
+          >
+            {['16:9', '9:16', '1:1', '2.39:1', '4:3'].map((ar) => (
+              <option key={ar} value={ar}>
+                {ar}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* Inputs & Presets */}
       <div className="space-y-4">
