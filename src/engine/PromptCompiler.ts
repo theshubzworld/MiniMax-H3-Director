@@ -225,6 +225,10 @@ export class PromptCompiler {
    */
   private static sanitizeShotProse(text: string): string {
     return text
+      // Fix empty parentheses
+      .replace(/\(\s*\)/g, '')
+      // Fix space before punctuation
+      .replace(/\s+([,.!?])/g, '$1')
       // Fix "standing in Starting..."
       .replace(/standing in Starting /gi, 'Starting ')
       // Fix hardcoded "same room" contradiction

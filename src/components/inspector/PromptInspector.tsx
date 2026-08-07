@@ -12,28 +12,28 @@ const highlightInlineTokens = (text: string) => {
     if (!part) return null;
     if (/<Picture\s*\d+>/i.test(part)) {
       return (
-        <span key={i} className="px-1.5 py-0.5 mx-0.5 rounded bg-purple-500/20 border border-purple-500/40 text-purple-400 font-bold text-xs font-mono shadow-sm">
+        <span key={i} className="inline-flex items-center px-1.5 py-0 mx-0.5 rounded bg-purple-500/20 border border-purple-500/40 text-purple-400 font-bold text-xs font-mono leading-tight align-baseline shadow-xs">
           {part}
         </span>
       );
     }
     if (/\(S[1-9]\)/i.test(part)) {
       return (
-        <span key={i} className="px-1 py-0.5 mx-0.5 rounded bg-sky-500/20 border border-sky-500/40 text-sky-400 font-bold text-xs font-mono shadow-sm">
+        <span key={i} className="inline-flex items-center px-1 py-0 mx-0.5 rounded bg-sky-500/20 border border-sky-500/40 text-sky-400 font-bold text-xs font-mono leading-tight align-baseline shadow-xs">
           {part}
         </span>
       );
     }
     if (part === '<d>' || part === '</d>') {
       return (
-        <span key={i} className="text-emerald-400 font-bold font-mono px-0.5">
+        <span key={i} className="text-emerald-400 font-bold font-mono px-0.5 leading-tight">
           {part}
         </span>
       );
     }
     if (/\[\s*(en-[A-Z]+|English)\s*\]/i.test(part)) {
       return (
-        <span key={i} className="text-emerald-400 font-bold font-mono px-1 bg-emerald-500/20 rounded border border-emerald-500/40">
+        <span key={i} className="inline-flex items-center px-1 py-0 text-emerald-400 font-bold font-mono bg-emerald-500/20 rounded border border-emerald-500/40 leading-tight align-baseline">
           {part}
         </span>
       );
@@ -48,10 +48,10 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
   const lines = text.split('\n');
 
   return (
-    <div className="font-mono text-[13px] leading-[1.8] text-zinc-100 select-all space-y-1.5">
+    <div className="font-mono text-[13px] leading-[2.2] text-zinc-100 select-all space-y-3">
       {lines.map((line, idx) => {
         const trimmed = line.trim();
-        if (!trimmed) return <div key={idx} className="h-2" />;
+        if (!trimmed) return <div key={idx} className="h-1" />;
 
         // 1. Root Section Headers
         if (
@@ -61,8 +61,8 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
           trimmed === 'non_diegetic_music:'
         ) {
           return (
-            <div key={idx} className="pt-3 pb-1 font-bold">
-              <span className="px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider shadow-sm">
+            <div key={idx} className="pt-2 pb-0.5 font-bold">
+              <span className="inline-flex items-center px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider leading-tight">
                 {trimmed}
               </span>
             </div>
@@ -76,27 +76,18 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
           const restOfLine = shotMatch[2];
 
           return (
-            <div key={idx} className="pt-2 text-zinc-100 leading-relaxed">
-              <span className="inline-block px-2 py-0.5 mr-2 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-400 font-bold text-xs font-mono shadow-sm">
+            <div key={idx} className="text-zinc-100 leading-[2.2] pt-1">
+              <span className="inline-flex items-center px-2 py-0 mr-2 rounded bg-amber-500/20 border border-amber-500/40 text-amber-400 font-bold text-xs font-mono leading-tight align-baseline shadow-xs">
                 {shotTag}
               </span>
-              <span className="text-zinc-100">{highlightInlineTokens(restOfLine)}</span>
+              <span>{highlightInlineTokens(restOfLine)}</span>
             </div>
           );
         }
 
-        // 3. Spoken Dialogue Lines (<d>...</d>)
-        if (line.includes('<d>') || line.includes('</d>')) {
-          return (
-            <div key={idx} className="my-1.5 p-2 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-400 font-medium leading-relaxed">
-              {highlightInlineTokens(line)}
-            </div>
-          );
-        }
-
-        // 4. Default Prose Lines
+        // 3. Dialogue & Default Prose Lines
         return (
-          <div key={idx} className="text-zinc-100 leading-relaxed">
+          <div key={idx} className="text-zinc-100 leading-[2.2]">
             {highlightInlineTokens(line)}
           </div>
         );
