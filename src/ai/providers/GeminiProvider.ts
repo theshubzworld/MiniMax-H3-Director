@@ -94,7 +94,7 @@ export class GeminiProvider implements AIProvider {
             },
           });
         }
-      } else if (url.startsWith('http')) {
+      } else if (url.startsWith('http') || url.startsWith('blob:')) {
         try {
           const res = await fetch(url);
           const blob = await res.blob();

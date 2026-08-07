@@ -14,26 +14,33 @@ export const ReferenceImageDropzone: React.FC = () => {
     Array.from(files).forEach((file, index) => {
       if (!file.type.startsWith('image/')) return;
 
-      const url = URL.createObjectURL(file);
-      const refCount = project.references.length + index + 1;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        if (!url) return;
 
-      const newRef: ReferenceImage = {
-        id: `ref-${Date.now()}-${index}`,
-        name: file.name,
-        url,
-        type: refCount === 1 ? 'first_frame' : refCount === 2 ? 'last_frame' : 'character',
-        shotIndex: refCount === 1 ? 1 : Math.max(1, project.shots.length),
-        traits: {
-          subject: 'Primary character / key object',
-          face: 'Sharp facial features',
-          hair: 'Styled hair',
-          wardrobe: 'Cinematic apparel',
-          environment: 'Keyframe setting',
-          lighting: 'Dramatic lighting',
-        },
+        const refCount = project.references.length + index + 1;
+
+        const newRef: ReferenceImage = {
+          id: `ref-${Date.now()}-${index}-${Math.random().toString(36).substring(2, 6)}`,
+          name: file.name,
+          url,
+          type: refCount === 1 ? 'first_frame' : refCount === 2 ? 'last_frame' : 'character',
+          shotIndex: refCount === 1 ? 1 : Math.max(1, project.shots.length),
+          traits: {
+            subject: 'Primary character / key object',
+            face: 'Sharp facial features',
+            hair: 'Styled hair',
+            wardrobe: 'Cinematic apparel',
+            environment: 'Keyframe setting',
+            lighting: 'Dramatic lighting',
+          },
+        };
+
+        addReference(newRef);
       };
 
-      addReference(newRef);
+      reader.readAsDataURL(file);
     });
   };
 
