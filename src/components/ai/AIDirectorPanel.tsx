@@ -7,6 +7,9 @@ import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, 
 
 const NARRATIVE_STYLES: NarrativeStyle[] = [
   'Live-Action Realism',
+  'Raw Smartphone Amateur',
+  'Amateur Mobile Vlog',
+  'Candid Selfie Motion',
   'Cinematic Film',
   'Sultry Romance',
   'Sensual Intimacy',
@@ -35,6 +38,11 @@ const NARRATIVE_STYLES: NarrativeStyle[] = [
 ];
 
 const STORY_SEED_PRESETS = [
+  // 📱 Raw Smartphone & Amateur Motion
+  { category: 'solo-sultry', label: '📱 Raw Smartphone Mirror Selfie', prompt: 'A casual vertical iPhone mirror selfie of a solo woman in a fitted top standing in a modern bathroom under warm vanity lighting. In a raw handheld mobile motion, she leans slightly against the marble counter with a candid smile as the phone flash creates soft rim blowout. Include slight mobile sensor noise foley, quiet breath, and authentic Instagram story aesthetic.' },
+  { category: 'solo-sultry', label: '🤳 Raw Mobile Vlog Walk & Talk', prompt: 'A solo woman holding her smartphone at arm length walking down a sunny city sidewalk talking directly into the camera. Natural handheld micro-shake and focus hunt optics. Include ambient street traffic foley, natural wind in hair, and candid amateur video physics.' },
+  { category: 'solo-sultry', label: '📱 Raw Mobile Bedroom Flash', prompt: 'A candid handheld smartphone video of a solo woman in silk loungewear sitting on white linen sheets under dim bedroom lamp light. Direct phone flash glow causing slight shadow noise. Include soft laughter foley, sheet rustle, and authentic mobile sensor grain.' },
+
   // 💃 Solo Sultry & Boudoir (Single Person S1)
   { category: 'solo-sultry', label: '💃 Solo Velvet Chaise Lounge', prompt: 'A solo woman in a blush-pink satin slip dress lounging on a plush velvet chaise under soft golden candlelight. In a slow tracking close-up, she runs her fingers through her hair while exhaling softly with eyes half-closed. Include whispered solo reflection voiceover, silk rustle foley, and sultry lo-fi piano score.' },
   { category: 'solo-sultry', label: '🔥 Solo Steamy Mirror Caress', prompt: 'A solo woman in a steamy, mist-covered bathroom after a hot shower under warm tungsten backlight. She slowly traces a pattern on the foggy mirror before turning to look back over her bare shoulder with a soft smile. Include whispered inner monologue, water droplet foley, and deep atmospheric lo-fi synth.' },

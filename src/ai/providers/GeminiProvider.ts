@@ -42,6 +42,9 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
   'Steamy Thriller': ['steamy neon magenta backlight', 'intimate low-key shadow contrast', 'wet skin golden key reflections'],
   'Velvet Boudoir': ['soft velvet boudoir lamp diffusion', 'golden amber key lighting', 'warm shadow falloff'],
   'Erotic Romance': ['dim candlelit silhouette glow', 'warm intimate side lighting', 'soft atmospheric twilight key'],
+  'Raw Smartphone Amateur': ['direct mobile phone flash blowout', 'natural unpolished ambient room light', 'casual indoor window light with slight overexposure'],
+  'Amateur Mobile Vlog': ['handheld daylight selfie lighting', 'casual outdoor golden sun flare', 'everyday ambient room light'],
+  'Candid Selfie Motion': ['dim mobile phone screen glow', 'soft ambient bedroom lamp light', 'authentic Instagram story flash'],
 };
 
 export class GeminiProvider implements AIProvider {

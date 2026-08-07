@@ -29,7 +29,10 @@ export type NarrativeStyle =
   | 'Sensual Intimacy'
   | 'Steamy Thriller'
   | 'Velvet Boudoir'
-  | 'Erotic Romance';
+  | 'Erotic Romance'
+  | 'Raw Smartphone Amateur'
+  | 'Amateur Mobile Vlog'
+  | 'Candid Selfie Motion';
 
 export interface StoryboardParams {
   idea: string;
