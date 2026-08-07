@@ -98,12 +98,22 @@ export class GeminiProvider implements AIProvider {
         try {
           const res = await fetch(url);
           const blob = await res.blob();
-          const buffer = await blob.arrayBuffer();
-          const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+          const base64Data = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const dataUrl = reader.result as string;
+              const base64 = dataUrl ? dataUrl.split(',')[1] : null;
+              if (base64) resolve(base64);
+              else reject(new Error('Failed to parse base64 from FileReader'));
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+
           parts.push({
             inlineData: {
               mimeType: blob.type || 'image/png',
-              data: base64,
+              data: base64Data,
             },
           });
         } catch (e) {
