@@ -11,14 +11,17 @@ const CATEGORIES: Array<TemplateCategory | 'All'> = [
   'Raw & Amateur',
   'Sultry & Romance',
   'Boudoir',
+  'Social Media',
   'Cinematic Film',
   'Fashion',
   'Luxury',
   'Action',
   'Sci-Fi',
-  'Anime',
   'Cars',
   'Food',
+  'Travel',
+  'Sports',
+  'Music Video',
 ];
 
 export const TemplateGallery: React.FC = () => {
