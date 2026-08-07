@@ -6,7 +6,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Raw Midnight Velvet Boudoir',
     category: 'Boudoir',
     description: '3rd-person mobile tracking of a solo model arching her back gently on a plush velvet bed under red accent lighting.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&auto=format&fit=crop&q=60',
     tags: ['Boudoir', 'Velvet', 'Red Light', 'Sensual', 'Contour'],
     presetSettings: { mode: 'I2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Erotic Low-Key Shadow Contours' },
     presetShots: [
@@ -32,7 +32,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Raw Penthouse Leather Lounge',
     category: 'Boudoir',
     description: 'Mobile camera tracking a solo model lying on a leather penthouse sofa surrounded by night city neon.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&auto=format&fit=crop&q=60',
     tags: ['Penthouse', 'Neon', 'Leather', 'Night City', 'Mobile'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sensual Candlelit Intimacy' },
     presetShots: [
@@ -58,7 +58,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Midnight Candlelit Luxury Bath Spa',
     category: 'Boudoir',
     description: 'Sensual third-person video of a solo model relaxing in a marble bathtub covered in floating rose petals under candle glow.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&auto=format&fit=crop&q=60',
     tags: ['Bath', 'Spa', 'Rose Petals', 'Candlelight', 'Sensual'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sensual Candlelit Intimacy' },
     presetShots: [
@@ -85,7 +85,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Tungsten Lamp Vanity Reflection',
     category: 'Boudoir',
     description: 'A solo female model seated before a gilded vanity mirror surrounded by warm candle glow and tungsten bulbs.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=60',
     tags: ['Vanity', 'Gilded', 'Mirror', 'Tungsten', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sultry Boudoir Tungsten Glow' },
     presetShots: [
@@ -111,7 +111,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Silk Robe Morning Terrace Glow',
     category: 'Boudoir',
     description: 'A solo model stepping out onto a sunlit private bedroom terrace wrapped in a silk robe.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&auto=format&fit=crop&q=60',
     tags: ['Silk', 'Terrace', 'Morning', 'Glow', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Live-Action Realism' },
     presetShots: [
@@ -137,7 +137,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Crimson Neon Leather Chaise',
     category: 'Boudoir',
     description: 'Sultry boudoir tracking of a solo model lounging on a leather chaise under crimson neon spotlights.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
     tags: ['Crimson', 'Neon', 'Leather', 'Chaise', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Erotic Low-Key Shadow Contours' },
     presetShots: [
@@ -163,7 +163,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Golden Hour Linen Bedside Stretch',
     category: 'Boudoir',
     description: 'A solo model waking up and stretching luxuriously on white linen sheets in golden morning sunlight.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&auto=format&fit=crop&q=60',
     tags: ['Linen', 'Bedside', 'Morning', 'Stretch', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Live-Action Realism' },
     presetShots: [
@@ -189,7 +189,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Vintage Gilded Mirror Hair Brush',
     category: 'Boudoir',
     description: 'Candid video of a solo model brushing her long hair before a antique gilded bedroom mirror.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&auto=format&fit=crop&q=60',
     tags: ['Gilded', 'Mirror', 'Hair Brush', 'Vintage', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sultry Boudoir Tungsten Glow' },
     presetShots: [
@@ -215,7 +215,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Candlelit Marble Tub Petals',
     category: 'Boudoir',
     description: 'Slow close-up macro of water ripples and floating red rose petals in a candlelit marble spa bath.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&auto=format&fit=crop&q=60',
     tags: ['Marble', 'Tub', 'Petals', 'Candlelight', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sensual Candlelit Intimacy' },
     presetShots: [
@@ -241,7 +241,7 @@ export const BOUDOIR_TEMPLATES: PromptTemplate[] = [
     title: 'Penthouse Horizon Dusk Silhouette',
     category: 'Boudoir',
     description: 'A solo model backlit by sunset city dusk standing near panoramic penthouse floor-to-ceiling windows.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop&q=60',
     tags: ['Penthouse', 'Silhouette', 'Dusk', 'Window', 'Boudoir'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Erotic Low-Key Shadow Contours' },
     presetShots: [

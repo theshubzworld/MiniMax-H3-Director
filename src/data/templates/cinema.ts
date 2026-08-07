@@ -6,7 +6,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: '35mm Film Noir Detective',
     category: 'Cinematic Film',
     description: 'Moody 35mm chiaroscuro camera tracking of a weary trenchcoat detective smoking under a rain-drenched streetlamp.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1548625361-185799974249?w=600&auto=format&fit=crop&q=60',
     tags: ['Film Noir', '35mm', 'Detective', 'Rain', 'Chiaroscuro'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -33,7 +33,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Venetian Masquerade Ballroom',
     category: 'Cinematic Film',
     description: 'A mysterious figure in a gilded Venetian mask stepping across a marble ballroom floor under candlelight.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
     tags: ['Venetian', 'Masquerade', 'Ballroom', 'Mask', 'Gilded'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -60,7 +60,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Amazonian Battle Princess',
     category: 'Cinematic Film',
     description: 'An Amazonian warrior princess in bronze armor standing before Greek temple pillars as sunlight glints off her sword.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=600&auto=format&fit=crop&q=60',
     tags: ['Amazonian', 'Warrior', 'Greek Temple', 'Armor', 'Epic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -87,7 +87,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Venetian Carnival Gold Mask Spec',
     category: 'Cinematic Film',
     description: 'Mysterious 35mm film video of a Venetian noblewoman in a filigree gold mask walking past candlelit canals.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&auto=format&fit=crop&q=60',
     tags: ['Venetian', 'Carnival', 'Mask', 'Venice', 'Cinematic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -114,7 +114,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Vintage Piano Candlelight Solo',
     category: 'Cinematic Film',
     description: 'Emotional 35mm film video of a pianist performing a passionate solo on a grand piano in a candlelit cathedral.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&auto=format&fit=crop&q=60',
     tags: ['Piano', 'Music Video', 'Candlelight', 'Cathedral', 'Solo'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -140,7 +140,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: '1970s Retro Convertible Highway Cruise',
     category: 'Cinematic Film',
     description: 'Vintage 35mm film video of a couple driving a red 1970s vintage convertible along California coastal cliffs at sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=60',
     tags: ['Retro', '70s', 'Convertible', 'Coastal', 'Cinematic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -166,7 +166,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'WWII Period Trench Warfare Rain',
     category: 'Cinematic Film',
     description: 'Gritty 35mm historical epic video of soldiers charging across muddy rain-soaked trenches through volumetric fog.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=60',
     tags: ['WWII', 'Historical', 'Trench', 'Warfare', 'Epic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -193,7 +193,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Gothic Cathedral Organ Performance',
     category: 'Cinematic Film',
     description: 'Dramatic chiaroscuro camera tracking a organist performing in a towering medieval stone cathedral.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600&auto=format&fit=crop&q=60',
     tags: ['Cathedral', 'Organ', 'Gothic', 'Chiaroscuro', 'Cinematic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -219,7 +219,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Cyberpunk Detective Monologue',
     category: 'Cinematic Film',
     description: 'Gritty 35mm film video of a cyborg investigator delivering a rain-soaked inner monologue under neon signs.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
     tags: ['Cyberpunk', 'Detective', 'Monologue', '35mm', 'Neon'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -246,7 +246,7 @@ export const CINEMA_TEMPLATES: PromptTemplate[] = [
     title: 'Desert Wasteland Nomad Sunset Trek',
     category: 'Cinematic Film',
     description: 'Post-apocalyptic 35mm film camera tracking a hooded nomad trekking across vast orange desert sand dunes.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1517457210348-703079e57d4b?w=600&auto=format&fit=crop&q=60',
     tags: ['Desert', 'Nomad', 'Wasteland', 'Sunset', 'Cinematic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [

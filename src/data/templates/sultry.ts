@@ -6,7 +6,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Raw POV Bedside Intimacy',
     category: 'Sultry & Romance',
     description: 'Handheld POV video of a solo model reclining on white sheets reaching toward the camera under dim warm lamplight.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=60',
     tags: ['POV', 'Bedside', 'Sultry', 'Lamplight', 'Handheld'],
     presetSettings: { mode: 'I2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Sultry Boudoir Tungsten Glow' },
     presetShots: [
@@ -33,7 +33,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Steamy Shower Glass Contours',
     category: 'Sultry & Romance',
     description: 'Candid 3rd-person video behind misted glass as water droplets streak down a warm tungsten backlit shower.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop&q=60',
     tags: ['Steamy', 'Shower', 'Water', 'Reflections', 'Tungsten'],
     presetSettings: { mode: 'I2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Steamy Bathroom Glass Reflection' },
     presetShots: [
@@ -59,7 +59,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Solo Velvet Chaise Sunset',
     category: 'Sultry & Romance',
     description: 'A solo model lounging on velvet under warm candle glow, running fingers through hair with slow tracking motion.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&auto=format&fit=crop&q=60',
     tags: ['Velvet', 'Chaise', 'Sunset', 'Candlelight', 'Solo'],
     presetSettings: { mode: 'I2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sultry Boudoir Tungsten Glow' },
     presetShots: [
@@ -86,7 +86,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Raw POV Candlelit Couple Romance',
     category: 'Sultry & Romance',
     description: 'Handheld POV video of an intimate couple on white bedsheets illuminated only by flickering candle glow.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&auto=format&fit=crop&q=60',
     tags: ['POV', 'Couple', 'Candlelight', 'Intimacy', 'Romance'],
     presetSettings: { mode: 'I2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sensual Candlelit Intimacy' },
     presetShots: [
@@ -113,7 +113,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Raw Amateur Hotel Bedroom',
     category: 'Sultry & Romance',
     description: 'Unpolished mobile video of an intimate couple embracing on a king-size bed under warm bedside lamp lighting.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&auto=format&fit=crop&q=60',
     tags: ['Amateur', 'Hotel', 'Couple', 'Bedside', 'Mobile'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Third-Person Sensual Handheld' },
     presetShots: [
@@ -140,7 +140,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Raw POV Midnight Kiss in Rain',
     category: 'Sultry & Romance',
     description: 'Raw handheld POV tracking of a passionate couple embracing under a rain-soaked streetlamp glow.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&auto=format&fit=crop&q=60',
     tags: ['POV', 'Rain', 'Kiss', 'Romance', 'Raw'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Third-Person Sensual Handheld' },
     presetShots: [
@@ -167,7 +167,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Steamy Bathroom Mirror Couple Hug',
     category: 'Sultry & Romance',
     description: 'Sultry couple embracing in a misted bathroom after a hot shower under warm tungsten lighting.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&auto=format&fit=crop&q=60',
     tags: ['Couple', 'Steamy', 'Shower', 'Embrace', 'Romance'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Steamy Bathroom Glass Reflection' },
     presetShots: [
@@ -194,7 +194,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Bedroom Morning Sunbeam Embrace',
     category: 'Sultry & Romance',
     description: 'Candid video of a couple tangled in white linen bedsheets as morning sunbeams stream through sheer curtains.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
     tags: ['Morning', 'Couple', 'Bedside', 'Sunbeam', 'Romance'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Live-Action Realism' },
     presetShots: [
@@ -221,7 +221,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Velvet Couch Fireplace Romance',
     category: 'Sultry & Romance',
     description: 'Sensual video of a couple wrapped in a cashmere blanket lounging by a roaring stone fireplace.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&auto=format&fit=crop&q=60',
     tags: ['Fireplace', 'Couple', 'Velvet', 'Cozy', 'Romance'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sensual Candlelit Intimacy' },
     presetShots: [
@@ -247,7 +247,7 @@ export const SULTRY_TEMPLATES: PromptTemplate[] = [
     title: 'Sunset Penthouse Balcony Embrace',
     category: 'Sultry & Romance',
     description: 'Sultry third-person camera tracking a couple embracing on a penthouse balcony overlooking a glowing city sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&auto=format&fit=crop&q=60',
     tags: ['Penthouse', 'Balcony', 'Sunset', 'Embrace', 'Romance'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sultry Boudoir Tungsten Glow' },
     presetShots: [

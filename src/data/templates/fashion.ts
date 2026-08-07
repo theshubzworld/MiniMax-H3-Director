@@ -6,7 +6,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Paris Runway High Fashion',
     category: 'Fashion',
     description: 'Luxury Parisian haute couture model walking down a sunlit marble runway in a billowing golden silk gown.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=60',
     tags: ['Fashion', 'Luxury', 'Runway', 'Paris', 'Model'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -32,7 +32,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Glam Makeup Transformation Reel',
     category: 'Fashion',
     description: 'Viral makeup transformation reel transitioning from bare face to full glam studio look with glowing highlighter.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=600&auto=format&fit=crop&q=60',
     tags: ['Makeup', 'Glam', 'Beauty', 'Transformation', 'TikTok'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -58,7 +58,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Red Carpet Paparazzi Flash Spec',
     category: 'Fashion',
     description: 'High-energy celebrity red carpet walk under strobing camera flashes and cheering crowds.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=600&auto=format&fit=crop&q=60',
     tags: ['Red Carpet', 'Paparazzi', 'Fashion', 'Celebrity', 'Flash'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -84,7 +84,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Milan Haute Couture Silk Gown',
     category: 'Fashion',
     description: 'Slow motion 60fps fashion video of a model in a vibrant magenta silk gown posing on a Milan palazzo marble staircase.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=60',
     tags: ['Milan', 'Haute Couture', 'Silk', 'Fashion', 'Model'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -110,7 +110,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Neon Streetwear Fashion Lookbook',
     category: 'Fashion',
     description: 'Dynamic fashion lookbook video showing a model in futuristic oversized silver puffer jacket under neon city lights.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&auto=format&fit=crop&q=60',
     tags: ['Streetwear', 'Neon', 'Lookbook', 'Puffer', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -136,7 +136,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Tokyo Cyberpunk Streetwear Model',
     category: 'Fashion',
     description: 'High-concept fashion film of a Japanese model in techwear coat walking through wet rain Shibuya crosswalk.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&auto=format&fit=crop&q=60',
     tags: ['Techwear', 'Tokyo', 'Cyberpunk', 'Shibuya', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -162,7 +162,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Vintage Vogue Black & White Portrait',
     category: 'Fashion',
     description: 'Timeless black-and-white 35mm film fashion portrait of a supermodel under dramatic chiaroscuro key light.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop&q=60',
     tags: ['Vogue', 'Black and White', '35mm', 'Portrait', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -188,7 +188,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Studio Flash Jewelry Commercial',
     category: 'Fashion',
     description: 'High-key commercial video highlighting a gold necklace and emerald earrings on a model under studio flashes.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&auto=format&fit=crop&q=60',
     tags: ['Jewelry', 'Gold', 'Emerald', 'Commercial', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
@@ -214,7 +214,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'Sunset Beach Swimwear Slow-Mo Walk',
     category: 'Fashion',
     description: '120fps beach fashion film of a swimwear model walking out of turquoise sea at golden sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1527061011665-3652c757a4d4?w=600&auto=format&fit=crop&q=60',
     tags: ['Swimwear', 'Beach', 'Sunset', 'Slow Motion', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -240,7 +240,7 @@ export const FASHION_TEMPLATES: PromptTemplate[] = [
     title: 'High Gloss Lip Gloss Macro Spec',
     category: 'Fashion',
     description: 'Macro beauty commercial video applying high-shine pink lip gloss with reflective glass sheen.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=60',
     tags: ['Lip Gloss', 'Beauty', 'Macro', 'Gloss', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [

@@ -33,7 +33,7 @@ export const RAW_TEMPLATES: PromptTemplate[] = [
     title: 'Raw Beach Sunset Shoreline Walk',
     category: 'Raw & Amateur',
     description: 'Raw 3rd-person mobile camera tracking a subject walking along wet beach sand backlit by golden-hour ocean sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=60',
     tags: ['Beach', 'Shoreline', 'Sunset', 'Golden Hour', 'Ocean'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Ultra Realistic Photorealism' },
     presetShots: [
@@ -112,7 +112,7 @@ export const RAW_TEMPLATES: PromptTemplate[] = [
     title: 'Raw Handheld POV Morning Coffee',
     category: 'Raw & Amateur',
     description: 'Arm-length handheld POV of a subject taking a first sip of hot coffee in bed under morning sunlight.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=60',
     tags: ['POV', 'Morning', 'Coffee', 'Bedside', 'Handheld'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Third-Person Mobile' },
     presetShots: [
@@ -165,7 +165,7 @@ export const RAW_TEMPLATES: PromptTemplate[] = [
     title: 'Candid 3rd-Person Street Walk',
     category: 'Raw & Amateur',
     description: 'Candid third-person handheld tracking of a model strolling across a sunlit city crosswalk.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop&q=60',
     tags: ['Street', 'Candid', 'Walk', 'Third Person', 'City'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Third-Person Mobile' },
     presetShots: [
@@ -233,7 +233,7 @@ export const RAW_TEMPLATES: PromptTemplate[] = [
         camera: { motionType: 'Pan Left', amplitude: 'small amplitude', speed: 'slow speed', targetSubject: 'her profile and smile' },
         character: { identity: 'The solo woman', pose: 'turning head to camera', motion: 'smiles gently' },
         environment: { location: 'balcony doorway', lighting: 'warm interior lamp glow' },
-        rawActionDescription: 'The camera dollies smoothly to her side as she turns back with a gentle smile under warm sky reflections.',
+        rawActionDescription: 'The camera dollies to her profile as she turns back with a gentle smile under warm sky reflections.',
       },
     ],
     presetAudio: { isSilent: false, music: { hasMusic: true, genreStyle: 'Chill Sunset Beats', instrumentation: ['acoustic guitar', 'synth pad'], tempo: 'slow', dynamics: 'peaceful', rhythmPattern: 'relaxed strum', layeringDescription: 'Balcony wind breeze foley.' } },
@@ -243,7 +243,7 @@ export const RAW_TEMPLATES: PromptTemplate[] = [
     title: 'Raw POV Car Passenger Seat Vlog',
     category: 'Raw & Amateur',
     description: 'Arm-length handheld passenger seat video of a traveler laughing on a scenic coastal drive.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&auto=format&fit=crop&q=60',
     tags: ['Car', 'Vlog', 'Passenger', 'Coastal Drive', 'Raw'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Amateur Mobile Vlog' },
     presetShots: [

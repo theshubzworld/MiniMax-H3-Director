@@ -6,7 +6,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Cyberpunk Tunnel Drift',
     category: 'Cars',
     description: 'High-speed 60fps tracking camera alongside a modified Nissan GT-R power drifting through a neon-lit Japanese expressway tunnel.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&auto=format&fit=crop&q=60',
     tags: ['Drift', 'GT-R', 'Japanese', 'Expressway', 'Cyberpunk'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -32,7 +32,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Night Expressway Drift Phonk',
     category: 'Cars',
     description: 'High-energy Phonk music video featuring a widebody Toyota Supra MK4 executing 90-degree drift slides past highway cameras.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=60',
     tags: ['Supra', 'Phonk', 'Drift', 'Night', 'JDM'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -58,7 +58,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Superbike Night Expressway Flyby',
     category: 'Cars',
     description: 'Adrenaline 60fps tracking video following a carbon fiber superbike weaving through night city highway traffic at 180mph.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&auto=format&fit=crop&q=60',
     tags: ['Superbike', 'Motorcycle', 'Night', 'Speed', 'Highway'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -84,7 +84,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Vintage Porsche 911 Country Cruise',
     category: 'Cars',
     description: 'Cinematic 35mm film video tracking a classic silver Porsche 911 driving down autumn mountain curves.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&auto=format&fit=crop&q=60',
     tags: ['Porsche', 'Classic Car', 'Vintage', 'Country', 'Autumn'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -110,7 +110,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Formula 1 Pit Stop 1.9s Spec',
     category: 'Cars',
     description: 'High-speed 120fps video of a Formula 1 pit crew changing four tires on a carbon race car in under 2 seconds.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&auto=format&fit=crop&q=60',
     tags: ['Formula 1', 'Pit Stop', 'Racing', 'F1', 'Commercial'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -137,7 +137,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Supercar Launch Control Drag Strip',
     category: 'Cars',
     description: '4K video tracking a red Ferrari launch control start at a drag strip, lifting front wheels under violent acceleration.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&auto=format&fit=crop&q=60',
     tags: ['Ferrari', 'Supercar', 'Launch Control', 'Drag Strip', 'Cars'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -163,7 +163,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Off-Road Trophy Truck Desert Jump',
     category: 'Cars',
     description: 'High-speed 120fps video tracking a 900hp Baja trophy truck launching 50 feet over a desert sand dune ridge.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&auto=format&fit=crop&q=60',
     tags: ['Trophy Truck', 'Baja', 'Off-Road', 'Jump', 'Desert'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -189,7 +189,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Classic Mustang Muscle Car Burnout',
     category: 'Cars',
     description: 'Kinetic video of a 1969 Ford Mustang Mach 1 executing a static burnout, clouding the street in thick white tire smoke.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&auto=format&fit=crop&q=60',
     tags: ['Mustang', 'Muscle Car', 'Burnout', 'Classic', 'Cars'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -215,7 +215,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Electric Hypercar Futuristic Light Trails',
     category: 'Cars',
     description: 'Sleek futuristic video tracking a quiet electric hypercar accelerating through a city underpass with LED light trails.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=600&auto=format&fit=crop&q=60',
     tags: ['Electric', 'Hypercar', 'Futuristic', 'Light Trails', 'Cars'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -241,7 +241,7 @@ export const CARS_TEMPLATES: PromptTemplate[] = [
     title: 'Japanese Touge Mountain Pass Drift',
     category: 'Cars',
     description: 'Cinematic 35mm film camera tracking a Mazda RX-7 drifting through foggy mountain hairpin turns in Hakone.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop&q=60',
     tags: ['Touge', 'Drift', 'RX-7', 'Hakone', 'JDM'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [

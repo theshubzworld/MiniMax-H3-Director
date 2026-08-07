@@ -6,7 +6,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Samurai Bamboo Forest Sword Duel',
     category: 'Action',
     description: 'High-speed martial arts katana duel between two samurai in a misty Kyoto bamboo forest at twilight.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1515260268569-9271009adfdb?w=600&auto=format&fit=crop&q=60',
     tags: ['Samurai', 'Katana', 'Bamboo', 'Duel', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -33,7 +33,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Sunset Skyscraper Ledge Walk',
     category: 'Action',
     description: 'Adrenaline POV video walking along the narrow ledge of a 60-story skyscraper overlooking a golden city sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=600&auto=format&fit=crop&q=60',
     tags: ['Adrenaline', 'POV', 'Skyscraper', 'Sunset', 'Ledge'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -60,7 +60,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Tactical SWAT Breach & Clear',
     category: 'Action',
     description: 'First-person tactical helmet camera tracking a SWAT squad breaching a heavy door with flashbang sparks.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop&q=60',
     tags: ['SWAT', 'Breach', 'Tactical', 'FPS', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -87,7 +87,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'High-Speed Rooftop Parkour Chase',
     category: 'Action',
     description: 'Adrenaline 60fps POV video sprinting and jumping across high-rise rooftop gaps over city streets.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&auto=format&fit=crop&q=60',
     tags: ['Parkour', 'Rooftop', 'POV', 'Jump', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -113,7 +113,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Martial Arts Dojo Kickboxing Sparring',
     category: 'Action',
     description: 'High-speed 120fps martial arts video tracking a spinning roundhouse kick inside a traditional wooden dojo.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&auto=format&fit=crop&q=60',
     tags: ['Kickboxing', 'Martial Arts', 'Dojo', 'Sparring', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -139,7 +139,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Cybernetic Soldier Firefight',
     category: 'Action',
     description: 'Futuristic sci-fi action video tracking a cybernetic soldier firing plasma rifle from behind barricades.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=60',
     tags: ['Cybernetic', 'Soldier', 'Plasma', 'Firefight', 'Sci-Fi'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -165,7 +165,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Helicopter Extraction Storm Sea',
     category: 'Action',
     description: 'Adrenaline video of a rescue swimmer being winched up to a Coast Guard helicopter above rough ocean waves.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
     tags: ['Helicopter', 'Extraction', 'Rescue', 'Storm', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -192,7 +192,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Gladiator Colosseum Sword Battle',
     category: 'Action',
     description: '35mm historical action film camera arcing around two gladiators clashing sword and shield in a sandy Roman arena.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&auto=format&fit=crop&q=60',
     tags: ['Gladiator', 'Colosseum', 'Roman', 'Sword', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '2.39:1', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -218,7 +218,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Highway Explosion Supercar Escape',
     category: 'Action',
     description: 'Kinetic 60fps action chase video tracking a matte black supercar speeding out of a massive fiery highway explosion.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=600&auto=format&fit=crop&q=60',
     tags: ['Explosion', 'Supercar', 'Chase', 'Highway', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -244,7 +244,7 @@ export const ACTION_TEMPLATES: PromptTemplate[] = [
     title: 'Plasma Sword Duel Space Platform',
     category: 'Action',
     description: 'Futuristic sci-fi duel video tracking two force warriors clashing glowing energy blades on a space station platform overlooking Earth.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600&auto=format&fit=crop&q=60',
     tags: ['Plasma', 'Energy Sword', 'Sci-Fi', 'Space', 'Action'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [

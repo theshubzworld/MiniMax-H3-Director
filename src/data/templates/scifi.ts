@@ -6,7 +6,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Deep Space Mech Hangar Launch',
     category: 'Sci-Fi',
     description: 'Cinematic sci-fi camera tracking a 50-foot military mech launching from a pressurized space station hangar into open orbit.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop&q=60',
     tags: ['Mech', 'Hangar', 'Sci-Fi', 'Space', 'Launch'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -33,7 +33,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Found Footage UFO Sky Encounter',
     category: 'Sci-Fi',
     description: 'Real-time found footage video of a giant glowing metallic UFO hovering over a desert highway at dusk.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=60',
     tags: ['UFO', 'Found Footage', 'Sci-Fi', 'Alien', 'Desert'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Third-Person Mobile' },
     presetShots: [
@@ -59,7 +59,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Cyberpunk Android Awakening Spec',
     category: 'Sci-Fi',
     description: 'Cinematic 4K video of a bio-synthetic android awakening inside a glass amniotic pod in a Neo-Tokyo laboratory.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&auto=format&fit=crop&q=60',
     tags: ['Android', 'Cyberpunk', 'Lab', 'Sci-Fi', 'Awakening'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -86,7 +86,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Cyberpunk Neon Bar Bartender',
     category: 'Sci-Fi',
     description: 'Sleek sci-fi video of a cybernetic bartender pouring glowing blue cocktails in a subterranean Neo-Tokyo club.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop&q=60',
     tags: ['Cyberpunk', 'Bartender', 'Sci-Fi', 'Neon', 'Cocktail'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -113,7 +113,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Orbital Space Station Earth Flyby',
     category: 'Sci-Fi',
     description: 'Breathtaking 4K orbital video tracking a ringed space station floating above blue Earth ocean and clouds.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&auto=format&fit=crop&q=60',
     tags: ['Space Station', 'Earth', 'Orbit', 'Sci-Fi', 'Astronaut'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Ultra Realistic Photorealism' },
     presetShots: [
@@ -139,7 +139,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Neon Cyberpunk Alley Cybernetic Doctor',
     category: 'Sci-Fi',
     description: 'Atmospheric 35mm film video of a street Ripperdoc repairing a cyborg arm in a dark rain-soaked Neo-Tokyo alley.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=60',
     tags: ['Cyberpunk', 'Ripperdoc', 'Cyborg', 'Rain', 'Sci-Fi'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Cinematic 35mm Film' },
     presetShots: [
@@ -165,7 +165,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Warp Speed Starship Hyperdrive',
     category: 'Sci-Fi',
     description: 'Spectacular 4K sci-fi video of a exploration starship accelerating into hyperdrive warp speed with light streaks.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&auto=format&fit=crop&q=60',
     tags: ['Starship', 'Warp Speed', 'Hyperdrive', 'Space', 'Sci-Fi'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -192,7 +192,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Mars Rover Red Planet Colony',
     category: 'Sci-Fi',
     description: 'Cinematic video tracking an autonomous Mars rover navigating red dust canyons near a glass dome colony.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=600&auto=format&fit=crop&q=60',
     tags: ['Mars', 'Rover', 'Red Planet', 'Colony', 'Sci-Fi'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Ultra Realistic Photorealism' },
     presetShots: [
@@ -218,7 +218,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Quantum Computer Core Hologram',
     category: 'Sci-Fi',
     description: 'Futuristic video tracking a scientist interacting with a glowing 3D holographic data sphere inside a quantum supercomputer room.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&auto=format&fit=crop&q=60',
     tags: ['Quantum', 'Hologram', 'Supercomputer', 'Sci-Fi', 'Tech'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Action Sci-Fi Blockbuster' },
     presetShots: [
@@ -244,7 +244,7 @@ export const SCIFI_TEMPLATES: PromptTemplate[] = [
     title: 'Alien Biosphere Jungle Exploration',
     category: 'Sci-Fi',
     description: 'Visually stunning video of an astronaut exploring a bioluminescent alien jungle with glowing blue flora at night.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=60',
     tags: ['Bioluminescent', 'Alien', 'Jungle', 'Astronaut', 'Sci-Fi'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Ultra Realistic Photorealism' },
     presetShots: [

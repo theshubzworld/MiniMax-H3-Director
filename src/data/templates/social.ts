@@ -6,7 +6,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'TikTok Viral Sunset Coffee Date POV',
     category: 'Social Media',
     description: 'Arm-length handheld selfie POV of a subject sipping iced latte at a sunny beachfront cafe table.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=600&auto=format&fit=crop&q=60',
     tags: ['TikTok', 'Viral', 'POV', 'Coffee', 'Sunset'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Raw Smartphone Selfie' },
     presetShots: [
@@ -33,7 +33,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'GRWM Mirror Outfit Snap Transition',
     category: 'Social Media',
     description: 'Viral Instagram Reels GRWM mirror snap transition from cozy loungewear into luxury evening gown.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=60',
     tags: ['GRWM', 'Transition', 'Reels', 'Outfit', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -59,7 +59,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Golden Retriever Puppies Playing Reel',
     category: 'Social Media',
     description: 'Adorable viral reel of golden retriever puppies tumbling playfully across a sun-drenched green lawn.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=600&auto=format&fit=crop&q=60',
     tags: ['Puppies', 'Pets', 'Cute', 'Viral', 'Dogs'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Live-Action Realism' },
     presetShots: [
@@ -85,7 +85,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Cozy Rain Cafe Window Corner',
     category: 'Social Media',
     description: 'Cozy aesthetic reel sitting inside a warm candlelit coffee shop sipping tea as rain falls on window glass.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600&auto=format&fit=crop&q=60',
     tags: ['Cozy', 'Rain', 'Cafe', 'Tea', 'Aesthetic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Live-Action Realism' },
     presetShots: [
@@ -112,7 +112,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Sneaker Customization Paint ASMR',
     category: 'Social Media',
     description: 'Crisp macro video painting vibrant custom anime graphics onto a white leather sneaker with fine detail brushes.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop&q=60',
     tags: ['Sneakers', 'Custom', 'Art', 'ASMR', 'Product'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Live-Action Realism' },
     presetShots: [
@@ -138,7 +138,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Streetwear Fit Check Transition',
     category: 'Social Media',
     description: 'Viral TikTok streetwear fit check video showing low-angle shoe step camera transition to oversized varsity jacket outfit.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=60',
     tags: ['Streetwear', 'Fit Check', 'Outfit', 'TikTok', 'Fashion'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Studio Flash High Fashion' },
     presetShots: [
@@ -164,7 +164,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Viral Dance Challenge Studio Reel',
     category: 'Social Media',
     description: 'High-energy TikTok dance challenge video executed in a mirrored dance studio with LED floor lights.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&auto=format&fit=crop&q=60',
     tags: ['Dance', 'TikTok', 'Challenge', 'Studio', 'Reels'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Sports Hype Dynamic Energy' },
     presetShots: [
@@ -190,7 +190,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Aesthetic Desk Setup Keyboard ASMR',
     category: 'Social Media',
     description: 'Aesthetic YouTube Shorts desk setup tour video highlighting mechanical custom keyboard typing ASMR.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&auto=format&fit=crop&q=60',
     tags: ['Desk Setup', 'ASMR', 'Keyboard', 'Tech', 'Aesthetic'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Live-Action Realism' },
     presetShots: [
@@ -216,7 +216,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Day in the Life NYC Cafe Vlog',
     category: 'Social Media',
     description: 'Relatable YouTube Shorts vlog video of a creator walking into a cozy Soho NYC coffee shop.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop&q=60',
     tags: ['Vlog', 'Day in Life', 'NYC', 'Cafe', 'Social Media'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Amateur Mobile Vlog' },
     presetShots: [
@@ -243,7 +243,7 @@ export const SOCIAL_TEMPLATES: PromptTemplate[] = [
     title: 'Unboxing Tech Gadget Quick Reel',
     category: 'Social Media',
     description: 'Fast-paced unboxing reel cutting plastic seals and pulling off protective plastic peel film from a futuristic gadget.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=600&auto=format&fit=crop&q=60',
     tags: ['Unboxing', 'Tech', 'Peel', 'ASMR', 'Reels'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '9:16', style: 'Live-Action Realism' },
     presetShots: [

@@ -6,7 +6,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Swiss Timepiece Tourbillon Macro',
     category: 'Luxury',
     description: 'Precision macro 4K commercial video of a rose gold Swiss tourbillon watch movement with intricate gears in motion.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&auto=format&fit=crop&q=60',
     tags: ['Watch', 'Swiss', 'Tourbillon', 'Macro', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
@@ -32,7 +32,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Rooftop Cocktail Golden Hour',
     category: 'Luxury',
     description: 'Sleek luxury travel video of friends clinking champagne flutes on a 40th-floor rooftop lounge overlooking Manhattan.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1517457210348-703079e57d4b?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1517649763962-0c6232661a0b?w=600&auto=format&fit=crop&q=60',
     tags: ['Rooftop', 'Cocktail', 'Manhattan', 'Champagne', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Luxury Fashion' },
     presetShots: [
@@ -59,7 +59,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Solitaire Diamond Ring Macro Spec',
     category: 'Luxury',
     description: 'Ultra high-end commercial macro video rotating a 5-carat solitaire diamond ring with fire refraction flashes.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&auto=format&fit=crop&q=60',
     tags: ['Diamond', 'Ring', 'Macro', 'Luxury', 'Jewelry'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
@@ -85,7 +85,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Monaco Harbor Superyacht Spec',
     category: 'Luxury',
     description: '4K drone camera tracking a 200-foot luxury mega-yacht cruising through Monaco harbor at golden sunset.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=60',
     tags: ['Superyacht', 'Monaco', 'Yacht', 'Luxury', 'Drone'],
     presetSettings: { mode: 'T2VA', durationSeconds: 8, aspectRatio: '16:9', style: 'Luxury Fashion' },
     presetShots: [
@@ -111,7 +111,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Private Jet Interior VIP Lounge',
     category: 'Luxury',
     description: 'Exclusive interior video of a VIP traveler enjoying a gourmet meal in a luxury private jet cabin above clouds.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600&auto=format&fit=crop&q=60',
     tags: ['Private Jet', 'VIP', 'Luxury', 'Travel', 'Interior'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Luxury Fashion' },
     presetShots: [
@@ -137,7 +137,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Luxury Perfume Glass Bottle Light Sweep',
     category: 'Luxury',
     description: 'High-end commercial macro video of a crystal glass perfume bottle with gold cap on a obsidian mirror table.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&auto=format&fit=crop&q=60',
     tags: ['Perfume', 'Luxury', 'Commercial', 'Glass', 'Macro'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
@@ -163,7 +163,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Italian Marble Villa Infinity Pool',
     category: 'Luxury',
     description: '4K camera tracking a luxury swimmer diving into an Italian marble infinity pool overlooking Lake Como at dusk.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=600&auto=format&fit=crop&q=60',
     tags: ['Lake Como', 'Villa', 'Infinity Pool', 'Italy', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Ultra Realistic Photorealism' },
     presetShots: [
@@ -189,7 +189,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Handcrafted Leather Designer Bag Macro',
     category: 'Luxury',
     description: 'Ultra close-up macro video showing gold needle stitching on a handcrafted Italian leather handbag.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=600&auto=format&fit=crop&q=60',
     tags: ['Leather', 'Handbag', 'Handcrafted', 'Macro', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
@@ -215,7 +215,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Champagne Cascade Pyramid Spec',
     category: 'Luxury',
     description: 'Slow-motion 120fps video of vintage champagne pouring down a multi-tiered crystal coupe pyramid at a gala.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1517457210348-703079e57d4b?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&auto=format&fit=crop&q=60',
     tags: ['Champagne', 'Gala', 'Pyramid', 'Coupe', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Luxury Fashion' },
     presetShots: [
@@ -241,7 +241,7 @@ export const LUXURY_TEMPLATES: PromptTemplate[] = [
     title: 'Vintage Cognac Crystal Glass Pour',
     category: 'Luxury',
     description: 'Macro video pouring amber vintage cognac into a crystal snifter glass beside a roaring library fireplace.',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1517457210348-703079e57d4b?w=600&auto=format&fit=crop&q=60',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=60',
     tags: ['Cognac', 'Crystal', 'Fireplace', 'Library', 'Luxury'],
     presetSettings: { mode: 'T2VA', durationSeconds: 6, aspectRatio: '16:9', style: 'Commercial' },
     presetShots: [
