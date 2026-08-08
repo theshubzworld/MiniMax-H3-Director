@@ -555,9 +555,13 @@ Audio & Dialogue Guidelines:
             {(
               narrativeCategoryFilter === 'all'
                 ? NARRATIVE_PRESETS
-                : NARRATIVE_PRESETS.filter((p) => p.category === narrativeCategoryFilter)
+                : [
+                    { id: 'None' as NarrativeStyle, category: narrativeCategoryFilter },
+                    ...NARRATIVE_PRESETS.filter((p) => p.id !== 'None' && p.category === narrativeCategoryFilter),
+                  ]
             ).map((preset) => {
               const isSelected = narrativeStyle === preset.id;
+              const displayLabel = preset.id === 'None' ? '🚫 None (Unstyled)' : preset.id;
               return (
                 <button
                   key={preset.id}
@@ -565,11 +569,13 @@ Audio & Dialogue Guidelines:
                   onClick={() => setNarrativeStyle(preset.id)}
                   className={`px-3 py-1.5 text-xs rounded-xl font-semibold transition-all ${
                     isSelected
-                      ? 'bg-cyan-500 text-zinc-950 shadow-lg shadow-cyan-500/20'
+                      ? 'bg-cyan-500 text-zinc-950 shadow-lg shadow-cyan-500/20 font-bold'
+                      : preset.id === 'None'
+                      ? 'bg-zinc-900 text-rose-300 border border-rose-500/30 hover:bg-zinc-800'
                       : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
                   }`}
                 >
-                  {preset.id}
+                  {displayLabel}
                 </button>
               );
             })}
