@@ -49,9 +49,11 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
   'Candid Selfie Motion': ['dim mobile phone screen glow', 'soft ambient bedroom lamp light', 'authentic Instagram story flash'],
   'Raw Third-Person Mobile': ['backlit golden hour window illumination illuminating sheer fabric', 'natural unpolished handheld 3rd-person tracking light', 'soft ambient room illumination'],
   'Candid Third-Person Sensual': ['translucent silhouette rim lighting', 'warm low-key tungsten side light tracing sheer wardrobe contours', 'candlelit boudoir glow'],
+  'None': ['natural ambient room lighting', 'authentic environmental light', 'soft unpolished lighting'],
 };
 
 export const NARRATIVE_STYLE_DIRECTIVES: Record<string, string> = {
+  'None': '',
   'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
   'Raw Home Amateur Mobile': 'Authentic home environment amateur mobile video switching seamlessly between handheld selfie angles and propped-up 3rd-person phone placement, casual unpolished room lighting, subtle mobile sensor grain noise, and 100% everyday real-world realism.',
   'Raw Third-Person Mobile': 'Candid 3rd-person handheld mobile camera tracking focusing mostly on body movement, natural depth of field, subtle handheld micro-shake, and authentic unpolished room lighting.',
@@ -362,11 +364,12 @@ export class GeminiProvider implements AIProvider {
       ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE. Multi-character interaction with S1, S2, S3.`
       : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION. Focus on 2 main characters (S1 and S2).`;
 
-    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[params.narrativeStyle] || params.narrativeStyle;
+    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[params.narrativeStyle] || (params.narrativeStyle !== 'None' ? params.narrativeStyle : '');
+    const styleLine = params.narrativeStyle !== 'None' && styleDirective ? `Visual Atmosphere & Motion Guidance: "${styleDirective}"\n` : '';
+    const styleNameHeader = params.narrativeStyle !== 'None' ? ` for a ${params.narrativeStyle} video` : '';
 
-    const promptText = `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON for a ${params.narrativeStyle} video.
-STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
-STORY IDEA: "${params.idea}".
+    const promptText = `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
+${styleLine}STORY IDEA: "${params.idea}".
 
 MANDATORY PROMPT RECOGNITION HEADING RULE:
 You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Naked Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases like "analyze image", "doing nude video call with her bf...", or "women under blanket taking naked selfie..." into the title.

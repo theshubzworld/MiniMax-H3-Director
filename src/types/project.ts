@@ -14,6 +14,7 @@ export type AspectRatio =
   | '5:4';
 
 export const ALL_VISUAL_STYLES = [
+  'None',
   'Ultra Realistic Photorealism',
   'Sultry Boudoir Tungsten Glow',
   'Sensual Candlelit Intimacy',

@@ -13,6 +13,7 @@ export interface NarrativePresetItem {
 }
 
 export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
+  'None': 'Unstyled - Allow AI Director to infer camera motion, lighting, and soundscape purely from your raw story idea without rigid style directives.',
   'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
   'Raw Home Amateur Mobile': 'Authentic home environment amateur mobile video switching seamlessly between handheld selfie angles and propped-up 3rd-person phone placement, casual unpolished room lighting, subtle mobile sensor grain noise, and 100% everyday real-world realism.',
   'Raw Third-Person Mobile': 'Candid 3rd-person handheld mobile camera tracking focusing mostly on body movement, natural depth of field, subtle handheld micro-shake, and authentic unpolished room lighting.',
@@ -49,6 +50,7 @@ export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
 
 const NARRATIVE_PRESETS: NarrativePresetItem[] = [
   // 📱 Raw & Amateur Realism
+  { id: 'None', category: 'raw' },
   { id: 'Live-Action Realism', category: 'raw' },
   { id: 'Raw Home Amateur Mobile', category: 'raw' },
   { id: 'Raw Third-Person Mobile', category: 'raw' },

@@ -4,6 +4,7 @@ import { Shot } from '../../types/shot';
 import { AudioSettings } from '../../types/audio';
 
 export type NarrativeStyle =
+  | 'None'
   | 'Live-Action Realism'
   | 'Cinematic Film'
   | 'Commercial'
