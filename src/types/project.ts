@@ -20,6 +20,7 @@ export const ALL_VISUAL_STYLES = [
   'Steamy Bathroom Glass Reflection',
   'Erotic Low-Key Shadow Contours',
   'Raw Third-Person Sensual Handheld',
+  'Raw Home Amateur Mobile',
   'Cinematic 35mm Film',
   'Raw Smartphone Selfie',
   'Kodak Portra 400 Color',

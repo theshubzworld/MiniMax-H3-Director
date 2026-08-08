@@ -14,6 +14,7 @@ export interface NarrativePresetItem {
 
 export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
   'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
+  'Raw Home Amateur Mobile': 'Authentic home environment amateur mobile video switching seamlessly between handheld selfie angles and propped-up 3rd-person phone placement, casual unpolished room lighting, subtle mobile sensor grain noise, and 100% everyday real-world realism.',
   'Raw Third-Person Mobile': 'Candid 3rd-person handheld mobile camera tracking focusing mostly on body movement, natural depth of field, subtle handheld micro-shake, and authentic unpolished room lighting.',
   'Candid Third-Person Sensual': 'Soft 3rd-person handheld body-focused camera tracking around waist, back, and torso contours, backlit golden sunbeams through delicate fabrics, and warm tungsten lamp falloff.',
   'Raw Smartphone Amateur': 'Direct mobile phone flash glow, slight sensor grain noise, casual unpolished indoor lighting, and authentic everyday Instagram story video physics.',
@@ -49,6 +50,7 @@ export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
 const NARRATIVE_PRESETS: NarrativePresetItem[] = [
   // 📱 Raw & Amateur Realism
   { id: 'Live-Action Realism', category: 'raw' },
+  { id: 'Raw Home Amateur Mobile', category: 'raw' },
   { id: 'Raw Third-Person Mobile', category: 'raw' },
   { id: 'Candid Third-Person Sensual', category: 'raw' },
   { id: 'Raw Smartphone Amateur', category: 'raw' },

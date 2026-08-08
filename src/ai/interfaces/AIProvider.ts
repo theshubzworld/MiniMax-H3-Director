@@ -31,6 +31,7 @@ export type NarrativeStyle =
   | 'Velvet Boudoir'
   | 'Erotic Romance'
   | 'Raw Smartphone Amateur'
+  | 'Raw Home Amateur Mobile'
   | 'Amateur Mobile Vlog'
   | 'Candid Selfie Motion'
   | 'Raw Third-Person Mobile'

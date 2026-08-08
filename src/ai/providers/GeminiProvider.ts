@@ -44,6 +44,7 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
   'Velvet Boudoir': ['soft velvet boudoir lamp diffusion', 'golden amber key lighting', 'warm shadow falloff'],
   'Erotic Romance': ['dim candlelit silhouette glow', 'warm intimate side lighting', 'soft atmospheric twilight key'],
   'Raw Smartphone Amateur': ['direct mobile phone flash blowout', 'natural unpolished ambient room light', 'casual indoor window light with slight overexposure'],
+  'Raw Home Amateur Mobile': ['authentic unpolished bedroom lamp light', 'direct smartphone flash blowout', 'casual indoor room ambient illumination with subtle sensor noise'],
   'Amateur Mobile Vlog': ['handheld daylight selfie lighting', 'casual outdoor golden sun flare', 'everyday ambient room light'],
   'Candid Selfie Motion': ['dim mobile phone screen glow', 'soft ambient bedroom lamp light', 'authentic Instagram story flash'],
   'Raw Third-Person Mobile': ['backlit golden hour window illumination illuminating sheer fabric', 'natural unpolished handheld 3rd-person tracking light', 'soft ambient room illumination'],
@@ -52,6 +53,7 @@ const GENRE_LIGHTING_MATRIX: Record<string, string[]> = {
 
 export const NARRATIVE_STYLE_DIRECTIVES: Record<string, string> = {
   'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
+  'Raw Home Amateur Mobile': 'Authentic home environment amateur mobile video switching seamlessly between handheld selfie angles and propped-up 3rd-person phone placement, casual unpolished room lighting, subtle mobile sensor grain noise, and 100% everyday real-world realism.',
   'Raw Third-Person Mobile': 'Candid 3rd-person handheld mobile camera tracking focusing mostly on body movement, natural depth of field, subtle handheld micro-shake, and authentic unpolished room lighting.',
   'Candid Third-Person Sensual': 'Soft 3rd-person handheld body-focused camera tracking around waist, back, and torso contours, backlit golden sunbeams through delicate fabrics, and warm tungsten lamp falloff.',
   'Raw Smartphone Amateur': 'Direct mobile phone flash glow, slight sensor grain noise, casual unpolished indoor lighting, and authentic everyday Instagram story video physics.',
