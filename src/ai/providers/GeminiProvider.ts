@@ -3,6 +3,7 @@ import { VisualDNA } from '../../types/visualDna';
 import { StudioProject } from '../../types/project';
 import { Shot, CameraMotionType, CameraAmplitude, CameraSpeed, ShotTransition } from '../../types/shot';
 import { AudioSettings } from '../../types/audio';
+import { TitleGenerator } from '../../engine/TitleGenerator';
 
 interface CameraPreset {
   motionType: CameraMotionType;
@@ -365,17 +366,22 @@ export class GeminiProvider implements AIProvider {
 STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
 STORY IDEA: "${params.idea}".
 
+MANDATORY PROMPT RECOGNITION HEADING RULE:
+You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Naked Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases like "analyze image", "doing nude video call with her bf...", or "women under blanket taking naked selfie..." into the title.
+
 ${modeInstruction}
 ${imageInstruction}
 ${compositionInstruction}
 
 Audio & Dialogue Guidelines:
+- Write a concise 3-5 word recognition title field summarizing the visual scene for prompt library recognition (e.g. "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run", "Bamboo Forest Katana Duel").
 - If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
 - Assign a unique speakerId (S1, S2, etc.) to each vocal source, and specify their distinct character identity (e.g. S1: "The man", S2: "The woman") so every dialogue line clearly identifies who is speaking.
 - Include realistic foley soundscape layers and a matching background music score.
 
 Return JSON format:
 {
+  "title": "3-5 word memorable title for prompt recognition",
   "shots": [
     {
       "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her eyes" },
@@ -493,7 +499,13 @@ Return JSON format:
           return shotObj;
         });
 
+        const derivedTitle = parsed.title && parsed.title.trim().length > 0
+          ? parsed.title.trim()
+          : TitleGenerator.generateCinematicTitle(params.idea, params.narrativeStyle);
+
         return {
+          name: derivedTitle,
+          description: params.idea,
           shots: apiShots,
           audio: parsed.audio
             ? {

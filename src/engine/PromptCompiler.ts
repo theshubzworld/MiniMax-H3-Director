@@ -4,6 +4,7 @@ import { CameraEngine } from './CameraEngine';
 import { AudioEngine } from './AudioEngine';
 import { ReferenceEngine } from './ReferenceEngine';
 import { TimelineEngine } from './TimelineEngine';
+import { TitleGenerator } from './TitleGenerator';
 
 export class PromptCompiler {
   /**

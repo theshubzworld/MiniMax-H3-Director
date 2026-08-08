@@ -9,6 +9,9 @@ import { PromptOptimizer } from '../engine/PromptOptimizer';
 import { TimelineEngine } from '../engine/TimelineEngine';
 import { GeneratedKeyframe } from '../ai/providers/ImageGenProvider';
 import { KeyframeStorageService } from '../utils/KeyframeStorageService';
+import { TitleGenerator } from '../engine/TitleGenerator';
+
+import userSavedPromptsData from '../data/user_saved_prompts.json';
 
 const DEFAULT_PROJECT: StudioProject = {
   id: 'proj-default-01',
@@ -155,7 +158,9 @@ interface StudioState {
   savePromptToLibrary: (customPrompt?: Partial<SavedPrompt>) => void;
   deleteSavedPrompt: (id: string) => void;
   toggleFavoritePrompt: (id: string) => void;
+  updateSavedPromptTitle: (id: string, newTitle: string) => void;
   loadSavedPromptIntoStudio: (savedPrompt: SavedPrompt) => void;
+  importPromptsFromJSON: (jsonString: string) => boolean;
 }
 
 // LocalStorage Persistence Helpers
@@ -226,18 +231,44 @@ const loadHydratedDraft = (): DirectorPlanDraft | null => {
 };
 
 const loadHydratedSavedPrompts = (): SavedPrompt[] => {
-  if (typeof window === 'undefined') return [];
+  let localPrompts: SavedPrompt[] = [];
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = localStorage.getItem('minimax_saved_prompts');
+      if (raw) localPrompts = JSON.parse(raw);
+    } catch (e) {}
+  }
+  const staticPrompts = (userSavedPromptsData as SavedPrompt[]) || [];
+
+  const map = new Map<string, SavedPrompt>();
+  [...staticPrompts, ...localPrompts].forEach((p) => {
+    if (p && p.compiledPrompt) {
+      const key = p.id || p.compiledPrompt.trim();
+      if (!map.has(key)) {
+        map.set(key, p);
+      }
+    }
+  });
+
+  return Array.from(map.values());
+};
+
+const syncSavedPromptsToFile = (prompts: SavedPrompt[]) => {
+  if (typeof window === 'undefined') return;
   try {
-    const raw = localStorage.getItem('minimax_saved_prompts');
-    if (raw) return JSON.parse(raw);
+    fetch('/api/save-prompts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(prompts),
+    }).catch(() => {});
   } catch (e) {}
-  return [];
 };
 
 const saveSavedPromptsToLocalStorage = (prompts: SavedPrompt[]) => {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem('minimax_saved_prompts', JSON.stringify(prompts));
+    syncSavedPromptsToFile(prompts);
   } catch (e) {
     console.warn('[StudioStore] Failed to save savedPrompts to localStorage', e);
   }
@@ -632,14 +663,17 @@ export const useStudioStore = create<StudioState>((set, get) => {
       
       if (!compiled || compiled.trim().length === 0) return;
 
-      const title = customPromptData?.title || directorPlanDraft?.idea || project.name || `${project.settings.style} Scene`;
       const idea = customPromptData?.idea || directorPlanDraft?.idea || project.description || 'Custom Director Scene Prompt';
+      const rawTitle = customPromptData?.title || (project.name !== 'Cyberpunk Neon Standoff' ? project.name : '');
+      const title = rawTitle && rawTitle.trim().length > 0 && !rawTitle.toLowerCase().includes('analyze image')
+        ? rawTitle.trim()
+        : TitleGenerator.generateCinematicTitle(idea, project.settings.style, project.settings.mode);
 
       // Deduplicate if identical compiled prompt already exists
       const existingIdx = savedPrompts.findIndex((p) => p.compiledPrompt.trim() === compiled.trim());
       if (existingIdx !== -1) {
-        // Already saved, move to top
-        const existing = savedPrompts[existingIdx];
+        // Already saved, move to top and update title if provided
+        const existing = { ...savedPrompts[existingIdx], title };
         const updatedList = [existing, ...savedPrompts.filter((_, i) => i !== existingIdx)];
         set({ savedPrompts: updatedList });
         saveSavedPromptsToLocalStorage(updatedList);
@@ -680,6 +714,14 @@ export const useStudioStore = create<StudioState>((set, get) => {
       saveSavedPromptsToLocalStorage(updated);
     },
 
+    updateSavedPromptTitle: (id, newTitle) => {
+      if (!newTitle || !newTitle.trim()) return;
+      const { savedPrompts } = get();
+      const updated = savedPrompts.map((p) => (p.id === id ? { ...p, title: newTitle.trim() } : p));
+      set({ savedPrompts: updated });
+      saveSavedPromptsToLocalStorage(updated);
+    },
+
     loadSavedPromptIntoStudio: (savedPrompt) => {
       const { project } = get();
       set({
@@ -699,6 +741,39 @@ export const useStudioStore = create<StudioState>((set, get) => {
         activeView: 'studio',
       });
       get().recompileAndValidate();
+    },
+
+    importPromptsFromJSON: (jsonString: string) => {
+      try {
+        const parsed = JSON.parse(jsonString);
+        const incoming: SavedPrompt[] = Array.isArray(parsed) ? parsed : [parsed];
+        const { savedPrompts } = get();
+
+        const map = new Map<string, SavedPrompt>();
+        savedPrompts.forEach((p) => {
+          if (p && p.compiledPrompt) {
+            const key = p.id || p.compiledPrompt.trim();
+            map.set(key, p);
+          }
+        });
+
+        incoming.forEach((p) => {
+          if (p && p.compiledPrompt) {
+            const key = p.id || p.compiledPrompt.trim();
+            if (!map.has(key)) {
+              map.set(key, p);
+            }
+          }
+        });
+
+        const updated = Array.from(map.values());
+        set({ savedPrompts: updated });
+        saveSavedPromptsToLocalStorage(updated);
+        return true;
+      } catch (e) {
+        console.error('[StudioStore] Failed to import JSON prompts', e);
+        return false;
+      }
     },
   };
 });

@@ -18,17 +18,37 @@ import {
   Layers,
   Download,
   FileText,
+  Upload,
+  Database,
+  FileJson,
+  X,
+  Edit2,
 } from 'lucide-react';
 
 export const PromptLibraryPanel: React.FC = () => {
-  const { savedPrompts, deleteSavedPrompt, toggleFavoritePrompt, loadSavedPromptIntoStudio, savePromptToLibrary, project } =
-    useStudioStore();
+  const {
+    savedPrompts,
+    deleteSavedPrompt,
+    toggleFavoritePrompt,
+    updateSavedPromptTitle,
+    loadSavedPromptIntoStudio,
+    savePromptToLibrary,
+    importPromptsFromJSON,
+    project,
+  } = useStudioStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterTab, setFilterTab] = useState<'all' | 'favorites' | 'T2VA' | 'I2VA' | 'FL2VA' | 'L2VA'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [justSavedCurrent, setJustSavedCurrent] = useState(false);
+  const [isCodebaseModalOpen, setIsCodebaseModalOpen] = useState(false);
+  const [copiedCodebaseJson, setCopiedCodebaseJson] = useState(false);
+  const [importMessage, setImportMessage] = useState<string | null>(null);
+  const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
+  const [editingTitleValue, setEditingTitleValue] = useState('');
+
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const prompts = savedPrompts || [];
 
@@ -42,6 +62,80 @@ export const PromptLibraryPanel: React.FC = () => {
     savePromptToLibrary();
     setJustSavedCurrent(true);
     setTimeout(() => setJustSavedCurrent(false), 2500);
+  };
+
+  const handleExportJSON = () => {
+    if (!prompts || prompts.length === 0) return;
+    const filename = `minimax_saved_prompts_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    const jsonStr = JSON.stringify(prompts, null, 2);
+
+    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadUserSavedPrompts = () => {
+    const filename = `user_saved_prompts.json`;
+    const jsonStr = JSON.stringify(prompts, null, 2);
+
+    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopyCodebaseJSON = () => {
+    const jsonStr = JSON.stringify(prompts, null, 2);
+    navigator.clipboard.writeText(jsonStr);
+    setCopiedCodebaseJson(true);
+    setTimeout(() => setCopiedCodebaseJson(false), 2000);
+  };
+
+  const handleImportFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        const success = importPromptsFromJSON(content);
+        if (success) {
+          setImportMessage('Prompts successfully imported & merged into your library!');
+        } else {
+          setImportMessage('Failed to parse JSON file. Please check file format.');
+        }
+        setTimeout(() => setImportMessage(null), 4000);
+      }
+    };
+    reader.readAsText(file);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleStartEditTitle = (p: SavedPrompt) => {
+    setEditingTitleId(p.id);
+    setEditingTitleValue(p.title);
+  };
+
+  const handleSaveTitle = (id: string) => {
+    if (editingTitleValue.trim()) {
+      updateSavedPromptTitle(id, editingTitleValue.trim());
+    }
+    setEditingTitleId(null);
   };
 
   const handleExportSingleTxt = (p: SavedPrompt) => {
@@ -155,32 +249,83 @@ ${sections}
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImportFileChange}
+              accept=".json"
+              className="hidden"
+            />
+
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-emerald-300 text-xs font-bold transition-all shadow-md"
+              title="Import JSON backup file into saved prompts library"
+            >
+              <Upload className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Import JSON</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleExportJSON}
+              disabled={prompts.length === 0}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-amber-500/40 text-amber-300 text-xs font-bold transition-all shadow-md disabled:opacity-40"
+              title="Export all saved prompts as JSON backup file"
+            >
+              <FileJson className="w-3.5 h-3.5 text-amber-400" />
+              <span>Export JSON</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCodebaseModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-purple-800/60 hover:border-purple-500/60 text-purple-300 text-xs font-bold transition-all shadow-md"
+              title="View permanent codebase JSON sync & backup code"
+            >
+              <Database className="w-3.5 h-3.5 text-purple-400" />
+              <span>Save to Codebase</span>
+            </button>
+
             <button
               type="button"
               onClick={handleExportAllTxt}
               disabled={prompts.length === 0}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-bold transition-all shadow-md disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-cyan-300 text-xs font-bold transition-all shadow-md disabled:opacity-40"
               title="Export all saved prompts into a single TXT file"
             >
-              <Download className="w-4 h-4 text-cyan-400" />
-              <span>Export All ({prompts.length}) .TXT</span>
+              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Export .TXT</span>
             </button>
 
             <button
               type="button"
               onClick={handleSaveCurrent}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-lg ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg ${
                 justSavedCurrent
                   ? 'bg-emerald-500 text-zinc-950 font-extrabold shadow-emerald-500/20 scale-105'
                   : 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white shadow-purple-500/20'
               }`}
             >
               {justSavedCurrent ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-              <span>{justSavedCurrent ? 'Saved Current Scene!' : 'Save Active Scene to Library'}</span>
+              <span>{justSavedCurrent ? 'Saved Current Scene!' : 'Save Active Scene'}</span>
             </button>
           </div>
         </div>
       </div>
+
+      {importMessage && (
+        <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs font-semibold px-4 py-3 rounded-xl flex items-center justify-between shadow-lg backdrop-blur-md animate-fadeIn">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400" />
+            <span>{importMessage}</span>
+          </div>
+          <button type="button" onClick={() => setImportMessage(null)} className="text-emerald-400 hover:text-emerald-200">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Search & Filter Control Bar */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-zinc-900/80 border border-zinc-800/80 rounded-2xl p-3 backdrop-blur-md">
@@ -285,9 +430,51 @@ ${sections}
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold text-zinc-100 tracking-tight group-hover:text-purple-300 transition-colors">
-                      {p.title}
-                    </h3>
+                    {editingTitleId === p.id ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <input
+                          type="text"
+                          value={editingTitleValue}
+                          onChange={(e) => setEditingTitleValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSaveTitle(p.id);
+                            if (e.key === 'Escape') setEditingTitleId(null);
+                          }}
+                          className="bg-zinc-950 border border-purple-500 rounded-lg px-2.5 py-1 text-xs text-zinc-100 font-bold focus:outline-none flex-1"
+                          autoFocus
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleSaveTitle(p.id)}
+                          className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-bold transition-all"
+                          title="Save Title"
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingTitleId(null)}
+                          className="p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-all"
+                          title="Cancel"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 group/title mt-1">
+                        <h3 className="text-base font-bold text-zinc-100 tracking-tight group-hover/title:text-purple-300 transition-colors">
+                          {p.title}
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditTitle(p)}
+                          className="opacity-50 hover:opacity-100 p-1 text-zinc-400 hover:text-purple-300 transition-all rounded-md hover:bg-zinc-800/60"
+                          title="Edit Recognition Title"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Top Actions */}
@@ -385,6 +572,73 @@ ${sections}
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Codebase Permanent Backup Modal */}
+      {isCodebaseModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative">
+            <button
+              type="button"
+              onClick={() => setIsCodebaseModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-purple-400">
+                <Database className="w-5 h-5" />
+                <h3 className="text-base font-extrabold text-zinc-100">Permanent Codebase Sync</h3>
+              </div>
+              <p className="text-xs text-zinc-400">
+                To save your browser prompts permanently into your codebase git repository, copy the JSON below or download{' '}
+                <code className="text-purple-300 bg-purple-950/60 px-1.5 py-0.5 rounded">user_saved_prompts.json</code> and place it inside{' '}
+                <code className="text-purple-300 bg-purple-950/60 px-1.5 py-0.5 rounded">src/data/</code>.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs font-semibold text-zinc-400">
+                <span>JSON Prompt Payload ({prompts.length} prompts)</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadUserSavedPrompts}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 text-xs font-bold transition-all"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download user_saved_prompts.json</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyCodebaseJSON}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all"
+                  >
+                    {copiedCodebaseJson ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedCodebaseJson ? 'Copied JSON!' : 'Copy JSON'}</span>
+                  </button>
+                </div>
+              </div>
+              <textarea
+                readOnly
+                rows={10}
+                value={JSON.stringify(prompts, null, 2)}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-[11px] font-mono text-zinc-300 focus:outline-none scrollbar-thin"
+              />
+            </div>
+
+            <div className="pt-3 border-t border-zinc-800 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsCodebaseModalOpen(false)}
+                className="px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
