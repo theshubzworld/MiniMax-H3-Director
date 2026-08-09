@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **[2026-08-09] Strip 'None.' Prefix from [Shot 1] Header**: Updated `PromptCompiler.ts` to exclude `${style}.` after `[Shot 1]` when `style === 'None'` or `'Unstyled'`, and added regex sanitization in `sanitizeShotProse` to strip residual `[Shot 1] None.` fragments. Cleaned all saved prompts on disk.
+
 ### Added
 - **[2026-08-09] System Prompt Preset Selector (Uncensored NSFW Simple Language)**: Created a dual System Prompt Architecture engine (`systemPromptPreset`) across `AIDirectorPanel.tsx`, `StudioStore.ts`, `AIProvider.ts`, and `GeminiProvider.ts`. Allows users to switch between **Standard Director Mode** (cinematic framing & optical physics) and **Uncensored NSFW Mode** (simple, direct, natural English focusing on explicit real-world actions, intimate bedroom postures, and unfiltered dialogue without preachy rules).
 - **[2026-08-08] None (Unstyled) Preset Option**: Added `'None'` option to Narrative & Motion Style presets across `AIDirectorPanel.tsx`, `AIProvider.ts`, `GeminiProvider.ts`, and `project.ts`. Allows AI Director to infer camera motion, lighting, and soundscape 100% from raw story ideas without imposing pre-packaged visual style directives.

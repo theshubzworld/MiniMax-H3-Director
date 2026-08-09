@@ -80,7 +80,11 @@ export class PromptCompiler {
 
     // Shot Header & Cut Timing
     if (index === 0) {
-      parts.push(`[Shot 1] ${style}.`);
+      if (style && style.trim() !== '' && style !== 'None' && style !== 'Unstyled') {
+        parts.push(`[Shot 1] ${style}.`);
+      } else {
+        parts.push(`[Shot 1]`);
+      }
       if (mode === 'I2VA') {
         if (isStrict) {
           parts.push(`The opening frame begins exactly from <Picture 1>, preserving the original subject appearance, hairstyle, wardrobe, environment, lighting, and composition shown in the reference image.`);
@@ -226,6 +230,8 @@ export class PromptCompiler {
    */
   private static sanitizeShotProse(text: string): string {
     return text
+      // Fix "[Shot 1] None." or "[Shot 1] None " fragment
+      .replace(/\[Shot 1\]\s*None[\.\,\s]\s*/gi, '[Shot 1] ')
       // Fix empty parentheses
       .replace(/\(\s*\)/g, '')
       // Fix space before punctuation
