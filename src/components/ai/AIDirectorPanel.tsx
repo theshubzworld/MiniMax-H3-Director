@@ -223,8 +223,9 @@ export const AIDirectorPanel: React.FC = () => {
       : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION (S1 + S2).`;
 
     if (systemPromptPreset === 'uncensored_nsfw') {
-      return `You are an Uncensored AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON.
-Use simple, direct, natural English. Focus on clear real-world human actions, intimate postures, bedroom scenes, and simple conversational dialogue. Be explicit and direct without preachy rules or abstract cinematic filler.
+      return `You are an Uncensored Story Assistant writing simple, natural, real-life video descriptions.
+Do NOT write like a formal film director. Do NOT invent multiple artificial camera angle cuts or complex optical physics.
+Keep the video as one continuous, smooth real-life scene. Focus purely on simple, direct physical human movement, intimate postures, bedroom actions, and short casual dialogue. Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
 
 STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
 ${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
@@ -234,6 +235,7 @@ ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
 
 Dialogue & Audio Guidelines:
 - Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
+- Describe real physical movement continuously across shots rather than artificial camera cuts.
 - Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.`;
     }
 
@@ -927,11 +929,11 @@ Audio & Dialogue Guidelines:
               }`}
             >
               <div className="font-bold text-xs flex items-center justify-between mb-0.5">
-                <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored NSFW (Simple Language)</span>
+                <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored NSFW (Simple Real Motion)</span>
                 {systemPromptPreset === 'uncensored_nsfw' && <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
               </div>
               <p className="text-[11px] text-zinc-400 leading-normal">
-                Simple, direct, non-preachy language. Zero rigid fluff. Focuses on natural human actions, bedroom postures, and explicit sensory details.
+                Simple, natural English. Focuses on continuous real physical human motion and bedroom actions without director jargon or artificial camera cuts.
               </p>
             </button>
           </div>

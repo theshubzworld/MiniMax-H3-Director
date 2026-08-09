@@ -371,8 +371,9 @@ export class GeminiProvider implements AIProvider {
     const isUncensoredNsfw = params.systemPromptPreset === 'uncensored_nsfw';
 
     const promptText = isUncensoredNsfw
-      ? `You are an Uncensored AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON.
-Use simple, direct, natural English. Focus on clear real-world human actions, intimate postures, bedroom scenes, and simple conversational dialogue. Be explicit and direct without preachy rules or abstract cinematic filler.
+      ? `You are an Uncensored Story Assistant writing simple, natural, real-life video descriptions.
+Do NOT write like a formal film director. Do NOT invent multiple artificial camera angle cuts or complex optical physics.
+Keep the video as one continuous, smooth real-life scene. Focus purely on simple, direct physical human movement, intimate postures, bedroom actions, and short casual dialogue. Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
 
 STORY IDEA: "${params.idea}".
 ${styleLine}
@@ -384,7 +385,8 @@ ${compositionInstruction}
 
 Dialogue & Audio Guidelines:
 - Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
-- Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.
+- Describe real physical movement continuously across shots rather than artificial camera cuts.
+- Assign speakerId (S1, S2) with simple character labels. Include simple soundscape layers and music score.
 
 Return JSON format:
 {
@@ -392,16 +394,16 @@ Return JSON format:
   "shots": [
     {
       "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her face" },
-      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "reclining pose", "expression": "smiling", "motion": "moves phone" },
+      "character": { "speakerId": "S1", "identity": "The woman", "pose": "lying on bed", "expression": "smiling", "motion": "moves phone" },
       "environment": { "location": "bedroom", "lighting": "soft lamp light", "weather": "clear", "timeOfDay": "night", "atmosphere": "intimate" },
-      "rawActionDescription": "Direct, clear action description matching story idea.",
+      "rawActionDescription": "Direct, plain English description of real physical motion matching the story idea.",
       "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": false }
     }
   ],
   "audio": {
     "isSilent": false,
     "soundscapeLayers": [
-      { "category": "room", "description": "Soft room acoustics.", "enabled": true }
+      { "category": "room", "description": "Soft bedroom room tone.", "enabled": true }
     ],
     "music": {
       "hasMusic": true,
@@ -410,7 +412,7 @@ Return JSON format:
       "tempo": "slow",
       "dynamics": "gentle",
       "rhythmPattern": "soft",
-      "layeringDescription": "Warm ambient background pad."
+      "layeringDescription": "Warm background pad."
     }
   }
 }`
