@@ -393,8 +393,16 @@ export const useStudioStore = create<StudioState>((set, get) => {
     },
 
     setProject: (project) => {
-      const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
-      const updated = { ...project, shots: dividedShots };
+      const recalculated = TimelineEngine.recalculateShotTimings(project.shots);
+      const totalDuration = recalculated.reduce((acc, s) => acc + (s.durationSeconds || 2), 0);
+      const updated = {
+        ...project,
+        shots: recalculated,
+        settings: {
+          ...project.settings,
+          durationSeconds: Number(totalDuration.toFixed(2)),
+        },
+      };
       set({ project: updated });
       get().recompileAndValidate();
     },
@@ -402,7 +410,12 @@ export const useStudioStore = create<StudioState>((set, get) => {
     updateSettings: (newSettings) => {
       const { project } = get();
       const updatedSettings = { ...project.settings, ...newSettings };
-      const dividedShots = TimelineEngine.divideShotsEvenly(project.shots, updatedSettings.durationSeconds);
+      let updatedShots = project.shots;
+
+      // Only divide evenly if durationSeconds was explicitly changed by user input
+      if (newSettings.durationSeconds !== undefined && newSettings.durationSeconds !== project.settings.durationSeconds) {
+        updatedShots = TimelineEngine.divideShotsEvenly(project.shots, updatedSettings.durationSeconds);
+      }
 
       let updatedRefs = project.references;
       if (newSettings.mode === 'T2VA') {
@@ -413,7 +426,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
         ...project,
         settings: updatedSettings,
         references: updatedRefs,
-        shots: dividedShots,
+        shots: updatedShots,
         updatedAt: new Date().toISOString(),
       };
       set({ project: updatedProject });
@@ -446,13 +459,14 @@ export const useStudioStore = create<StudioState>((set, get) => {
         newShots = currentShots.slice(0, targetCount);
       } else {
         newShots = [...currentShots];
+        const defaultDuration = project.shots[0]?.durationSeconds || 2;
         while (newShots.length < targetCount) {
           const idx = newShots.length;
           newShots.push({
             id: `shot-${Date.now()}-${idx + 1}`,
             shotNumber: idx + 1,
             startTimeSeconds: 0,
-            durationSeconds: 1,
+            durationSeconds: defaultDuration,
             transitionToNext: 'cut',
             camera: {
               motionType: idx % 2 === 0 ? 'Push In' : 'Arc Shot',
@@ -477,8 +491,15 @@ export const useStudioStore = create<StudioState>((set, get) => {
         }
       }
 
-      const dividedShots = TimelineEngine.divideShotsEvenly(newShots, project.settings.durationSeconds);
-      set({ project: { ...project, shots: dividedShots } });
+      const recalculated = TimelineEngine.recalculateShotTimings(newShots);
+      const totalDuration = recalculated.reduce((acc, s) => acc + s.durationSeconds, 0);
+      set({
+        project: {
+          ...project,
+          shots: recalculated,
+          settings: { ...project.settings, durationSeconds: Number(totalDuration.toFixed(2)) },
+        },
+      });
       recompileAndValidate();
     },
 
@@ -487,12 +508,13 @@ export const useStudioStore = create<StudioState>((set, get) => {
       if (project.shots.length >= 9) return;
       const nextNum = project.shots.length + 1;
       const lastShot = project.shots[project.shots.length - 1];
+      const defaultDuration = project.shots[0]?.durationSeconds || 2;
 
       const newShot: Shot = {
         id: `shot-${Date.now()}`,
         shotNumber: nextNum,
         startTimeSeconds: 0,
-        durationSeconds: 1,
+        durationSeconds: defaultDuration,
         transitionToNext: 'cut',
         camera: {
           motionType: 'Tracking Shot',
@@ -517,8 +539,15 @@ export const useStudioStore = create<StudioState>((set, get) => {
       };
 
       const updatedShots = [...project.shots, newShot];
-      const dividedShots = TimelineEngine.divideShotsEvenly(updatedShots, project.settings.durationSeconds);
-      set({ project: { ...project, shots: dividedShots } });
+      const recalculated = TimelineEngine.recalculateShotTimings(updatedShots);
+      const totalDuration = recalculated.reduce((acc, s) => acc + s.durationSeconds, 0);
+      set({
+        project: {
+          ...project,
+          shots: recalculated,
+          settings: { ...project.settings, durationSeconds: Number(totalDuration.toFixed(2)) },
+        },
+      });
       get().recompileAndValidate();
     },
 
@@ -527,8 +556,15 @@ export const useStudioStore = create<StudioState>((set, get) => {
       const newShots = [...project.shots];
       if (index >= 0 && index < newShots.length) {
         newShots[index] = { ...newShots[index], ...updatedShot };
-        const dividedShots = TimelineEngine.recalculateShotTimings(newShots);
-        set({ project: { ...project, shots: dividedShots } });
+        const recalculated = TimelineEngine.recalculateShotTimings(newShots);
+        const totalDuration = recalculated.reduce((acc, s) => acc + (s.durationSeconds || 2), 0);
+        set({
+          project: {
+            ...project,
+            shots: recalculated,
+            settings: { ...project.settings, durationSeconds: Number(totalDuration.toFixed(2)) },
+          },
+        });
         get().recompileAndValidate();
       }
     },
@@ -537,8 +573,15 @@ export const useStudioStore = create<StudioState>((set, get) => {
       const { project } = get();
       if (project.shots.length <= 1) return;
       const newShots = project.shots.filter((_, idx) => idx !== index);
-      const dividedShots = TimelineEngine.divideShotsEvenly(newShots, project.settings.durationSeconds);
-      set({ project: { ...project, shots: dividedShots } });
+      const recalculated = TimelineEngine.recalculateShotTimings(newShots);
+      const totalDuration = recalculated.reduce((acc, s) => acc + s.durationSeconds, 0);
+      set({
+        project: {
+          ...project,
+          shots: recalculated,
+          settings: { ...project.settings, durationSeconds: Number(totalDuration.toFixed(2)) },
+        },
+      });
       get().recompileAndValidate();
     },
 

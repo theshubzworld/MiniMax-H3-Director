@@ -4,7 +4,7 @@ import { AIEngine } from '../../ai/AIEngine';
 import { GeminiProvider, NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
+import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap, Clock } from 'lucide-react';
 import { ALL_VISUAL_STYLES, VisualStyle, AspectRatio } from '../../types/project';
 
 export interface NarrativePresetItem {
@@ -168,12 +168,16 @@ const STORY_SEED_PRESETS = [
   { category: 'cinematic', label: '🧗 Mountain Peak Conquest', prompt: 'A climber reaching the sharp summit of a snowy peak and planting a flag as sunrise breaks over the clouds. Include triumphant exhaled breath, wind gust foley, and inspiring piano orchestra.' },
 ];
 
+import { TimelineEngine } from '../../engine/TimelineEngine';
+
 export const AIDirectorPanel: React.FC = () => {
   const {
     project,
     setProject,
     updateSettings,
+    setShotsCount,
     addShot,
+    updateShot,
     removeShot,
     autoFixProject,
     directorModel,
@@ -381,28 +385,80 @@ export const AIDirectorPanel: React.FC = () => {
 
       {/* Inputs & Presets */}
       <div className="space-y-4">
-        {/* Dynamic Shot Chips + Add Shot Button */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs text-zinc-400 font-medium block">
-              Active Storyboard Shots ({currentShotCount} Shot{currentShotCount > 1 ? 's' : ''} divided evenly across {totalDuration}s)
-            </label>
-            <span className="text-[11px] text-cyan-400 font-medium">Max 9 Shots</span>
+        {/* Dynamic Per-Shot Duration & Shot Count Setup Controls */}
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/80 pb-2">
+            <div>
+              <label className="text-xs text-zinc-200 font-bold block flex items-center gap-1.5">
+                <Video className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Storyboard Shot Setup ({currentShotCount} Shot{currentShotCount > 1 ? 's' : ''} • Total {totalDuration}s)</span>
+              </label>
+              <p className="text-[11px] text-zinc-400">
+                Select target shot count or customize individual shot durations below.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Preset Shot Count Selector */}
+              <div className="flex items-center gap-1.5 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1 text-xs">
+                <span className="text-[11px] text-zinc-400 font-semibold">Total Shots:</span>
+                <select
+                  value={currentShotCount}
+                  onChange={(e) => setShotsCount(parseInt(e.target.value, 10))}
+                  className="bg-transparent text-cyan-300 font-bold focus:outline-none cursor-pointer text-xs font-mono"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                    <option key={num} value={num} className="bg-zinc-950 text-zinc-100">
+                      {num} {num === 1 ? 'Shot' : 'Shots'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Equalize Durations Action Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  const divided = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
+                  setProject({ ...project, shots: divided });
+                }}
+                className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[11px] font-semibold rounded-xl border border-zinc-700 transition-all flex items-center gap-1"
+                title="Divide total duration evenly across all shots"
+              >
+                <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                <span>⚡ Equalize</span>
+              </button>
+            </div>
           </div>
 
+          {/* Per-Shot Duration Chips */}
           <div className="flex flex-wrap gap-2">
             {activeShots.map((shot, idx) => (
               <div
                 key={shot.id}
-                className="bg-cyan-950/60 border border-cyan-500/50 text-cyan-300 rounded-xl px-3.5 py-2 text-xs font-bold flex items-center gap-2 shadow-md shadow-cyan-500/10"
+                className="bg-zinc-950 border border-cyan-500/40 text-cyan-300 rounded-xl px-3 py-1.5 text-xs font-bold flex items-center gap-2 shadow-xs"
               >
-                <span>Shot {idx + 1} ({shot.durationSeconds.toFixed(1)}s)</span>
+                <span className="text-zinc-200">Shot {idx + 1}:</span>
+
+                {/* Per-Shot Duration Select */}
+                <select
+                  value={shot.durationSeconds}
+                  onChange={(e) => updateShot(idx, { durationSeconds: parseFloat(e.target.value) || 2 })}
+                  className="bg-cyan-950/80 text-cyan-300 font-mono font-bold px-1.5 py-0.5 rounded border border-cyan-500/40 text-xs focus:outline-none cursor-pointer"
+                >
+                  {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6].map((sec) => (
+                    <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
+                      {sec.toFixed(1)}s
+                    </option>
+                  ))}
+                </select>
+
                 {currentShotCount > 1 && (
                   <button
                     type="button"
                     onClick={() => removeShot(idx)}
                     title="Remove Shot"
-                    className="text-cyan-400 hover:text-red-400 transition-colors p-0.5 rounded"
+                    className="text-zinc-500 hover:text-red-400 transition-colors p-0.5 rounded ml-0.5"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -414,7 +470,7 @@ export const AIDirectorPanel: React.FC = () => {
               <button
                 type="button"
                 onClick={() => addShot()}
-                className="bg-zinc-950 hover:bg-zinc-800 border border-dashed border-zinc-700 hover:border-cyan-500/50 text-zinc-300 hover:text-cyan-300 rounded-xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                className="bg-zinc-950 hover:bg-zinc-800 border border-dashed border-zinc-700 hover:border-cyan-500/50 text-zinc-300 hover:text-cyan-300 rounded-xl px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
               >
                 <Plus className="w-4 h-4 text-cyan-400" />
                 <span>+ Add Shot</span>

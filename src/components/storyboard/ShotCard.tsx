@@ -38,12 +38,31 @@ export const ShotCard: React.FC<ShotCardProps> = ({
             #{shot.shotNumber}
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="font-semibold text-sm text-zinc-100">Shot {shot.shotNumber}</span>
               <span className="text-xs bg-zinc-800 text-cyan-400 px-2 py-0.5 rounded font-mono flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                {index === 0 ? 'Start 0.00s' : formattedTime} ({shot.durationSeconds}s)
+                <Clock className="w-3 h-3 text-cyan-400" />
+                {index === 0 ? 'Start 0.00s' : formattedTime}
               </span>
+
+              {/* Per-Shot Duration Selector Dropdown */}
+              <div
+                className="flex items-center gap-1 bg-cyan-950/80 border border-cyan-500/40 rounded px-2 py-0.5 text-xs text-cyan-300 font-mono shadow-xs"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="text-[10px] text-zinc-400 font-sans font-medium">Duration:</span>
+                <select
+                  value={shot.durationSeconds}
+                  onChange={(e) => onUpdate({ durationSeconds: parseFloat(e.target.value) || 2 })}
+                  className="bg-transparent text-cyan-300 font-bold focus:outline-none cursor-pointer text-xs"
+                >
+                  {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6].map((sec) => (
+                    <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
+                      {sec.toFixed(1)}s
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <p className="text-xs text-zinc-400 truncate max-w-md mt-0.5">
               {shot.rawActionDescription || 'Action details...'}

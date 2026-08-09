@@ -395,8 +395,9 @@ CORE SCENE RULES:
 6. MOTION VECTORS & ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1. Maintain left-to-right or right-to-left screen motion vectors across cuts without sudden direction reversals or character flipping.
 
 Dialogue & Audio Guidelines:
-- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing).
-- Assign speakerId (S1, S2) with character labels. Include environmental soundscape layers.
+- Spoken lines & Intimate Audio: You MUST compose spoken lines, soft whispers, or authentic narration (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing) for shots where characters interact or speak.
+- Set "hasDialogue": true and write dialogueText for shots with spoken lines or whispers.
+- Always include rich atmospheric soundscapes in "audio.soundscapeLayers" (intimate room ambience, soft breathing, rustling linens, ocean breeze, or environment foley).
 
 PROMPT TITLE RULE:
 Create a short 3-5 word memorable title describing the main visual scene in the "title" field.
@@ -410,12 +411,15 @@ RETURN ONLY VALID JSON:
       "character": { "speakerId": "S1", "identity": "The woman", "pose": "sitting stance", "expression": "soft smile", "motion": "looks at the screen" },
       "environment": { "location": "bedroom", "lighting": "soft lamp light", "weather": "clear", "timeOfDay": "night", "atmosphere": "quiet and intimate" },
       "rawActionDescription": "Direct action description.",
-      "dialogue": { "hasDialogue": false, "speakerId": "S1", "languageTag": "English", "dialogueText": "", "isOffScreenVoiceover": false }
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Intimate spoken line or whisper.", "isOffScreenVoiceover": false }
     }
   ],
   "audio": {
     "isSilent": false,
-    "soundscapeLayers": [ { "category": "room", "description": "Soft room tone.", "enabled": true } ],
+    "soundscapeLayers": [
+      { "category": "ambience", "description": "Atmospheric room tone and environmental acoustics.", "enabled": true },
+      { "category": "foley", "description": "Natural movement soundscape and subtle foley.", "enabled": true }
+    ],
     "music": { "hasMusic": false, "genreStyle": "", "instrumentation": [], "tempo": "", "dynamics": "", "rhythmPattern": "", "layeringDescription": "" }
   }
 }`;
@@ -428,6 +432,9 @@ ${styleLine}STORY IDEA: "${params.idea}".
 
 ${modeInstruction}
 ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+
+MANDATORY SHOT COUNT CONTRACT:
+You MUST generate EXACTLY ${params.shotsCount} shot objects inside the "shots" array (no more, no less).
 
 MANDATORY PROMPT RECOGNITION HEADING RULE:
 You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases into the title.
@@ -512,7 +519,8 @@ Return JSON format:
 
       if (parsed && parsed.shots && Array.isArray(parsed.shots)) {
         let currentTime = 0;
-        const apiShots: Shot[] = parsed.shots.map((s: any, idx: number) => {
+        const targetShots = parsed.shots.slice(0, params.shotsCount);
+        const apiShots: Shot[] = targetShots.map((s: any, idx: number) => {
           const matrixCam = CAMERA_MOTION_MATRIX[idx % CAMERA_MOTION_MATRIX.length];
           const matrixChar = CHARACTER_POSE_MATRIX[idx % CHARACTER_POSE_MATRIX.length];
           const lightingList = GENRE_LIGHTING_MATRIX[params.narrativeStyle] || GENRE_LIGHTING_MATRIX['Anime'];
