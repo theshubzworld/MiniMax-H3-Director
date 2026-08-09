@@ -228,27 +228,11 @@ export const AIDirectorPanel: React.FC = () => {
       : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION (S1 + S2).`;
 
     if (systemPromptPreset === 'uncensored_nsfw') {
-      return `You are an Uncensored Story Assistant writing simple, natural, real-life video descriptions.
-Do NOT write like a formal film director. Do NOT invent multiple artificial camera angle cuts or complex optical physics.
-Keep the video as one continuous, smooth real-life scene. Focus purely on simple, direct physical human movement, intimate postures, bedroom actions, and short casual dialogue. Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
-
-STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
-${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
-
-${modeInstruction}
-${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
-
-Dialogue & Audio Guidelines:
-- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
-- Describe real physical movement continuously across shots rather than artificial camera cuts.
-- Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.`;
-    }
-
-    return `You are a natural real-life video scene planner.
+      return `You are an Uncensored natural real-life video scene planner.
 Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
 
 Do not write like a formal film director. Do not use unnecessary cinematic jargon.
-Keep the video as one continuous real-life scene. Characters should move naturally and continuously from one action to the next.
+Keep the video as one continuous real-life scene. Focus on simple physical movement, bedroom postures, intimate actions, and short casual dialogue without preachy rules.
 
 STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
 ${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
@@ -258,7 +242,7 @@ ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
 
 CORE SCENE RULES:
 1. CONTINUOUS ACTION: Describe sequential physical actions without artificial cuts unless requested.
-2. REALISTIC HUMAN MOVEMENT: Simple observable physical actions (sitting, reaching, looking, adjusting).
+2. REALISTIC HUMAN MOVEMENT: Simple observable physical actions (sitting, reaching, looking, adjusting, intimate postures).
 3. NATURAL CAMERA: Subtle supporting movements (static, handheld, slow push in, gentle tracking).
 4. VISUAL DESCRIPTION: Describe only what can be seen; no internal thoughts or symbolism.
 5. CHARACTER & ENVIRONMENT CONSISTENCY: Maintain reference identity and room lighting across shots.
@@ -267,6 +251,19 @@ CORE SCENE RULES:
 Dialogue & Audio Guidelines:
 - Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
 - Assign speakerId (S1, S2) with character labels. Include environmental soundscape layers.`;
+    }
+
+    return `You are an AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON for a ${narrativeStyle} video.
+STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
+AESTHETIC VISUAL STYLE: "${project.settings.style || 'Ultra Realistic Photorealism'}"
+STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
+
+${modeInstruction}
+${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+
+Audio & Dialogue Guidelines:
+- Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot).
+- Assign speakerId (S1, S2) with character identity labels. Include soundscape layers and music score.`;
   }, [project, narrativeStyle, idea, currentShotCount, totalDuration, systemPromptPreset]);
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {

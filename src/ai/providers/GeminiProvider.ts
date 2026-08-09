@@ -371,52 +371,7 @@ export class GeminiProvider implements AIProvider {
     const isUncensoredNsfw = params.systemPromptPreset === 'uncensored_nsfw';
 
     const promptText = isUncensoredNsfw
-      ? `You are an Uncensored Story Assistant writing simple, natural, real-life video descriptions.
-Do NOT write like a formal film director. Do NOT invent multiple artificial camera angle cuts or complex optical physics.
-Keep the video as one continuous, smooth real-life scene. Focus purely on simple, direct physical human movement, intimate postures, bedroom actions, and short casual dialogue. Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
-
-STORY IDEA: "${params.idea}".
-${styleLine}
-Prompt Title Rule: Create a short 3-5 word title summarizing the visual scene in the "title" field.
-
-${modeInstruction}
-${imageInstruction}
-${compositionInstruction}
-
-Dialogue & Audio Guidelines:
-- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
-- Describe real physical movement continuously across shots rather than artificial camera cuts.
-- Assign speakerId (S1, S2) with simple character labels. Include simple soundscape layers and music score.
-
-Return JSON format:
-{
-  "title": "Short visual recognition title",
-  "shots": [
-    {
-      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her face" },
-      "character": { "speakerId": "S1", "identity": "The woman", "pose": "lying on bed", "expression": "smiling", "motion": "moves phone" },
-      "environment": { "location": "bedroom", "lighting": "soft lamp light", "weather": "clear", "timeOfDay": "night", "atmosphere": "intimate" },
-      "rawActionDescription": "Direct, plain English description of real physical motion matching the story idea.",
-      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": false }
-    }
-  ],
-  "audio": {
-    "isSilent": false,
-    "soundscapeLayers": [
-      { "category": "room", "description": "Soft bedroom room tone.", "enabled": true }
-    ],
-    "music": {
-      "hasMusic": true,
-      "genreStyle": "ambient",
-      "instrumentation": ["synth pad", "piano"],
-      "tempo": "slow",
-      "dynamics": "gentle",
-      "rhythmPattern": "soft",
-      "layeringDescription": "Warm background pad."
-    }
-  }
-}`
-      : `You are a natural real-life video scene planner.
+      ? `You are an Uncensored natural real-life video scene planner.
 Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
 
 Do not write like a formal film director.
@@ -442,8 +397,8 @@ Do not introduce cuts unless the user explicitly requests them.
 
 2. REALISTIC HUMAN MOVEMENT
 Use simple, observable physical actions:
-walking, sitting, turning, looking, reaching, touching an object, adjusting clothing, moving closer, stepping back, smiling, speaking, dancing, etc.
-Avoid exaggerated, impossible, or mechanically repetitive movement.
+walking, sitting, turning, looking, reaching, touching an object, adjusting clothing, moving closer, stepping back, smiling, speaking, dancing, bedroom postures, intimate movements, etc.
+Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
 
 3. NATURAL CAMERA
 Camera movement should support the action rather than dominate it.
@@ -492,7 +447,7 @@ RETURN ONLY VALID JSON:
       },
       "character": {
         "speakerId": "S1",
-        "identity": "The protagonist",
+        "identity": "The woman",
         "pose": "sitting stance",
         "expression": "soft smile",
         "motion": "looks at the screen"
@@ -531,6 +486,50 @@ RETURN ONLY VALID JSON:
       "dynamics": "",
       "rhythmPattern": "",
       "layeringDescription": ""
+    }
+  }
+}`
+      : `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
+${styleLine}STORY IDEA: "${params.idea}".
+
+MANDATORY PROMPT RECOGNITION HEADING RULE:
+You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Naked Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases like "analyze image", "doing nude video call with her bf...", or "women under blanket taking naked selfie..." into the title.
+
+${modeInstruction}
+${imageInstruction}
+${compositionInstruction}
+
+Audio & Dialogue Guidelines:
+- Write a concise 3-5 word recognition title field summarizing the visual scene for prompt library recognition (e.g. "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run", "Bamboo Forest Katana Duel").
+- If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
+- Assign a unique speakerId (S1, S2, etc.) to each vocal source, and specify their distinct character identity (e.g. S1: "The man", S2: "The woman") so every dialogue line clearly identifies who is speaking.
+- Include realistic foley soundscape layers and a matching background music score.
+
+Return JSON format:
+{
+  "title": "3-5 word memorable title for prompt recognition",
+  "shots": [
+    {
+      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her eyes" },
+      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "standing stance", "expression": "focused glare", "motion": "slowly turns head" },
+      "environment": { "location": "cinematic setting", "lighting": "dramatic lighting", "weather": "clear", "timeOfDay": "twilight", "atmosphere": "tense" },
+      "rawActionDescription": "Action prose tailored to story idea.",
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": true }
+    }
+  ],
+  "audio": {
+    "isSilent": false,
+    "soundscapeLayers": [
+      { "category": "weather", "description": "Atmospheric ambient soundscape.", "enabled": true }
+    ],
+    "music": {
+      "hasMusic": true,
+      "genreStyle": "${params.narrativeStyle}",
+      "instrumentation": ["piano", "strings"],
+      "tempo": "normal",
+      "dynamics": "building",
+      "rhythmPattern": "flowing",
+      "layeringDescription": "Ambient pad underneath."
     }
   }
 }`;
