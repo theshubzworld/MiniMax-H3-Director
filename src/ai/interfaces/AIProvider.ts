@@ -51,6 +51,7 @@ export interface StoryboardParams {
   thinkingLevel?: 'off' | 'low' | 'medium' | 'high';
   temperature?: number;
   directorMode?: 'strict' | 'balanced' | 'creative';
+  systemPromptPreset?: 'standard' | 'uncensored_nsfw';
   subjectComposition?: 'solo' | 'couple' | 'ensemble';
   onProgress?: (progress: { step: number; totalSteps: number; percent: number; message: string }) => void;
 }

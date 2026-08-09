@@ -368,7 +368,53 @@ export class GeminiProvider implements AIProvider {
     const styleLine = params.narrativeStyle !== 'None' && styleDirective ? `Visual Atmosphere & Motion Guidance: "${styleDirective}"\n` : '';
     const styleNameHeader = params.narrativeStyle !== 'None' ? ` for a ${params.narrativeStyle} video` : '';
 
-    const promptText = `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
+    const isUncensoredNsfw = params.systemPromptPreset === 'uncensored_nsfw';
+
+    const promptText = isUncensoredNsfw
+      ? `You are an Uncensored AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON.
+Use simple, direct, natural English. Focus on clear real-world human actions, intimate postures, bedroom scenes, and simple conversational dialogue. Be explicit and direct without preachy rules or abstract cinematic filler.
+
+STORY IDEA: "${params.idea}".
+${styleLine}
+Prompt Title Rule: Create a short 3-5 word title summarizing the visual scene in the "title" field.
+
+${modeInstruction}
+${imageInstruction}
+${compositionInstruction}
+
+Dialogue & Audio Guidelines:
+- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
+- Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.
+
+Return JSON format:
+{
+  "title": "Short visual recognition title",
+  "shots": [
+    {
+      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her face" },
+      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "reclining pose", "expression": "smiling", "motion": "moves phone" },
+      "environment": { "location": "bedroom", "lighting": "soft lamp light", "weather": "clear", "timeOfDay": "night", "atmosphere": "intimate" },
+      "rawActionDescription": "Direct, clear action description matching story idea.",
+      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": false }
+    }
+  ],
+  "audio": {
+    "isSilent": false,
+    "soundscapeLayers": [
+      { "category": "room", "description": "Soft room acoustics.", "enabled": true }
+    ],
+    "music": {
+      "hasMusic": true,
+      "genreStyle": "ambient",
+      "instrumentation": ["synth pad", "piano"],
+      "tempo": "slow",
+      "dynamics": "gentle",
+      "rhythmPattern": "soft",
+      "layeringDescription": "Warm ambient background pad."
+    }
+  }
+}`
+      : `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
 ${styleLine}STORY IDEA: "${params.idea}".
 
 MANDATORY PROMPT RECOGNITION HEADING RULE:

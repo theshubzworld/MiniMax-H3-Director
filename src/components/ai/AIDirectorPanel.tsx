@@ -177,6 +177,8 @@ export const AIDirectorPanel: React.FC = () => {
     setDirectorThinkingBudget,
     directorMode,
     setDirectorMode,
+    systemPromptPreset,
+    setSystemPromptPreset,
   } = useStudioStore();
 
   const [idea, setIdea] = useState(() => localStorage.getItem('minimax_h3_prompt_idea') || '');
@@ -220,6 +222,21 @@ export const AIDirectorPanel: React.FC = () => {
       ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE (S1, S2, S3).`
       : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION (S1 + S2).`;
 
+    if (systemPromptPreset === 'uncensored_nsfw') {
+      return `You are an Uncensored AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON.
+Use simple, direct, natural English. Focus on clear real-world human actions, intimate postures, bedroom scenes, and simple conversational dialogue. Be explicit and direct without preachy rules or abstract cinematic filler.
+
+STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
+${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
+
+${modeInstruction}
+${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+
+Dialogue & Audio Guidelines:
+- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
+- Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.`;
+    }
+
     return `You are an AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON for a ${narrativeStyle} video.
 STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
 AESTHETIC VISUAL STYLE: "${project.settings.style || 'Ultra Realistic Photorealism'}"
@@ -231,7 +248,7 @@ ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
 Audio & Dialogue Guidelines:
 - Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot).
 - Assign speakerId (S1, S2) with character identity labels. Include soundscape layers and music score.`;
-  }, [project, narrativeStyle, idea, currentShotCount, totalDuration]);
+  }, [project, narrativeStyle, idea, currentShotCount, totalDuration, systemPromptPreset]);
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
@@ -264,6 +281,7 @@ Audio & Dialogue Guidelines:
           directorModel,
           thinkingBudget: directorThinkingBudget,
           directorMode,
+          systemPromptPreset,
           onProgress: (prog) => setProgressState(prog),
         },
         apiKey
@@ -865,6 +883,57 @@ Audio & Dialogue Guidelines:
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* 4. System Prompt Architecture Mode Selector */}
+        <div className="pt-2 border-t border-zinc-800/60">
+          <label className="text-[11px] text-zinc-300 font-bold uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+              System Prompt Directive Architecture
+            </span>
+            <span className="text-[10px] text-rose-400 font-mono">
+              {systemPromptPreset === 'uncensored_nsfw' ? '🔥 Simple Language (Uncensored)' : '🎬 Standard Director (Cinematic)'}
+            </span>
+          </label>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => setSystemPromptPreset('standard')}
+              className={`p-3 rounded-xl border text-left transition-all ${
+                systemPromptPreset === 'standard'
+                  ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200 shadow-md shadow-cyan-500/10'
+                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+              }`}
+            >
+              <div className="font-bold text-xs flex items-center justify-between mb-0.5">
+                <span className="flex items-center gap-1.5 text-cyan-300">🎬 Standard Director Mode</span>
+                {systemPromptPreset === 'standard' && <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-mono">ACTIVE</span>}
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-normal">
+                Formal cinematic framing, 35mm optical lens physics, strict audio guidelines, and detailed lighting falloff rules.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSystemPromptPreset('uncensored_nsfw')}
+              className={`p-3 rounded-xl border text-left transition-all ${
+                systemPromptPreset === 'uncensored_nsfw'
+                  ? 'bg-rose-950/70 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
+                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+              }`}
+            >
+              <div className="font-bold text-xs flex items-center justify-between mb-0.5">
+                <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored NSFW (Simple Language)</span>
+                {systemPromptPreset === 'uncensored_nsfw' && <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-normal">
+                Simple, direct, non-preachy language. Zero rigid fluff. Focuses on natural human actions, bedroom postures, and explicit sensory details.
+              </p>
+            </button>
           </div>
         </div>
 
