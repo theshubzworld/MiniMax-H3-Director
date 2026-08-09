@@ -102,12 +102,12 @@ export const Header: React.FC = () => {
             onClick={() => setActiveView('gemini-director')}
             className={`px-3 py-1 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
               activeView === 'gemini-director'
-                ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-200 border border-cyan-400 shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'bg-cyan-500/20 text-cyan-950 dark:text-cyan-200 border border-cyan-400 shadow-sm'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Gemini AI</span>
+            <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span className="text-cyan-950 dark:text-cyan-200">Gemini AI</span>
           </button>
 
           <button

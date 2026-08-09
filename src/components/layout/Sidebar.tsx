@@ -20,15 +20,15 @@ export const Sidebar: React.FC = () => {
               onClick={() => setActiveView('gemini-director')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeView === 'gemini-director'
-                  ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-200 border border-cyan-400 shadow-lg shadow-cyan-500/20 font-bold'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-900 border border-cyan-500/30 bg-cyan-950/30'
+                  ? 'bg-cyan-500/20 text-cyan-950 dark:text-cyan-200 border border-cyan-400 shadow-md font-bold'
+                  : 'text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-                <span>Gemini Director</span>
+                <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 animate-pulse" />
+                <span className="text-cyan-950 dark:text-cyan-200 font-bold">Gemini Director</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-extrabold border border-cyan-500/40">
+              <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 text-[10px] font-mono font-extrabold border border-cyan-500/40">
                 STANDALONE
               </span>
             </button>
