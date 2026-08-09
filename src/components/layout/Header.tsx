@@ -1,15 +1,24 @@
 import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { useHistoryStore } from '../../store/HistoryStore';
-import { Video, Undo, Redo, Download, Sparkles, Layout, Sun, Moon, Film, Coffee, PanelRight, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  Undo2, Redo2, Download, Sparkles, LayoutDashboard, Sun, Moon,
+  Coffee, PanelRight, Maximize2, Minimize2, Clapperboard,
+} from 'lucide-react';
 import { MiniMaxMode } from '../../types/project';
 import { PromptFormatter } from '../../engine/PromptFormatter';
+
+const MODE_LABELS: Record<MiniMaxMode, string> = {
+  T2VA:  'T2V',
+  I2VA:  'I2V',
+  FL2VA: 'FL2V',
+  L2VA:  'L2V',
+};
 
 export const Header: React.FC = () => {
   const {
     project,
     setProject,
-    updateSettings,
     setMode,
     activeView,
     setActiveView,
@@ -22,10 +31,6 @@ export const Header: React.FC = () => {
   } = useStudioStore();
   const { undo, redo, canUndo, canRedo } = useHistoryStore();
 
-  const handleModeChange = (mode: MiniMaxMode) => {
-    setMode(mode);
-  };
-
   const handleExportTXT = () => {
     const text = PromptFormatter.toTXT(project);
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -34,193 +39,206 @@ export const Header: React.FC = () => {
     a.href = url;
     a.download = `${project.name.toLowerCase().replace(/\s+/g, '_')}_prompt.txt`;
     a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <header className="h-16 bg-zinc-950/90 border-b border-zinc-800/80 px-6 flex items-center justify-between backdrop-blur-md sticky top-0 z-40">
-      {/* Brand Logo & Name */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <img src="/favicon.svg" alt="MiniMax H3 Director Logo" className="w-9 h-9 rounded-xl shadow-lg shadow-cyan-500/20 flex-shrink-0" />
+    <header className="h-14 bg-zinc-950 border-b border-zinc-800/60 px-4 flex items-center justify-between gap-4 sticky top-0 z-40 backdrop-blur-xl">
 
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-2">
-              <h1 className="font-extrabold text-sm sm:text-base tracking-tight text-zinc-100 flex items-center gap-1.5">
-                MiniMax H3 <span className="text-[10px] bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold tracking-wider">DIRECTOR</span>
-              </h1>
-            </div>
-
-            <div className="flex items-center gap-2 mt-0.5">
-              <div className="flex items-center gap-1 text-zinc-400 hover:text-zinc-200 transition-colors">
-                <Film className="w-3 h-3 text-cyan-400 flex-shrink-0" />
-                <input
-                  type="text"
-                  value={project.name}
-                  onChange={(e) => setProject({ ...project, name: e.target.value })}
-                  placeholder="Untitled Project"
-                  className="text-[11px] font-medium text-zinc-300 hover:text-zinc-100 focus:text-zinc-100 bg-transparent hover:bg-zinc-900/60 px-1 py-0.2 rounded focus:outline-none focus:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-all w-36 sm:w-48 truncate"
-                  title="Click to edit project name"
-                />
-              </div>
-
-              <span className="text-[10px] text-zinc-400 font-mono hidden xl:inline-flex items-center gap-1 bg-zinc-900/80 px-2 py-0.2 rounded border border-zinc-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                {project.shots.length} Shots • {project.settings.durationSeconds}s • {project.settings.mode}
-              </span>
-            </div>
-          </div>
+      {/* ── LEFT: Brand ── */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <img
+          src="/favicon.svg"
+          alt="MiniMax H3 Director"
+          className="w-8 h-8 rounded-lg shadow-lg shadow-cyan-500/20 flex-shrink-0"
+        />
+        <div className="flex flex-col leading-none gap-0.5">
+          <span className="font-black text-[13px] tracking-tight text-white">MiniMax H3</span>
+          <span className="font-mono font-bold text-[9px] tracking-[0.2em] text-cyan-400 uppercase">Director</span>
         </div>
 
-        {/* MiniMax Mode Switcher Badges */}
-        <div className="hidden md:flex items-center bg-zinc-900 p-1 rounded-xl border border-zinc-800 gap-1 ml-4">
+        {/* Divider */}
+        <div className="w-px h-6 bg-zinc-800 mx-1 hidden sm:block" />
+
+        {/* Stats pill */}
+        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-500">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span>{project.shots.length} shots</span>
+          <span className="text-zinc-700">·</span>
+          <span>{project.settings.durationSeconds}s</span>
+          <span className="text-zinc-700">·</span>
+          <span className="text-cyan-500 font-bold">{MODE_LABELS[project.settings.mode as MiniMaxMode] ?? project.settings.mode}</span>
+        </div>
+      </div>
+
+      {/* ── CENTER: View Switcher ── */}
+      <div className="flex-1 flex items-center justify-center">
+        <nav className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-0.5" aria-label="View switcher">
+
+          {/* Gemini AI */}
+          <button
+            type="button"
+            id="view-tab-gemini"
+            onClick={() => setActiveView('gemini-director')}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+              activeView === 'gemini-director'
+                ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/10 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
+            }`}
+          >
+            <Sparkles className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'gemini-director' ? 'text-cyan-400' : 'text-zinc-600'}`} />
+            <span>Gemini AI</span>
+          </button>
+
+          {/* Wizard */}
+          <button
+            type="button"
+            id="view-tab-wizard"
+            onClick={() => setActiveView('wizard')}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+              activeView === 'wizard'
+                ? 'bg-zinc-800 text-violet-300 border border-violet-500/30 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
+            }`}
+          >
+            <Clapperboard className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'wizard' ? 'text-violet-400' : 'text-zinc-600'}`} />
+            <span>Wizard</span>
+          </button>
+
+          {/* Pro Studio */}
+          <button
+            type="button"
+            id="view-tab-studio"
+            onClick={() => setActiveView('studio')}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+              activeView === 'studio'
+                ? 'bg-zinc-800 text-sky-300 border border-sky-500/30 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
+            }`}
+          >
+            <LayoutDashboard className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'studio' ? 'text-sky-400' : 'text-zinc-600'}`} />
+            <span>Pro Studio</span>
+          </button>
+        </nav>
+      </div>
+
+      {/* ── RIGHT: Controls ── */}
+      <div className="flex items-center gap-2 flex-shrink-0">
+
+        {/* Mode Badges */}
+        <div className="hidden md:flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-0.5">
           {(['T2VA', 'I2VA', 'FL2VA', 'L2VA'] as MiniMaxMode[]).map((m) => {
-            const isSelected = project.settings.mode === m;
+            const isActive = project.settings.mode === m;
             return (
               <button
                 key={m}
                 type="button"
-                onClick={() => handleModeChange(m)}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                  isSelected
-                    ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                id={`mode-badge-${m}`}
+                onClick={() => setMode(m)}
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-cyan-500 text-zinc-950 shadow-sm shadow-cyan-500/30'
+                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
                 }`}
               >
-                {m}
+                {MODE_LABELS[m]}
               </button>
             );
           })}
         </div>
-      </div>
 
-      {/* Action Controls */}
-      <div className="flex items-center gap-3">
-        {/* View Switcher (Gemini AI vs Wizard vs Pro Studio) */}
-        <div className="flex bg-zinc-900 p-1 rounded-xl border border-zinc-800 gap-0.5">
-          <button
-            type="button"
-            onClick={() => setActiveView('gemini-director')}
-            className={`px-3 py-1 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
-              activeView === 'gemini-director'
-                ? 'bg-cyan-500/20 text-cyan-950 dark:text-cyan-200 border border-cyan-400 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span className="text-cyan-950 dark:text-cyan-200">Gemini AI</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveView('wizard')}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
-              activeView === 'wizard'
-                ? 'bg-zinc-800 text-cyan-300 border border-cyan-500/30'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Wizard</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveView('studio')}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
-              activeView === 'studio'
-                ? 'bg-zinc-800 text-cyan-300 border border-cyan-500/30'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            <Layout className="w-3.5 h-3.5" />
-            <span>Pro Studio</span>
-          </button>
-        </div>
+        {/* Sep */}
+        <div className="w-px h-5 bg-zinc-800 hidden md:block" />
 
         {/* Undo / Redo */}
-        <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+        <div className="flex items-center gap-0.5">
           <button
             type="button"
             onClick={() => undo(project)}
             disabled={!canUndo}
-            className="p-1.5 text-zinc-400 hover:text-zinc-100 disabled:opacity-30 rounded-lg hover:bg-zinc-800 transition-all"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
             title="Undo"
           >
-            <Undo className="w-4 h-4" />
+            <Undo2 className="w-4 h-4" />
           </button>
-
           <button
             type="button"
             onClick={() => redo(project)}
             disabled={!canRedo}
-            className="p-1.5 text-zinc-400 hover:text-zinc-100 disabled:opacity-30 rounded-lg hover:bg-zinc-800 transition-all"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 disabled:opacity-25 disabled:cursor-not-allowed transition-all"
             title="Redo"
           >
-            <Redo className="w-4 h-4" />
+            <Redo2 className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Light / Dark Theme Toggle */}
+        {/* Sep */}
+        <div className="w-px h-5 bg-zinc-800" />
+
+        {/* Theme Toggle */}
         <button
           type="button"
           onClick={toggleTheme}
-          className="p-2 bg-zinc-900 border border-zinc-800 hover:border-cyan-500/50 text-zinc-300 hover:text-cyan-400 rounded-xl transition-all shadow-sm"
+          className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-all"
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
         >
-          {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-cyan-500" />}
+          {theme === 'dark'
+            ? <Sun className="w-4 h-4 text-amber-400" />
+            : <Moon className="w-4 h-4 text-sky-400" />}
         </button>
 
-        {/* Buy Me A Coffee Support Button */}
-        <a
-          href="https://buymeacoffee.com/shubzworld"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-2 sm:px-3 sm:py-1.5 bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 text-zinc-300 hover:text-amber-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm group"
-          title="Support project on Buy Me a Coffee"
-        >
-          <Coffee className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-          <span className="hidden sm:inline">Buy Me a Coffee</span>
-        </a>
-
-        {/* Toggle Prompt Inspector & Expand Widescreen Buttons */}
-        <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+        {/* Inspector + Expand */}
+        <div className="flex items-center gap-0.5">
           <button
             type="button"
             onClick={toggleInspectorOpen}
-            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+            className={`p-1.5 rounded-lg transition-all ${
               isInspectorOpen
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                : 'text-zinc-400 hover:text-zinc-200'
+                ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/30'
+                : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
             }`}
             title={isInspectorOpen ? 'Hide Prompt Inspector' : 'Show Prompt Inspector'}
           >
             <PanelRight className="w-4 h-4" />
           </button>
-
           {isInspectorOpen && (
             <button
               type="button"
               onClick={toggleInspectorExpanded}
-              className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`p-1.5 rounded-lg transition-all ${
                 isInspectorExpanded
-                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200'
+                  ? 'text-violet-400 bg-violet-500/10 border border-violet-500/30'
+                  : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
               }`}
-              title={isInspectorExpanded ? 'Normal Width Inspector (384px)' : 'Widescreen Inspector (560px)'}
+              title={isInspectorExpanded ? 'Normal Width' : 'Widescreen'}
             >
               {isInspectorExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
           )}
         </div>
 
-        {/* Export Button */}
+        {/* Sep */}
+        <div className="w-px h-5 bg-zinc-800" />
+
+        {/* Coffee */}
+        <a
+          href="https://buymeacoffee.com/shubzworld"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-1.5 rounded-lg text-zinc-500 hover:text-amber-400 hover:bg-amber-500/10 transition-all"
+          title="Support on Buy Me a Coffee"
+        >
+          <Coffee className="w-4 h-4" />
+        </a>
+
+        {/* Export */}
         <button
           type="button"
           onClick={handleExportTXT}
-          className="px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 bg-cyan-500 hover:bg-cyan-400 active:scale-95 text-zinc-950 font-bold rounded-xl text-xs transition-all shadow-md shadow-cyan-500/25"
         >
-          <Download className="w-4 h-4" />
-          <span>Export TXT</span>
+          <Download className="w-3.5 h-3.5" />
+          <span>Export</span>
         </button>
       </div>
     </header>
