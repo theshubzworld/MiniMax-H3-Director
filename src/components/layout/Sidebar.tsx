@@ -1,204 +1,119 @@
-import React from 'react';
+﻿import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
-import { Sparkles, Film, ShieldCheck, Grid, Cpu, FolderPlus, Coffee, Bookmark } from 'lucide-react';
+import {
+  Sparkles, Film, ShieldCheck, Grid3x3, Cpu, FolderPlus,
+  Coffee, Bookmark, Clapperboard, Images, Settings2,
+} from 'lucide-react';
+
+type NavItem = {
+  view: string;
+  label: string;
+  icon: React.ElementType;
+  iconColor: string;
+  activeColor: string;
+  badge?: string | number;
+};
 
 export const Sidebar: React.FC = () => {
-  const { activeView, setActiveView, addShot, sceneKeyframes, setActiveSceneStep } = useStudioStore();
-  const keyframes = sceneKeyframes || [];
+  const { activeView, setActiveView, addShot, sceneKeyframes, savedPrompts } = useStudioStore();
+  const keyframeCount = (sceneKeyframes || []).length;
+  const savedCount = savedPrompts?.length ?? 0;
+
+  const isActive = (view: string) => activeView === view;
+
+  const navItem = (item: NavItem) => {
+    const active = isActive(item.view);
+    return (
+      <button
+        key={item.view}
+        type="button"
+        onClick={() => setActiveView(item.view as any)}
+        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all duration-100 cursor-pointer ${
+          active ? item.activeColor : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900'
+        }`}
+      >
+        <div className="flex items-center gap-2.5">
+          <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? '' : item.iconColor}`} />
+          <span className={active ? 'font-semibold' : ''}>{item.label}</span>
+        </div>
+        {item.badge !== undefined && (
+          <span className={`px-1.5 py-px rounded-full text-[10px] font-mono font-bold ${
+            active ? 'bg-white/10 text-white' : 'bg-zinc-800 text-zinc-500'
+          }`}>
+            {item.badge}
+          </span>
+        )}
+      </button>
+    );
+  };
 
   return (
-    <aside className="w-64 bg-zinc-950 border-r border-zinc-800/80 flex flex-col justify-between h-full flex-shrink-0">
-      {/* Top Nav List */}
-      <div className="p-4 space-y-6">
-        <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-3 mb-2 block">
-            Studio Views
-          </span>
-          <nav className="space-y-1">
-            <button
-              type="button"
-              onClick={() => setActiveView('gemini-director')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                activeView === 'gemini-director'
-                  ? 'bg-cyan-500/20 text-cyan-950 dark:text-cyan-200 border border-cyan-400 shadow-md font-bold'
-                  : 'text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Sparkles className="w-4 h-4 text-cyan-600 dark:text-cyan-400 animate-pulse" />
-                <span className="text-cyan-950 dark:text-cyan-200 font-bold">Gemini Director</span>
-              </div>
-              <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 text-[10px] font-mono font-extrabold border border-cyan-500/40">
-                STANDALONE
-              </span>
-            </button>
+    <aside className="w-60 bg-zinc-950 border-r border-zinc-800/60 flex flex-col h-full flex-shrink-0">
 
-            <button
-              type="button"
-              onClick={() => setActiveView('wizard')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                activeView === 'wizard'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span>Director Wizard (4-Step)</span>
-            </button>
+      <div className="flex-1 overflow-y-auto p-3 space-y-5">
 
-            <button
-              type="button"
-              onClick={() => setActiveView('scene-creator')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'scene-creator'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Film className="w-4 h-4 text-amber-400" />
-              <span>Scene Creator (Nano Banana)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('scene-gallery')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'scene-gallery'
-                  ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/10 text-amber-300 border border-amber-500/40 font-bold'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Film className="w-4 h-4 text-amber-400" />
-                <span>Scene Keyframe Gallery</span>
-              </div>
-              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono font-extrabold border border-amber-500/40">
-                {keyframes.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('storyboard')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'storyboard'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Film className="w-4 h-4 text-purple-400" />
-              <span>Visual Storyboard</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('diagnostics')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'diagnostics'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Diagnostics Engine</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('prompt-library')}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'prompt-library'
-                  ? 'bg-gradient-to-r from-purple-500/20 to-indigo-500/10 text-purple-300 border border-purple-500/40 font-bold'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Bookmark className="w-4 h-4 text-purple-400" />
-                <span>Saved Prompt Library</span>
-              </div>
-              <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-mono font-extrabold border border-purple-500/40">
-                {useStudioStore().savedPrompts?.length || 0}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('templates')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'templates'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Grid className="w-4 h-4 text-amber-400" />
-              <span>140+ Template Library</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('comfy')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'comfy'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Cpu className="w-4 h-4 text-pink-400" />
-              <span>ComfyUI Payload</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveView('ai-settings' as any)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                (activeView as any) === 'ai-settings'
-                  ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span>AI Director Settings</span>
-            </button>
+        <section>
+          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 px-2 mb-1.5">AI Modes</p>
+          <nav className="space-y-0.5">
+            {navItem({ view: 'gemini-director', label: 'Gemini Director', icon: Sparkles, iconColor: 'text-cyan-400', activeColor: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30' })}
+            {navItem({ view: 'wizard', label: 'Director Wizard', icon: Clapperboard, iconColor: 'text-violet-400', activeColor: 'bg-violet-500/15 text-violet-300 border border-violet-500/30' })}
+            {navItem({ view: 'scene-creator', label: 'Scene Creator', icon: Film, iconColor: 'text-amber-400', activeColor: 'bg-amber-500/15 text-amber-300 border border-amber-500/30' })}
           </nav>
-        </div>
+        </section>
 
-        {/* Quick Actions */}
-        <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-3 mb-2 block">
-            Quick Actions
-          </span>
+        <section>
+          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 px-2 mb-1.5">Creative Tools</p>
+          <nav className="space-y-0.5">
+            {navItem({ view: 'scene-gallery', label: 'Keyframe Gallery', icon: Images, iconColor: 'text-amber-400', activeColor: 'bg-amber-500/15 text-amber-300 border border-amber-500/30', badge: keyframeCount })}
+            {navItem({ view: 'storyboard', label: 'Visual Storyboard', icon: Grid3x3, iconColor: 'text-purple-400', activeColor: 'bg-purple-500/15 text-purple-300 border border-purple-500/30' })}
+            {navItem({ view: 'prompt-library', label: 'Saved Prompts', icon: Bookmark, iconColor: 'text-pink-400', activeColor: 'bg-pink-500/15 text-pink-300 border border-pink-500/30', badge: savedCount })}
+            {navItem({ view: 'templates', label: '140+ Templates', icon: Grid3x3, iconColor: 'text-sky-400', activeColor: 'bg-sky-500/15 text-sky-300 border border-sky-500/30' })}
+          </nav>
+        </section>
+
+        <section>
+          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 px-2 mb-1.5">System</p>
+          <nav className="space-y-0.5">
+            {navItem({ view: 'comfy', label: 'ComfyUI Payload', icon: Cpu, iconColor: 'text-rose-400', activeColor: 'bg-rose-500/15 text-rose-300 border border-rose-500/30' })}
+            {navItem({ view: 'diagnostics', label: 'Diagnostics', icon: ShieldCheck, iconColor: 'text-emerald-400', activeColor: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' })}
+            {navItem({ view: 'ai-settings', label: 'AI Settings', icon: Settings2, iconColor: 'text-zinc-400', activeColor: 'bg-zinc-700/40 text-zinc-200 border border-zinc-600/50' })}
+          </nav>
+        </section>
+
+        <section>
+          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 px-2 mb-1.5">Quick Actions</p>
           <button
             type="button"
             onClick={() => addShot()}
-            className="w-full border border-dashed border-zinc-800 hover:border-cyan-500/50 hover:bg-zinc-900 text-zinc-300 py-2 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all mb-2"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed border-zinc-700 hover:border-cyan-500/50 text-zinc-500 hover:text-cyan-300 hover:bg-cyan-500/5 text-xs font-medium transition-all"
           >
-            <FolderPlus className="w-4 h-4 text-cyan-400" />
-            <span>Add New Shot Node</span>
+            <FolderPlus className="w-3.5 h-3.5" />
+            <span>Add Shot Node</span>
           </button>
-        </div>
+        </section>
       </div>
 
-      {/* Footer Specs info & Native Support Card */}
-      <div className="p-4 border-t border-zinc-900 bg-zinc-950 space-y-3">
-        <div className="text-[11px] text-zinc-400 space-y-0.5">
-          <p className="font-semibold text-zinc-200">MiniMax H3 Engine v1.0</p>
-          <p>Native Stereo Audio Sync</p>
-          <p className="text-[10px] text-cyan-400 font-mono">T2VA / I2VA / FL2VA / L2VA</p>
+      <div className="p-3 border-t border-zinc-800/60 space-y-2">
+        <div className="flex items-center justify-between px-2">
+          <span className="text-[10px] font-mono text-zinc-600">MiniMax H3 Engine</span>
+          <span className="px-1.5 py-px rounded-full bg-zinc-900 border border-zinc-800 text-[9px] font-mono text-cyan-500">v1.0</span>
         </div>
-
+        <div className="px-2">
+          <span className="text-[9px] font-mono text-zinc-700 tracking-wider">T2VA · I2VA · FL2VA · L2VA</span>
+        </div>
         <a
           href="https://buymeacoffee.com/shubzworld"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/60 hover:bg-amber-500/10 border border-zinc-800 hover:border-amber-500/30 transition-all group"
-          title="Support project development on Buy Me a Coffee"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-zinc-900 hover:bg-amber-500/10 border border-zinc-800 hover:border-amber-500/30 transition-all group"
+          title="Support project on Buy Me a Coffee"
         >
-          <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
-            <Coffee className="w-3.5 h-3.5" />
+          <div className="w-6 h-6 rounded-md bg-amber-500/10 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+            <Coffee className="w-3.5 h-3.5 text-amber-400" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-medium text-zinc-300 group-hover:text-amber-300 text-[11px] truncate">Support Development</span>
-            <span className="text-[10px] text-zinc-400 truncate">Buy Me a Coffee ☕</span>
+            <span className="text-[11px] font-semibold text-zinc-300 group-hover:text-amber-300 transition-colors leading-none">Support Development</span>
+            <span className="text-[9px] text-zinc-600 mt-0.5">buymeacoffee.com</span>
           </div>
         </a>
       </div>
