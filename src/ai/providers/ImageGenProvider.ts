@@ -591,7 +591,7 @@ User Transformation Arc: "${params.idea}"`;
         temperature: 0.4,
         topP: 0.95,
         maxOutputTokens: 32768,
-        responseModalities: ['IMAGE'],
+        responseModalities: ['TEXT', 'IMAGE'],
         imageConfig,
       },
       safetySettings: [

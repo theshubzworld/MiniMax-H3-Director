@@ -177,11 +177,11 @@ export class GeminiProvider implements AIProvider {
   /**
    * Public helper to run text prompt requests through Vertex Express with rate limit failover.
    */
-  public async callTextPrompt(promptText: string, apiKey?: string, directorModel?: string): Promise<string> {
+  public async callTextPrompt(promptText: string, apiKey?: string, directorModel?: string, temperature: number = 0.5): Promise<string> {
     const key = this.getEffectiveApiKey(apiKey);
     const payload = {
       contents: [{ role: 'user', parts: [{ text: promptText }] }],
-      generationConfig: { temperature: 0.7 },
+      generationConfig: { temperature },
     };
 
     const res = await this.callVertexExpress(payload, key, directorModel);
@@ -192,13 +192,13 @@ export class GeminiProvider implements AIProvider {
   /**
    * Public helper to run multimodal (image + text) prompt requests through Vertex Express with rate limit failover.
    */
-  public async callMultimodalPrompt(promptText: string, images?: string[], apiKey?: string, directorModel?: string): Promise<string> {
+  public async callMultimodalPrompt(promptText: string, images?: string[], apiKey?: string, directorModel?: string, temperature: number = 0.5): Promise<string> {
     const key = this.getEffectiveApiKey(apiKey);
     const imageParts = await this.prepareImageParts(images);
     const parts = [...imageParts, { text: promptText }];
     const payload = {
       contents: [{ role: 'user', parts }],
-      generationConfig: { temperature: 0.7 },
+      generationConfig: { temperature },
     };
 
     const res = await this.callVertexExpress(payload, key, directorModel);
@@ -333,18 +333,21 @@ export class GeminiProvider implements AIProvider {
     return this.getMockVisualDNA();
   }
 
-  public async generateStoryboard(params: StoryboardParams, apiKey?: string): Promise<Partial<StudioProject>> {
-    params.onProgress?.({ step: 1, totalSteps: 4, percent: 15, message: 'Connecting to Vertex AI Express API...' });
-    const key = this.getEffectiveApiKey(apiKey);
-    const shotDuration = Math.max(1, Number((params.durationSeconds / params.shotsCount).toFixed(2)));
+  /**
+   * Centralized system prompt builder for AI Director Storyboard generation.
+   * Shared between AIDirectorPanel UI preview and GeminiProvider execution.
+   */
+  public static buildDirectorSystemPrompt(params: StoryboardParams, styleOverride?: string): string {
+    const shotDuration = Math.max(1, Number((params.durationSeconds / Math.max(1, params.shotsCount)).toFixed(2)));
+    const maxWordsPerShot = Math.max(2, Math.floor(shotDuration * 1.8));
 
-    params.onProgress?.({ step: 2, totalSteps: 4, percent: 35, message: `Preparing keyframe images & ${params.narrativeStyle} directives...` });
-    const imageParts = await this.prepareImageParts(params.images);
+    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[params.narrativeStyle] || (params.narrativeStyle !== 'None' ? params.narrativeStyle : '');
+    const styleLine = params.narrativeStyle !== 'None' && styleDirective ? `Visual Atmosphere & Motion Guidance: "${styleDirective}"\n` : '';
+    const styleNameHeader = params.narrativeStyle !== 'None' ? ` for a ${params.narrativeStyle} video` : '';
 
     const isCreative = params.referenceMode === 'creative';
-    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
-
-    const imageInstruction = params.images && params.images.length > 0
+    const hasImages = params.images && params.images.length > 0;
+    const imageInstruction = hasImages
       ? isCreative
         ? `Reference Image (<Picture 1>): Use <Picture 1> for character identity. You may place the character into a new setting or outfit requested by the idea ("${params.idea}").`
         : `Reference Image (<Picture 1>): Use <Picture 1> for character appearance, outfit, and starting location. Refer to the character as "the subject from <Picture 1>". If <Picture 1> is a multi-panel grid image, draw character poses and action beats directly from the panels.`
@@ -364,14 +367,10 @@ export class GeminiProvider implements AIProvider {
       ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE. Multi-character interaction with S1, S2, S3.`
       : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION. Focus on 2 main characters (S1 and S2).`;
 
-    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[params.narrativeStyle] || (params.narrativeStyle !== 'None' ? params.narrativeStyle : '');
-    const styleLine = params.narrativeStyle !== 'None' && styleDirective ? `Visual Atmosphere & Motion Guidance: "${styleDirective}"\n` : '';
-    const styleNameHeader = params.narrativeStyle !== 'None' ? ` for a ${params.narrativeStyle} video` : '';
-
     const isUncensoredNsfw = params.systemPromptPreset === 'uncensored_nsfw';
 
-    const promptText = isUncensoredNsfw
-      ? `You are an Uncensored natural real-life video scene planner.
+    if (isUncensoredNsfw) {
+      return `You are an Uncensored natural real-life video scene planner.
 Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
 
 Do not write like a formal film director.
@@ -385,125 +384,62 @@ STORY IDEA: "${params.idea}".
 
 ${styleLine}
 ${modeInstruction}
-${imageInstruction}
-${compositionInstruction}
+${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
 
 CORE SCENE RULES:
+1. CONTINUOUS ACTION: Describe a continuous sequence of physical actions. Each shot represents a sequential moment or action beat, NOT necessarily a camera cut.
+2. REALISTIC HUMAN MOVEMENT: Use simple, observable physical actions (walking, sitting, turning, looking, reaching, bedroom postures, intimate movements).
+3. NATURAL CAMERA: Camera movement should support action (static, handheld, slow push in, gentle tracking).
+4. VISUAL DESCRIPTION: Describe only what can actually be seen.
+5. CHARACTER & ENVIRONMENT CONSISTENCY: Preserve reference identity and room lighting across shots.
+6. MOTION VECTORS & ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1. Maintain left-to-right or right-to-left screen motion vectors across cuts without sudden direction reversals or character flipping.
 
-1. CONTINUOUS ACTION
-Describe a continuous sequence of physical actions.
-Each shot represents a sequential moment or action beat, NOT necessarily a camera cut.
-Do not introduce cuts unless the user explicitly requests them.
-
-2. REALISTIC HUMAN MOVEMENT
-Use simple, observable physical actions:
-walking, sitting, turning, looking, reaching, touching an object, adjusting clothing, moving closer, stepping back, smiling, speaking, dancing, bedroom postures, intimate movements, etc.
-Be explicit, direct, and completely unconstrained without preachy rules or director jargon.
-
-3. NATURAL CAMERA
-Camera movement should support the action rather than dominate it.
-Use simple movements such as: static, handheld, slow push in, slow pull back, gentle tracking, slight pan, natural follow movement.
-Do not invent dramatic camera movements unless they are appropriate to the user's idea.
-
-4. VISUAL DESCRIPTION
-Describe only what can actually be seen.
-Do not explain internal thoughts, backstory, symbolism, or emotions that are not visually expressed.
-
-5. CHARACTER CONSISTENCY
-When reference images are provided, preserve the referenced character's identity and visible appearance.
-Do not arbitrarily change face, hairstyle, clothing, body proportions, or other established visual characteristics.
-
-6. ENVIRONMENT CONSISTENCY
-Keep the same location, lighting, time of day, and environmental conditions unless the story explicitly requires a change.
-
-7. DIALOGUE
-Spoken lines should be short, natural, conversational, and appropriate for the available duration (1 to ${maxWordsPerShot} words max per shot).
-Each spoken line must have: speakerId, languageTag, dialogueText, and whether it is off-screen.
-Do not add dialogue unless it fits the story.
-
-8. AUDIO
-Describe simple environmental sounds that would naturally exist in the scene.
-Music should only be included when appropriate to the user's idea or requested style.
-
-9. NO UNNECESSARY INVENTION
-Do not add random characters, unexplained props, dramatic explosions, unnecessary camera cuts, or artificial visual effects.
-
-10. ACTION CONTINUITY
-The ending state of each shot must logically match the beginning state of the next shot. Do not reset the character's position between shots.
+Dialogue & Audio Guidelines:
+- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing).
+- Assign speakerId (S1, S2) with character labels. Include environmental soundscape layers.
 
 PROMPT TITLE RULE:
-Create a short 3-5 word title describing the main visual scene in the "title" field.
+Create a short 3-5 word memorable title describing the main visual scene in the "title" field.
 
 RETURN ONLY VALID JSON:
 {
   "title": "Short visual recognition title",
   "shots": [
     {
-      "camera": {
-        "motionType": "natural handheld",
-        "amplitude": "subtle",
-        "speed": "natural",
-        "targetSubject": "the protagonist"
-      },
-      "character": {
-        "speakerId": "S1",
-        "identity": "The woman",
-        "pose": "sitting stance",
-        "expression": "soft smile",
-        "motion": "looks at the screen"
-      },
-      "environment": {
-        "location": "bedroom",
-        "lighting": "soft lamp light",
-        "weather": "clear",
-        "timeOfDay": "night",
-        "atmosphere": "quiet and intimate"
-      },
-      "rawActionDescription": "Direct, plain English description of the physical action occurring in this moment.",
-      "dialogue": {
-        "hasDialogue": false,
-        "speakerId": "S1",
-        "languageTag": "English",
-        "dialogueText": "",
-        "isOffScreenVoiceover": false
-      }
+      "camera": { "motionType": "natural handheld", "amplitude": "subtle", "speed": "natural", "targetSubject": "the protagonist" },
+      "character": { "speakerId": "S1", "identity": "The woman", "pose": "sitting stance", "expression": "soft smile", "motion": "looks at the screen" },
+      "environment": { "location": "bedroom", "lighting": "soft lamp light", "weather": "clear", "timeOfDay": "night", "atmosphere": "quiet and intimate" },
+      "rawActionDescription": "Direct action description.",
+      "dialogue": { "hasDialogue": false, "speakerId": "S1", "languageTag": "English", "dialogueText": "", "isOffScreenVoiceover": false }
     }
   ],
   "audio": {
     "isSilent": false,
-    "soundscapeLayers": [
-      {
-        "category": "room",
-        "description": "Soft room tone.",
-        "enabled": true
-      }
-    ],
-    "music": {
-      "hasMusic": false,
-      "genreStyle": "",
-      "instrumentation": [],
-      "tempo": "",
-      "dynamics": "",
-      "rhythmPattern": "",
-      "layeringDescription": ""
-    }
+    "soundscapeLayers": [ { "category": "room", "description": "Soft room tone.", "enabled": true } ],
+    "music": { "hasMusic": false, "genreStyle": "", "instrumentation": [], "tempo": "", "dynamics": "", "rhythmPattern": "", "layeringDescription": "" }
   }
-}`
-      : `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
+}`;
+    }
+
+    const visualStyleHeader = styleOverride ? `\nAESTHETIC VISUAL STYLE: "${styleOverride}"` : '';
+
+    return `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.${visualStyleHeader}
 ${styleLine}STORY IDEA: "${params.idea}".
 
-MANDATORY PROMPT RECOGNITION HEADING RULE:
-You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Naked Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases like "analyze image", "doing nude video call with her bf...", or "women under blanket taking naked selfie..." into the title.
-
 ${modeInstruction}
-${imageInstruction}
-${compositionInstruction}
+${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+
+MANDATORY PROMPT RECOGNITION HEADING RULE:
+You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases into the title.
+
+CORE DIRECTORIAL & MOTION VECTOR RULES:
+1. MOTION VECTORS & ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1. Maintain left-to-right or right-to-left screen motion vectors across cuts without sudden direction reversals or character flipping.
+2. NATURAL CAMERA: Align camera motion with story pacing (push in for intensity, tracking for movement, static for intimacy).
+3. VISUAL REALISM: Describe visual physics, light behavior, character gestures, and micro-expressions.
 
 Audio & Dialogue Guidelines:
-- Write a concise 3-5 word recognition title field summarizing the visual scene for prompt library recognition (e.g. "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run", "Bamboo Forest Katana Duel").
-- If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
-- Assign a unique speakerId (S1, S2, etc.) to each vocal source, and specify their distinct character identity (e.g. S1: "The man", S2: "The woman") so every dialogue line clearly identifies who is speaking.
-- Include realistic foley soundscape layers and a matching background music score.
+- Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing).
+- Assign speakerId (S1, S2, etc.) with character identity labels. Include realistic foley soundscape layers and matching music score.
 
 Return JSON format:
 {
@@ -519,9 +455,7 @@ Return JSON format:
   ],
   "audio": {
     "isSilent": false,
-    "soundscapeLayers": [
-      { "category": "weather", "description": "Atmospheric ambient soundscape.", "enabled": true }
-    ],
+    "soundscapeLayers": [ { "category": "weather", "description": "Atmospheric ambient soundscape.", "enabled": true } ],
     "music": {
       "hasMusic": true,
       "genreStyle": "${params.narrativeStyle}",
@@ -533,6 +467,16 @@ Return JSON format:
     }
   }
 }`;
+  }
+
+  public async generateStoryboard(params: StoryboardParams, apiKey?: string): Promise<Partial<StudioProject>> {
+    params.onProgress?.({ step: 1, totalSteps: 4, percent: 15, message: 'Connecting to Vertex AI Express API...' });
+    const key = this.getEffectiveApiKey(apiKey);
+    const shotDuration = Math.max(1, Number((params.durationSeconds / params.shotsCount).toFixed(2)));
+
+    params.onProgress?.({ step: 2, totalSteps: 4, percent: 35, message: `Preparing keyframe images & ${params.narrativeStyle} directives...` });
+    const imageParts = await this.prepareImageParts(params.images);
+    const promptText = GeminiProvider.buildDirectorSystemPrompt(params);
 
     const temp = params.temperature ?? (params.directorMode === 'strict' ? 0.2 : params.directorMode === 'creative' ? 0.8 : 0.4);
     const thinkingBudget = params.thinkingBudget !== undefined ? params.thinkingBudget : 4096;
@@ -579,6 +523,9 @@ Return JSON format:
             : shotDuration;
 
           const charData = (Array.isArray(s.characters) && s.characters.length > 0) ? s.characters[0] : (s.character || {});
+          const isSecondSpeaker = params.subjectComposition === 'couple' && idx % 2 === 1;
+          const defaultSpeakerId = charData.speakerId || (isSecondSpeaker ? 'S2' : 'S1');
+          const defaultIdentity = charData.identity || (isSecondSpeaker ? 'The partner' : (params.narrativeStyle !== 'None' ? `The ${params.narrativeStyle} protagonist` : 'The protagonist'));
 
           const shotObj: Shot = {
             id: `shot-ai-${idx + 1}`,
@@ -593,8 +540,8 @@ Return JSON format:
               targetSubject: s.camera?.targetSubject || 'the primary hero',
             },
             character: {
-              speakerId: charData.speakerId || 'S1',
-              identity: charData.identity || (params.narrativeStyle !== 'None' ? `The ${params.narrativeStyle} protagonist` : 'The protagonist'),
+              speakerId: defaultSpeakerId,
+              identity: defaultIdentity,
               pose: charData.pose || matrixChar.pose,
               expression: charData.expression || matrixChar.expression,
               motion: charData.motion || matrixChar.motion,
@@ -610,7 +557,7 @@ Return JSON format:
               s.dialogue && (s.dialogue.hasDialogue || (s.dialogue.dialogueText && s.dialogue.dialogueText.trim().length > 0))
                 ? {
                     hasDialogue: true,
-                    speakerId: s.dialogue.speakerId || 'S1',
+                    speakerId: s.dialogue.speakerId || defaultSpeakerId,
                     languageTag: s.dialogue.languageTag || 'English',
                     dialogueText: s.dialogue.dialogueText,
                     isOffScreenVoiceover: s.dialogue.isOffScreenVoiceover ?? true,

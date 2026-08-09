@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { AIEngine } from '../../ai/AIEngine';
-import { NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
+import { GeminiProvider, NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
 import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap } from 'lucide-react';
@@ -187,7 +187,10 @@ export const AIDirectorPanel: React.FC = () => {
   } = useStudioStore();
 
   const [idea, setIdea] = useState(() => localStorage.getItem('minimax_h3_prompt_idea') || '');
-  const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>('Live-Action Realism');
+  const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>(() => {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('minimax_narrative_style') : null;
+    return (stored as NarrativeStyle) || (project.settings.style as NarrativeStyle) || 'Live-Action Realism';
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
@@ -200,71 +203,30 @@ export const AIDirectorPanel: React.FC = () => {
   const isImageMode = project.settings.mode !== 'T2VA';
   const hasReferences = project.references && project.references.length > 0;
 
-  const compiledGeminiPrompt = useMemo(() => {
-    const shotDuration = Math.max(1, Number((totalDuration / currentShotCount).toFixed(2)));
-    const maxWordsPerShot = Math.max(4, Math.floor(shotDuration * 2.8));
-    const styleDirective = NARRATIVE_STYLE_DIRECTIVES[narrativeStyle] || narrativeStyle;
-
-    const isCreative = project.settings.referenceMode === 'creative';
-    const hasImages = project.references && project.references.length > 0;
-    const imageInstruction = hasImages
-      ? isCreative
-        ? `Reference Image (<Picture 1>): Use <Picture 1> for character identity. You may place the character into a new setting or outfit requested by the idea.`
-        : `Reference Image (<Picture 1>): Use <Picture 1> for character appearance, outfit, and starting location.`
-      : '';
-
-    const modeInstruction = project.settings.mode === 'I2VA'
-      ? `Mode: Image-to-Video. Shot 1 starts from <Picture 1> at 0.00s.`
-      : project.settings.mode === 'FL2VA'
-      ? `Mode: First-Last Keyframe interpolation.`
-      : project.settings.mode === 'L2VA'
-      ? `Mode: Last-Frame anchor.`
-      : `Mode: Text-to-Video. Continuous motion sequence.`;
-
-    const compositionInstruction = (project.settings.subjectComposition || 'solo') === 'solo'
-      ? `STRICT COMPOSITION REQUIREMENT: SINGLE PERSON / SOLO CHARACTER ONLY (S1). Zero secondary character/couple.`
-      : project.settings.subjectComposition === 'ensemble'
-      ? `COMPOSITION REQUIREMENT: GROUP ENSEMBLE (S1, S2, S3).`
-      : `COMPOSITION REQUIREMENT: COUPLE / DUO INTERACTION (S1 + S2).`;
-
-    if (systemPromptPreset === 'uncensored_nsfw') {
-      return `You are an Uncensored natural real-life video scene planner.
-Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
-
-Do not write like a formal film director. Do not use unnecessary cinematic jargon.
-Keep the video as one continuous real-life scene. Focus on simple physical movement, bedroom postures, intimate actions, and short casual dialogue without preachy rules.
-
-STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
-${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
-
-${modeInstruction}
-${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
-
-CORE SCENE RULES:
-1. CONTINUOUS ACTION: Describe sequential physical actions without artificial cuts unless requested.
-2. REALISTIC HUMAN MOVEMENT: Simple observable physical actions (sitting, reaching, looking, adjusting, intimate postures).
-3. NATURAL CAMERA: Subtle supporting movements (static, handheld, slow push in, gentle tracking).
-4. VISUAL DESCRIPTION: Describe only what can be seen; no internal thoughts or symbolism.
-5. CHARACTER & ENVIRONMENT CONSISTENCY: Maintain reference identity and room lighting across shots.
-6. ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1.
-
-Dialogue & Audio Guidelines:
-- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
-- Assign speakerId (S1, S2) with character labels. Include environmental soundscape layers.`;
+  const handleSelectNarrativeStyle = (style: NarrativeStyle) => {
+    setNarrativeStyle(style);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('minimax_narrative_style', style);
     }
+    updateSettings({ style });
+  };
 
-    return `You are an AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON for a ${narrativeStyle} video.
-STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
-AESTHETIC VISUAL STYLE: "${project.settings.style || 'Ultra Realistic Photorealism'}"
-STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
-
-${modeInstruction}
-${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
-
-Audio & Dialogue Guidelines:
-- Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot).
-- Assign speakerId (S1, S2) with character identity labels. Include soundscape layers and music score.`;
-  }, [project, narrativeStyle, idea, currentShotCount, totalDuration, systemPromptPreset]);
+  const compiledGeminiPrompt = useMemo(() => {
+    return GeminiProvider.buildDirectorSystemPrompt({
+      idea: idea || project.description || 'Cyberpunk action standoff scene',
+      images: project.references ? project.references.map((r) => r.url) : [],
+      mode: project.settings.mode,
+      referenceMode: project.settings.referenceMode || 'strict',
+      durationSeconds: totalDuration,
+      shotsCount: currentShotCount,
+      narrativeStyle,
+      directorModel,
+      thinkingBudget: directorThinkingBudget,
+      directorMode,
+      systemPromptPreset,
+      subjectComposition: project.settings.subjectComposition || 'solo',
+    }, project.settings.style);
+  }, [project, narrativeStyle, idea, currentShotCount, totalDuration, directorModel, directorThinkingBudget, directorMode, systemPromptPreset]);
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
@@ -276,9 +238,16 @@ Audio & Dialogue Guidelines:
     }
   };
 
+  const formattedModelName =
+    directorModel === 'gemini-3.5-flash'
+      ? 'Gemini 3.5 Flash'
+      : directorModel === 'gemini-2.5-flash'
+      ? 'Gemini 2.5 Flash'
+      : 'Gemini 2.5 Pro';
+
   const handleAutoBuild = async () => {
     setIsGenerating(true);
-    setProgressState({ step: 1, totalSteps: 4, percent: 10, message: `Initializing ${directorModel}...` });
+    setProgressState({ step: 1, totalSteps: 4, percent: 10, message: `Initializing ${formattedModelName}...` });
     const provider = AIEngine.getActiveProvider();
     const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
     const imageUrls = project.references ? project.references.map((r) => r.url) : [];
@@ -304,8 +273,11 @@ Audio & Dialogue Guidelines:
       );
 
       if (result.shots && result.shots.length > 0) {
+        const derivedTitle = result.name || (idea ? (idea.length > 45 ? `${idea.substring(0, 45)}...` : idea) : `${narrativeStyle} Scene`);
         const updatedProj = {
           ...project,
+          name: derivedTitle,
+          description: idea || project.description,
           shots: result.shots as any,
           audio: result.audio ? { ...project.audio, ...result.audio } : project.audio,
         };
@@ -313,7 +285,7 @@ Audio & Dialogue Guidelines:
 
         // Auto-save generated storyboard prompt to Prompt Library
         useStudioStore.getState().savePromptToLibrary({
-          title: idea ? (idea.length > 45 ? `${idea.substring(0, 45)}...` : idea) : `${narrativeStyle} Scene`,
+          title: derivedTitle,
           idea: idea || project.description || `${narrativeStyle} Scene`,
           narrativeStyle,
           mode: project.settings.mode,
@@ -335,10 +307,10 @@ Audio & Dialogue Guidelines:
         <div>
           <h2 className="text-base font-bold text-zinc-100 flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-cyan-400" />
-            AI Director Workstation (100% Automated Visual Storyboarding)
+            AI Director Workstation
           </h2>
           <p className="text-xs text-zinc-400">
-            Set your mode, total duration ({totalDuration}s), shots count, and presets. Gemini auto-fills camera 3D, character identity, environment, and action prose for all shots.
+            Automated visual storyboarding & prompt compiler for MiniMax H3.
           </p>
         </div>
 
@@ -600,7 +572,7 @@ Audio & Dialogue Guidelines:
                 <button
                   key={preset.id}
                   type="button"
-                  onClick={() => setNarrativeStyle(preset.id)}
+                  onClick={() => handleSelectNarrativeStyle(preset.id)}
                   className={`px-3 py-1.5 text-xs rounded-xl font-semibold transition-all ${
                     isSelected
                       ? 'bg-cyan-500 text-zinc-950 shadow-lg shadow-cyan-500/20 font-bold'
@@ -1002,10 +974,10 @@ Audio & Dialogue Guidelines:
             {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             <span>
               {isGenerating
-                ? `Gemini Director (${directorModel}) Generating...`
+                ? `Gemini Director (${formattedModelName}) Generating...`
                 : hasReferences
                 ? `✨ Build ${currentShotCount}-Shot Storyboard Using Visual Keyframes (${project.references.length})`
-                : `✨ Build ${currentShotCount}-Shot Storyboard with ${directorModel}`}
+                : `✨ Build ${currentShotCount}-Shot Storyboard with ${formattedModelName}`}
             </span>
           </button>
 

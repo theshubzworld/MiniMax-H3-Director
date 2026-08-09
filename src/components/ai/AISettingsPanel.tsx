@@ -6,9 +6,6 @@ export const AISettingsPanel: React.FC = () => {
   const [providerId, setProviderId] = useState('gemini');
   const [apiKey, setApiKey] = useState('');
   const [saved, setSaved] = useState(false);
-  const [temperature, setTemperature] = useState(0.7);
-  const [visionDetail, setVisionDetail] = useState('high');
-
   useEffect(() => {
     let storedKey = (localStorage.getItem('minimax_gemini_api_key') || '').trim();
     if (!storedKey) {
@@ -33,7 +30,7 @@ export const AISettingsPanel: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base font-bold text-zinc-100">AI Director Engine Settings</h2>
-            <p className="text-xs text-zinc-400">Configure AI provider, models, temperature, and API keys.</p>
+            <p className="text-xs text-zinc-400">Configure AI provider and API key credentials.</p>
           </div>
         </div>
 
@@ -81,37 +78,6 @@ export const AISettingsPanel: React.FC = () => {
             placeholder="AIzaSy... (or configure VITE_GEMINI_API_KEY in .env)"
             className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50 font-mono"
           />
-        </div>
-
-        {/* Creativity Controls */}
-        <div className="grid grid-cols-2 gap-4 pt-2">
-          <div>
-            <label className="text-xs text-zinc-400 font-medium mb-1 block">
-              Director Creativity (Temperature: {temperature})
-            </label>
-            <input
-              type="range"
-              min="0.1"
-              max="1.0"
-              step="0.05"
-              value={temperature}
-              onChange={(e) => setTemperature(parseFloat(e.target.value))}
-              className="w-full accent-cyan-500"
-            />
-          </div>
-
-          <div>
-            <label className="text-xs text-zinc-400 font-medium mb-1 block">Vision Detail Level</label>
-            <select
-              value={visionDetail}
-              onChange={(e) => setVisionDetail(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none"
-            >
-              <option value="high">High Detail (Full Visual DNA)</option>
-              <option value="medium">Medium Detail</option>
-              <option value="low">Fast Low Detail</option>
-            </select>
-          </div>
         </div>
       </div>
 

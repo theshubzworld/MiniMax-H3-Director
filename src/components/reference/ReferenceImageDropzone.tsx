@@ -152,22 +152,33 @@ export const ReferenceImageDropzone: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {project.references.map((ref, index) => {
               const pictureLabel = `Picture ${index + 1}`;
               const isFirst = index === 0;
               const isSecond = index === 1;
 
+              const cleanName = ref.name && ref.name.length > 20
+                ? `${ref.name.slice(0, 10)}...${ref.name.slice(-6)}`
+                : (ref.name || `Anchor Image ${index + 1}`);
+
+              const subtitleText = isFirst
+                ? 'First Frame • 0.00s'
+                : isSecond
+                ? `Ending Frame • Shot ${project.shots.length}`
+                : 'Character Anchor';
+
               return (
                 <div
                   key={ref.id}
-                  className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 items-start shadow-xl group hover:border-cyan-500/40 transition-all"
+                  className="bg-zinc-900 border border-zinc-800 hover:border-cyan-500/40 rounded-2xl p-3 flex gap-3 items-center shadow-xl group transition-all relative overflow-hidden"
                 >
-                  <div className="relative w-28 h-28 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0 flex items-center justify-center">
+                  {/* Thumbnail Image with Picture Badge and Delete Overlay */}
+                  <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0 flex items-center justify-center">
                     {imageErrorMap[ref.id] ? (
                       <div className="flex flex-col items-center justify-center p-2 text-center text-zinc-500 space-y-1">
-                        <ImageIcon className="w-6 h-6 text-zinc-600" />
-                        <span className="text-[9px] font-mono leading-tight break-all line-clamp-2 text-zinc-400">{ref.name}</span>
+                        <ImageIcon className="w-5 h-5 text-zinc-600" />
+                        <span className="text-[9px] font-mono leading-tight truncate text-zinc-400">{cleanName}</span>
                       </div>
                     ) : (
                       <img
@@ -177,50 +188,61 @@ export const ReferenceImageDropzone: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                     )}
-                    <div className="absolute top-1.5 left-1.5 bg-zinc-950/90 border border-cyan-500/40 text-cyan-300 font-mono text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
+
+                    {/* Picture Label Overlay (Top-Left) */}
+                    <div className="absolute top-1.5 left-1.5 bg-zinc-950/90 border border-cyan-500/50 text-cyan-300 font-mono text-[10px] font-bold px-1.5 py-0.5 rounded shadow-xs">
                       &lt;{pictureLabel}&gt;
                     </div>
+
+                    {/* Delete Button Overlay (Top-Right on Image Thumbnail) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeReference(ref.id);
+                      }}
+                      className="absolute top-1.5 right-1.5 bg-red-950/90 hover:bg-red-600 border border-red-500/50 text-red-300 hover:text-white p-1 rounded-md shadow-md transition-all z-10"
+                      title="Remove Image"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold text-zinc-100">{ref.name}</span>
-                        <p className="text-[10px] text-zinc-400">
-                          {isFirst
-                            ? 'First Frame Anchor (Shot 1 at 0.00s)'
-                            : isSecond
-                            ? `Ending Frame Anchor (Shot ${project.shots.length})`
-                            : 'Character Anchor'}
+                  {/* Card Metadata & Actions */}
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold text-zinc-100 truncate" title={ref.name}>
+                          {cleanName}
+                        </div>
+                        <p className="text-[10px] font-medium text-cyan-400/90 font-mono">
+                          {subtitleText}
                         </p>
                       </div>
 
+                      {/* Clear explicit Remove Button on Card Right */}
                       <button
                         type="button"
                         onClick={() => removeReference(ref.id)}
-                        className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-950/40 rounded-lg transition-all"
+                        className="shrink-0 px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all"
                         title="Remove Reference"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3" />
+                        <span>Remove</span>
                       </button>
                     </div>
 
-                    {/* Detected Visual Attributes Badges */}
-                    <div className="space-y-1.5 pt-1 border-t border-zinc-800/80">
-                      <span className="text-[10px] font-semibold text-cyan-400 flex items-center gap-1">
-                        <Tag className="w-3 h-3" /> Detected Visual Traits:
+                    {/* Compact Visual Trait Badges */}
+                    <div className="flex flex-wrap gap-1 pt-1 border-t border-zinc-800/60 text-[9px] font-medium">
+                      <span className="bg-zinc-950 border border-zinc-800/80 text-zinc-300 px-1.5 py-0.5 rounded">
+                        {ref.traits?.face || 'Sharp features'}
                       </span>
-                      <div className="flex flex-wrap gap-1 text-[10px]">
-                        <span className="bg-zinc-950 border border-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
-                          Face: {ref.traits?.face || 'Sharp features'}
-                        </span>
-                        <span className="bg-zinc-950 border border-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
-                          Hair: {ref.traits?.hair || 'Styled'}
-                        </span>
-                        <span className="bg-zinc-950 border border-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
-                          Lighting: {ref.traits?.lighting || 'Dramatic'}
-                        </span>
-                      </div>
+                      <span className="bg-zinc-950 border border-zinc-800/80 text-zinc-300 px-1.5 py-0.5 rounded">
+                        {ref.traits?.hair || 'Styled hair'}
+                      </span>
+                      <span className="bg-zinc-950 border border-zinc-800/80 text-zinc-300 px-1.5 py-0.5 rounded">
+                        {ref.traits?.lighting || 'Dramatic lighting'}
+                      </span>
                     </div>
                   </div>
                 </div>
