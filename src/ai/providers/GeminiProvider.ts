@@ -416,47 +416,121 @@ Return JSON format:
     }
   }
 }`
-      : `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.
-${styleLine}STORY IDEA: "${params.idea}".
+      : `You are a natural real-life video scene planner.
+Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
 
-MANDATORY PROMPT RECOGNITION HEADING RULE:
-You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bedroom Naked Video Call", "Blanket Selfie Embrace", "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run") in the "title" field. Never copy raw prompt instruction phrases like "analyze image", "doing nude video call with her bf...", or "women under blanket taking naked selfie..." into the title.
+Do not write like a formal film director.
+Do not use unnecessary cinematic jargon.
+Do not turn simple actions into elaborate movie descriptions.
+Do not invent unnecessary camera angles, cuts, transitions, or optical effects.
 
+The video should feel like one continuous real-life scene. Characters should move naturally and continuously from one action to the next.
+
+STORY IDEA: "${params.idea}".
+
+${styleLine}
 ${modeInstruction}
 ${imageInstruction}
 ${compositionInstruction}
 
-Audio & Dialogue Guidelines:
-- Write a concise 3-5 word recognition title field summarizing the visual scene for prompt library recognition (e.g. "Gold Chainmail Bedside Strip", "Sunny Beach Towel Run", "Bamboo Forest Katana Duel").
-- If dialogue or narration is requested in the story idea, write short, original spoken lines (1 to ${maxWordsPerShot} words max per shot) so voiceovers sound natural and unhurried (~2.5 words/sec).
-- Assign a unique speakerId (S1, S2, etc.) to each vocal source, and specify their distinct character identity (e.g. S1: "The man", S2: "The woman") so every dialogue line clearly identifies who is speaking.
-- Include realistic foley soundscape layers and a matching background music score.
+CORE SCENE RULES:
 
-Return JSON format:
+1. CONTINUOUS ACTION
+Describe a continuous sequence of physical actions.
+Each shot represents a sequential moment or action beat, NOT necessarily a camera cut.
+Do not introduce cuts unless the user explicitly requests them.
+
+2. REALISTIC HUMAN MOVEMENT
+Use simple, observable physical actions:
+walking, sitting, turning, looking, reaching, touching an object, adjusting clothing, moving closer, stepping back, smiling, speaking, dancing, etc.
+Avoid exaggerated, impossible, or mechanically repetitive movement.
+
+3. NATURAL CAMERA
+Camera movement should support the action rather than dominate it.
+Use simple movements such as: static, handheld, slow push in, slow pull back, gentle tracking, slight pan, natural follow movement.
+Do not invent dramatic camera movements unless they are appropriate to the user's idea.
+
+4. VISUAL DESCRIPTION
+Describe only what can actually be seen.
+Do not explain internal thoughts, backstory, symbolism, or emotions that are not visually expressed.
+
+5. CHARACTER CONSISTENCY
+When reference images are provided, preserve the referenced character's identity and visible appearance.
+Do not arbitrarily change face, hairstyle, clothing, body proportions, or other established visual characteristics.
+
+6. ENVIRONMENT CONSISTENCY
+Keep the same location, lighting, time of day, and environmental conditions unless the story explicitly requires a change.
+
+7. DIALOGUE
+Spoken lines should be short, natural, conversational, and appropriate for the available duration (1 to ${maxWordsPerShot} words max per shot).
+Each spoken line must have: speakerId, languageTag, dialogueText, and whether it is off-screen.
+Do not add dialogue unless it fits the story.
+
+8. AUDIO
+Describe simple environmental sounds that would naturally exist in the scene.
+Music should only be included when appropriate to the user's idea or requested style.
+
+9. NO UNNECESSARY INVENTION
+Do not add random characters, unexplained props, dramatic explosions, unnecessary camera cuts, or artificial visual effects.
+
+10. ACTION CONTINUITY
+The ending state of each shot must logically match the beginning state of the next shot. Do not reset the character's position between shots.
+
+PROMPT TITLE RULE:
+Create a short 3-5 word title describing the main visual scene in the "title" field.
+
+RETURN ONLY VALID JSON:
 {
-  "title": "3-5 word memorable title for prompt recognition",
+  "title": "Short visual recognition title",
   "shots": [
     {
-      "camera": { "motionType": "Push In", "amplitude": "small amplitude", "speed": "slow speed", "targetSubject": "her eyes" },
-      "character": { "speakerId": "S1", "identity": "The protagonist", "pose": "standing stance", "expression": "focused glare", "motion": "slowly turns head" },
-      "environment": { "location": "cinematic setting", "lighting": "dramatic lighting", "weather": "clear", "timeOfDay": "twilight", "atmosphere": "tense" },
-      "rawActionDescription": "Action prose tailored to story idea.",
-      "dialogue": { "hasDialogue": true, "speakerId": "S1", "languageTag": "English", "dialogueText": "Spoken line matching story idea.", "isOffScreenVoiceover": true }
+      "camera": {
+        "motionType": "natural handheld",
+        "amplitude": "subtle",
+        "speed": "natural",
+        "targetSubject": "the protagonist"
+      },
+      "character": {
+        "speakerId": "S1",
+        "identity": "The protagonist",
+        "pose": "sitting stance",
+        "expression": "soft smile",
+        "motion": "looks at the screen"
+      },
+      "environment": {
+        "location": "bedroom",
+        "lighting": "soft lamp light",
+        "weather": "clear",
+        "timeOfDay": "night",
+        "atmosphere": "quiet and intimate"
+      },
+      "rawActionDescription": "Direct, plain English description of the physical action occurring in this moment.",
+      "dialogue": {
+        "hasDialogue": false,
+        "speakerId": "S1",
+        "languageTag": "English",
+        "dialogueText": "",
+        "isOffScreenVoiceover": false
+      }
     }
   ],
   "audio": {
     "isSilent": false,
     "soundscapeLayers": [
-      { "category": "weather", "description": "Atmospheric ambient soundscape.", "enabled": true }
+      {
+        "category": "room",
+        "description": "Soft room tone.",
+        "enabled": true
+      }
     ],
     "music": {
-      "hasMusic": true,
-      "genreStyle": "${params.narrativeStyle}",
-      "instrumentation": ["piano", "strings"],
-      "tempo": "normal",
-      "dynamics": "building",
-      "rhythmPattern": "flowing",
-      "layeringDescription": "Ambient pad underneath."
+      "hasMusic": false,
+      "genreStyle": "",
+      "instrumentation": [],
+      "tempo": "",
+      "dynamics": "",
+      "rhythmPattern": "",
+      "layeringDescription": ""
     }
   }
 }`;
@@ -505,6 +579,8 @@ Return JSON format:
             ? Math.max(0.5, Number((params.durationSeconds - currentTime).toFixed(2)))
             : shotDuration;
 
+          const charData = (Array.isArray(s.characters) && s.characters.length > 0) ? s.characters[0] : (s.character || {});
+
           const shotObj: Shot = {
             id: `shot-ai-${idx + 1}`,
             shotNumber: idx + 1,
@@ -518,11 +594,11 @@ Return JSON format:
               targetSubject: s.camera?.targetSubject || 'the primary hero',
             },
             character: {
-              speakerId: s.character?.speakerId || 'S1',
-              identity: s.character?.identity || `The ${params.narrativeStyle} protagonist`,
-              pose: s.character?.pose || matrixChar.pose,
-              expression: s.character?.expression || matrixChar.expression,
-              motion: s.character?.motion || matrixChar.motion,
+              speakerId: charData.speakerId || 'S1',
+              identity: charData.identity || (params.narrativeStyle !== 'None' ? `The ${params.narrativeStyle} protagonist` : 'The protagonist'),
+              pose: charData.pose || matrixChar.pose,
+              expression: charData.expression || matrixChar.expression,
+              motion: charData.motion || matrixChar.motion,
             },
             environment: {
               location: s.environment?.location || `${params.narrativeStyle} setting`,

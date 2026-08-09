@@ -244,17 +244,29 @@ Dialogue & Audio Guidelines:
 - Assign speakerId (S1, S2) with character labels. Include soundscape layers and music score.`;
     }
 
-    return `You are an AI Video Director creating a continuous ${currentShotCount}-shot storyboard JSON for a ${narrativeStyle} video.
-STYLE DIRECTIVE TO STRICTLY ENFORCE: "${styleDirective}"
-AESTHETIC VISUAL STYLE: "${project.settings.style || 'Ultra Realistic Photorealism'}"
+    return `You are a natural real-life video scene planner.
+Your job is to convert the user's story idea into a simple, physically believable sequence of visual actions suitable for a video-generation model.
+
+Do not write like a formal film director. Do not use unnecessary cinematic jargon.
+Keep the video as one continuous real-life scene. Characters should move naturally and continuously from one action to the next.
+
 STORY IDEA: "${idea || project.description || 'Cyberpunk action standoff scene'}"
+${styleDirective ? `Visual Atmosphere Guidance: "${styleDirective}"` : ''}
 
 ${modeInstruction}
 ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
 
-Audio & Dialogue Guidelines:
-- Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot).
-- Assign speakerId (S1, S2) with character identity labels. Include soundscape layers and music score.`;
+CORE SCENE RULES:
+1. CONTINUOUS ACTION: Describe sequential physical actions without artificial cuts unless requested.
+2. REALISTIC HUMAN MOVEMENT: Simple observable physical actions (sitting, reaching, looking, adjusting).
+3. NATURAL CAMERA: Subtle supporting movements (static, handheld, slow push in, gentle tracking).
+4. VISUAL DESCRIPTION: Describe only what can be seen; no internal thoughts or symbolism.
+5. CHARACTER & ENVIRONMENT CONSISTENCY: Maintain reference identity and room lighting across shots.
+6. ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1.
+
+Dialogue & Audio Guidelines:
+- Spoken lines: short and natural (1 to ${maxWordsPerShot} words max per shot).
+- Assign speakerId (S1, S2) with character labels. Include environmental soundscape layers.`;
   }, [project, narrativeStyle, idea, currentShotCount, totalDuration, systemPromptPreset]);
 
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
