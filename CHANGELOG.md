@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **[2026-08-09] Reference Image Corrupted Preview Fix**: Replaced temporary `URL.createObjectURL(file)` in `ReferenceImageDropzone.tsx` with persistent `FileReader.readAsDataURL(file)` Base64 conversion. Added `imageErrorMap` state and graceful fallback UI to prevent broken image icon overlays.
 - **[2026-08-09] Strip 'None.' Prefix from [Shot 1] Header**: Updated `PromptCompiler.ts` to exclude `${style}.` after `[Shot 1]` when `style === 'None'` or `'Unstyled'`, and added regex sanitization in `sanitizeShotProse` to strip residual `[Shot 1] None.` fragments. Cleaned all saved prompts on disk.
 
 ### Added

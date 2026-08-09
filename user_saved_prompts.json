@@ -1,5 +1,56 @@
 [
   {
+    "id": "prompt-1786248051380-wkn3v",
+    "title": "she take off top on street. no audio",
+    "idea": "she take off top on street. no audio",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] The opening frame begins exactly from <Picture 1>, preserving the original subject appearance, hairstyle, wardrobe, environment, lighting, and composition shown in the reference image. The woman stands on a sunny city street. With a slight smile, she hooks her thumbs under the hem of her black t-shirt. She smoothly pulls the shirt up over her stomach, chest, and then over her head, removing it completely. She holds the balled-up shirt in one hand, now standing topless on the sidewalk. The camera moves toward her upper body.\n\noverall_soundscape: Natural ambient room tone continues smoothly in the background with subtle atmospheric acoustics.\n\nnon_diegetic_music: N/A",
+    "narrativeStyle": "None",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-09T04:00:51.380Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "None"
+    ]
+  },
+  {
+    "id": "prompt-1786247765758-cftpp",
+    "title": "these four girls removes clothes together",
+    "idea": "these four girls removes clothes together",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] The opening frame begins exactly from <Picture 1>, preserving the original subject appearance, hairstyle, wardrobe, environment, lighting, and composition shown in the reference image. The woman in the olive dress, now alone in her bedroom after the event, undresses. She unzips the back, unhooks the front clasps, and lets the heavy gown fall to the floor. She steps out of it and stretches in relief. The woman in the olive dress from <Picture 1> (S1) says: <d>[English] Finally..</d>. The camera moves with medium amplitude at slow speed toward the woman in the olive dress.\n\ndialogue:\n\n[Shot 1]\nS1 (woman in the olive dress from <Picture 1>): \"Finally...\"\n\noverall_soundscape: Quiet room tone, the soft zzzip of a zipper, the rustle of heavy satin fabric falling to the floor.\n\nnon_diegetic_music: lo-fi chill score featuring electric piano, soft synth pad at a slow tempo with relaxed beat and gentle. A warm, gentle melody that fades in as the scene transitions to the bedroom.",
+    "narrativeStyle": "Live-Action Realism",
+    "mode": "I2VA",
+    "shotsCount": 2,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-09T03:56:05.758Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "None"
+    ]
+  },
+  {
+    "id": "prompt-1786247698850-ccj40",
+    "title": "she takes off everything in car",
+    "idea": "she takes off everything in car",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] The opening frame begins exactly from <Picture 1>, preserving the original subject appearance, hairstyle, wardrobe, environment, lighting, and composition shown in the reference image. The subject from <Picture 1> sits in the passenger seat of a dark, parked car. She looks out the side window for a moment, then turns to face forward. She takes a small breath, and her hands move from her lap to the bottom hem of her shirt. the (S1) says: <d>[English] Okay.. here we go.</d>. The camera pushes in with small amplitude at slow speed toward her torso.\n\n[Shot 2] At 00:02.000, the camera cuts to a new angle, preserving the subject appearance and wardrobe from <Picture 1>. Set in a parked car, dim overhead dome light and ambient streetlights, clear, night, intimate and private environment. She pulls her shirt up, the fabric sliding over her stomach and chest. She lifts her arms, pulling the shirt completely over her head, messing her hair slightly. She casually tosses the garment into the back seat, now sitting just in her bra. The camera pushes in with small amplitude at slow speed toward her chest.\n\n[Shot 3] At 00:04.000, the camera cross-dissolves to a new angle, preserving the subject appearance and wardrobe from <Picture 1>. Set in a parked car, dim overhead dome light and ambient streetlights, clear, night, intimate and private environment. She leans forward in the seat, reaching her hands behind her back. Her fingers find the clasp of her bra and undo it. She pulls the straps down off her shoulders and lets the bra fall away, tossing it onto the back seat with her shirt. The camera pushes in with small amplitude at slow speed toward her torso.\n\n[Shot 4] At 00:06.000, the camera cuts to a new angle, preserving the subject appearance and wardrobe from <Picture 1>. Set in a parked car, dim overhead dome light and ambient streetlights, clear, night, intimate and private environment. She unbuttons her pants and pulls the zipper down. Lifting her hips off the seat, she wriggles and pushes the pants down over her hips and thighs in the confined space. She kicks her feet to shove them down into the footwell. the (S1) says: <d>[English] Almost..</d>. The camera moves with small amplitude at slow speed toward her legs.\n\n[Shot 5] At 00:08.000, the camera cuts to a new angle, preserving the subject appearance and wardrobe from <Picture 1>. Set in a parked car, dim overhead dome light and ambient streetlights, clear, night, intimate and private environment. Completely naked, she settles back into the passenger seat, adjusting herself. She runs one hand slowly down her arm, then across her stomach. She looks forward, a small, contented smile on her face as she relaxes. The camera moves with zero amplitude at zero speed toward her face and upper body.\n\ndialogue:\n\n[Shot 1]\nS1: \"Okay... here we go.\"\n\n[Shot 2]\n(No dialogue.)\n\n[Shot 3]\n(No dialogue.)\n\n[Shot 4]\nS1: \"Almost...\"\n\n[Shot 5]\n(No dialogue.)\n\noverall_soundscape: Quiet interior car room tone. Faint, distant city traffic hum. Sounds of fabric rustling, soft movements against car seat upholstery.\n\nnon_diegetic_music: lo-fi ambient score featuring synth pad, soft electric piano at a very slow tempo with arpeggiated and gentle. A warm, low-volume synth pad with a simple, repeating piano melody.",
+    "narrativeStyle": "Live-Action Realism",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-09T03:54:58.850Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "None"
+    ]
+  },
+  {
     "id": "prompt-1786247327040-q6yux",
     "title": "she takes off everything in car",
     "idea": "she takes off everything in car",

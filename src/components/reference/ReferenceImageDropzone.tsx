@@ -8,32 +8,39 @@ export const ReferenceImageDropzone: React.FC = () => {
   const { project, addReference, removeReference, clearAllReferences, sceneKeyframes } = useStudioStore();
   const [isDragOver, setIsDragOver] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = (files: FileList | File[]) => {
     Array.from(files).forEach((file, index) => {
       if (!file.type.startsWith('image/')) return;
 
-      const url = URL.createObjectURL(file);
-      const refCount = project.references.length + index + 1;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        if (!url) return;
 
-      const newRef: ReferenceImage = {
-        id: `ref-${Date.now()}-${index}-${Math.random().toString(36).substring(2, 6)}`,
-        name: file.name,
-        url,
-        type: refCount === 1 ? 'first_frame' : refCount === 2 ? 'last_frame' : 'character',
-        shotIndex: refCount === 1 ? 1 : Math.max(1, project.shots.length),
-        traits: {
-          subject: 'Primary character / key object',
-          face: 'Sharp facial features',
-          hair: 'Styled hair',
-          wardrobe: 'Cinematic apparel',
-          environment: 'Keyframe setting',
-          lighting: 'Dramatic lighting',
-        },
+        const refCount = project.references.length + index + 1;
+
+        const newRef: ReferenceImage = {
+          id: `ref-${Date.now()}-${index}-${Math.random().toString(36).substring(2, 6)}`,
+          name: file.name,
+          url,
+          type: refCount === 1 ? 'first_frame' : refCount === 2 ? 'last_frame' : 'character',
+          shotIndex: refCount === 1 ? 1 : Math.max(1, project.shots.length),
+          traits: {
+            subject: 'Primary character / key object',
+            face: 'Sharp facial features',
+            hair: 'Styled hair',
+            wardrobe: 'Cinematic apparel',
+            environment: 'Keyframe setting',
+            lighting: 'Dramatic lighting',
+          },
+        };
+
+        addReference(newRef);
       };
-
-      addReference(newRef);
+      reader.readAsDataURL(file);
     });
   };
 
@@ -156,9 +163,21 @@ export const ReferenceImageDropzone: React.FC = () => {
                   key={ref.id}
                   className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 items-start shadow-xl group hover:border-cyan-500/40 transition-all"
                 >
-                  <div className="relative w-28 h-28 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0">
-                    <img src={ref.url} alt={ref.name} className="w-full h-full object-cover" />
-                    <div className="absolute top-1.5 left-1.5 bg-zinc-950/90 border border-cyan-500/40 text-cyan-300 font-mono text-[10px] font-bold px-2 py-0.5 rounded-md">
+                  <div className="relative w-28 h-28 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0 flex items-center justify-center">
+                    {imageErrorMap[ref.id] ? (
+                      <div className="flex flex-col items-center justify-center p-2 text-center text-zinc-500 space-y-1">
+                        <ImageIcon className="w-6 h-6 text-zinc-600" />
+                        <span className="text-[9px] font-mono leading-tight break-all line-clamp-2 text-zinc-400">{ref.name}</span>
+                      </div>
+                    ) : (
+                      <img
+                        src={ref.url}
+                        alt={ref.name}
+                        onError={() => setImageErrorMap((prev) => ({ ...prev, [ref.id]: true }))}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                    <div className="absolute top-1.5 left-1.5 bg-zinc-950/90 border border-cyan-500/40 text-cyan-300 font-mono text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
                       &lt;{pictureLabel}&gt;
                     </div>
                   </div>
