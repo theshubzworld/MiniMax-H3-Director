@@ -5,6 +5,8 @@ import { Shot, CameraMotionType, CameraAmplitude, CameraSpeed, ShotTransition } 
 import { AudioSettings } from '../../types/audio';
 import { TitleGenerator } from '../../engine/TitleGenerator';
 
+import { CINEMATIC_STATE_MACHINES } from '../../data/cinematic_state_machines';
+
 interface CameraPreset {
   motionType: CameraMotionType;
   amplitude: CameraAmplitude;
@@ -425,6 +427,13 @@ RETURN ONLY VALID JSON:
 }`;
     }
 
+    const stateMachineObj = params.stateMachineId
+      ? CINEMATIC_STATE_MACHINES.find((sm) => sm.id === params.stateMachineId)
+      : null;
+    const stateMachineInstruction = stateMachineObj
+      ? `\nDIRECTORIAL STATE MACHINE: "${stateMachineObj.name}"\n${stateMachineObj.summary}\n${stateMachineObj.creativeDNA}\n`
+      : '';
+
     const visualStyleHeader = styleOverride ? `\nAESTHETIC VISUAL STYLE: "${styleOverride}"` : '';
 
     return `You are an AI Video Director creating a continuous ${params.shotsCount}-shot storyboard JSON${styleNameHeader}.${visualStyleHeader}
@@ -432,6 +441,9 @@ ${styleLine}STORY IDEA: "${params.idea}".
 
 ${modeInstruction}
 ${imageInstruction ? `${imageInstruction}\n` : ''}${compositionInstruction}
+${stateMachineInstruction}
+NON-NEGOTIABLE PRIORITY PRECEDENCE HIERARCHY:
+User Intent & Observable Media Facts > Core H3 Directorial Rules > Narrative Style Presets > Directorial State Machines. Lower priority rules can NEVER overwrite explicit user intent or observable reference image details.
 
 MANDATORY SHOT COUNT CONTRACT:
 You MUST generate EXACTLY ${params.shotsCount} shot objects inside the "shots" array (no more, no less).
@@ -444,9 +456,11 @@ CORE DIRECTORIAL & MOTION VECTOR RULES:
 2. NATURAL CAMERA: Align camera motion with story pacing (push in for intensity, tracking for movement, static for intimacy).
 3. VISUAL REALISM: Describe visual physics, light behavior, character gestures, and micro-expressions.
 
-Audio & Dialogue Guidelines:
+Audio & Spoken Dialogue Guidelines:
 - Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing).
-- Assign speakerId (S1, S2, etc.) with character identity labels. Include realistic foley soundscape layers and matching music score.
+- Assign speakerId (S1, S2, etc.) with character identity labels.
+- For off-screen narration, set isOffScreenVoiceover: true and state that visible lips remain closed.
+- Include realistic foley soundscape layers in "overall_soundscape" (1-4 sentences) and matching audience score in "music" (1-3 sentences).
 
 Return JSON format:
 {

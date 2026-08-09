@@ -103,7 +103,7 @@ export interface DirectorPlanDraft {
 interface StudioState {
   project: StudioProject;
   currentStep: number;
-  activeView: 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy' | 'scene-creator' | 'scene-gallery' | 'prompt-library';
+  activeView: 'gemini-director' | 'wizard' | 'studio' | 'storyboard' | 'diagnostics' | 'templates' | 'comfy' | 'scene-creator' | 'scene-gallery' | 'prompt-library';
   diagnostics: DiagnosticsResult;
   proposedPromptDiff: string | null;
   theme: 'dark' | 'light';
@@ -118,6 +118,7 @@ interface StudioState {
   directorThinkingBudget: number;
   directorMode: 'strict' | 'balanced' | 'creative';
   systemPromptPreset: 'standard' | 'uncensored_nsfw';
+  directorProfile: 'cinematic' | 'uncensored' | 'reasoning' | 'custom';
   isInspectorOpen: boolean;
   isInspectorExpanded: boolean;
   inspectorWidth: number;
@@ -155,6 +156,7 @@ interface StudioState {
   setDirectorThinkingBudget: (budget: number) => void;
   setDirectorMode: (mode: 'strict' | 'balanced' | 'creative') => void;
   setSystemPromptPreset: (preset: 'standard' | 'uncensored_nsfw') => void;
+  setDirectorProfile: (profile: 'cinematic' | 'uncensored' | 'reasoning' | 'custom') => void;
   
   // Prompt Library Actions
   savePromptToLibrary: (customPrompt?: Partial<SavedPrompt>) => void;
@@ -315,9 +317,10 @@ export const useStudioStore = create<StudioState>((set, get) => {
     directorPlanDraft: initialDraft,
     activeSceneStep: initialSceneStep,
     directorModel: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_model') as any) : null) || 'gemini-2.5-pro',
-    directorThinkingBudget: typeof window !== 'undefined' && localStorage.getItem('minimax_thinking_budget') !== null ? Number(localStorage.getItem('minimax_thinking_budget')) : 4096,
+    directorThinkingBudget: typeof window !== 'undefined' && localStorage.getItem('minimax_thinking_budget') !== null ? Number(localStorage.getItem('minimax_thinking_budget')) : 1024,
     directorMode: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_mode') as any) : null) || 'balanced',
     systemPromptPreset: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_system_prompt_preset') as any) : null) || 'standard',
+    directorProfile: (typeof window !== 'undefined' ? (localStorage.getItem('minimax_director_profile') as any) : null) || 'cinematic',
     isInspectorOpen: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_open') !== 'false' : true,
     isInspectorExpanded: typeof window !== 'undefined' ? localStorage.getItem('minimax_inspector_expanded') === 'true' : false,
     inspectorWidth: typeof window !== 'undefined' && localStorage.getItem('minimax_inspector_width') ? Number(localStorage.getItem('minimax_inspector_width')) : 480,
@@ -342,22 +345,75 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     setDirectorModel: (model) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_director_model', model);
-      set({ directorModel: model });
+      set({ directorModel: model, directorProfile: 'custom' });
     },
 
     setDirectorThinkingBudget: (budget) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_thinking_budget', String(budget));
-      set({ directorThinkingBudget: budget });
+      set({ directorThinkingBudget: budget, directorProfile: 'custom' });
     },
 
     setDirectorMode: (mode) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_director_mode', mode);
-      set({ directorMode: mode });
+      set({ directorMode: mode, directorProfile: 'custom' });
     },
 
     setSystemPromptPreset: (preset) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_system_prompt_preset', preset);
-      set({ systemPromptPreset: preset });
+      set({ systemPromptPreset: preset, directorProfile: 'custom' });
+    },
+
+    setDirectorProfile: (profile) => {
+      if (typeof window !== 'undefined') localStorage.setItem('minimax_director_profile', profile);
+
+      if (profile === 'cinematic') {
+        const nextState = {
+          directorProfile: 'cinematic' as const,
+          directorModel: 'gemini-3.5-flash' as const,
+          directorThinkingBudget: 1024,
+          directorMode: 'balanced' as const,
+          systemPromptPreset: 'standard' as const,
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('minimax_director_model', nextState.directorModel);
+          localStorage.setItem('minimax_thinking_budget', '1024');
+          localStorage.setItem('minimax_director_mode', nextState.directorMode);
+          localStorage.setItem('minimax_system_prompt_preset', nextState.systemPromptPreset);
+        }
+        set(nextState);
+      } else if (profile === 'uncensored') {
+        const nextState = {
+          directorProfile: 'uncensored' as const,
+          directorModel: 'gemini-3.5-flash' as const,
+          directorThinkingBudget: 1024,
+          directorMode: 'balanced' as const,
+          systemPromptPreset: 'uncensored_nsfw' as const,
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('minimax_director_model', nextState.directorModel);
+          localStorage.setItem('minimax_thinking_budget', '1024');
+          localStorage.setItem('minimax_director_mode', nextState.directorMode);
+          localStorage.setItem('minimax_system_prompt_preset', nextState.systemPromptPreset);
+        }
+        set(nextState);
+      } else if (profile === 'reasoning') {
+        const nextState = {
+          directorProfile: 'reasoning' as const,
+          directorModel: 'gemini-2.5-pro' as const,
+          directorThinkingBudget: 4096,
+          directorMode: 'strict' as const,
+          systemPromptPreset: 'standard' as const,
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('minimax_director_model', nextState.directorModel);
+          localStorage.setItem('minimax_thinking_budget', '4096');
+          localStorage.setItem('minimax_director_mode', nextState.directorMode);
+          localStorage.setItem('minimax_system_prompt_preset', nextState.systemPromptPreset);
+        }
+        set(nextState);
+      } else {
+        set({ directorProfile: 'custom' });
+      }
     },
 
     setDirectorPlanDraft: (draft) => {
@@ -409,6 +465,9 @@ export const useStudioStore = create<StudioState>((set, get) => {
 
     updateSettings: (newSettings) => {
       const { project } = get();
+      if (newSettings.style && typeof window !== 'undefined') {
+        localStorage.setItem('minimax_narrative_style', newSettings.style);
+      }
       const updatedSettings = { ...project.settings, ...newSettings };
       let updatedShots = project.shots;
 

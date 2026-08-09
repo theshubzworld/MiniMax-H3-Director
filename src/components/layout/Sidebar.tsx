@@ -17,15 +17,33 @@ export const Sidebar: React.FC = () => {
           <nav className="space-y-1">
             <button
               type="button"
+              onClick={() => setActiveView('gemini-director')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                activeView === 'gemini-director'
+                  ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-200 border border-cyan-400 shadow-lg shadow-cyan-500/20 font-bold'
+                  : 'text-zinc-300 hover:text-white hover:bg-zinc-900 border border-cyan-500/30 bg-cyan-950/30'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
+                <span>Gemini Director</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-extrabold border border-cyan-500/40">
+                STANDALONE
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveView('wizard')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeView === 'wizard'
                   ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 text-cyan-300 border border-cyan-500/40'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
               }`}
             >
               <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span>Director Wizard</span>
+              <span>Director Wizard (4-Step)</span>
             </button>
 
             <button

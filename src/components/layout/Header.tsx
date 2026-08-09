@@ -95,12 +95,25 @@ export const Header: React.FC = () => {
 
       {/* Action Controls */}
       <div className="flex items-center gap-3">
-        {/* View Switcher (Wizard vs Studio Editor) */}
-        <div className="flex bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+        {/* View Switcher (Gemini AI vs Wizard vs Pro Studio) */}
+        <div className="flex bg-zinc-900 p-1 rounded-xl border border-zinc-800 gap-0.5">
+          <button
+            type="button"
+            onClick={() => setActiveView('gemini-director')}
+            className={`px-3 py-1 text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
+              activeView === 'gemini-director'
+                ? 'bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-200 border border-cyan-400 shadow-sm'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Gemini AI</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setActiveView('wizard')}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
               activeView === 'wizard'
                 ? 'bg-zinc-800 text-cyan-300 border border-cyan-500/30'
                 : 'text-zinc-400 hover:text-zinc-200'
@@ -113,7 +126,7 @@ export const Header: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveView('studio')}
-            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
               activeView === 'studio'
                 ? 'bg-zinc-800 text-cyan-300 border border-cyan-500/30'
                 : 'text-zinc-400 hover:text-zinc-200'

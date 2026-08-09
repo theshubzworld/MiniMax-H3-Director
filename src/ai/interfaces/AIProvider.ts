@@ -53,6 +53,7 @@ export interface StoryboardParams {
   directorMode?: 'strict' | 'balanced' | 'creative';
   systemPromptPreset?: 'standard' | 'uncensored_nsfw';
   subjectComposition?: 'solo' | 'couple' | 'ensemble';
+  stateMachineId?: string;
   onProgress?: (progress: { step: number; totalSteps: number; percent: number; message: string }) => void;
 }
 

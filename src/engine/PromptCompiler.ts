@@ -47,7 +47,8 @@ export class PromptCompiler {
           : '';
         const roleLabel = cleanRole ? ` (${cleanRole})` : '';
         const delivery = d.deliveryTone ? ` (${d.deliveryTone})` : '';
-        dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${roleLabel}${delivery}: "${d.dialogueText.trim()}"`);
+        const transTag = d.carriesAcrossCut ? ' <scenetrans>' : '';
+        dialogueShots.push(`[Shot ${shotNum}]\n${speakerId}${roleLabel}${delivery}: "${d.dialogueText.trim()}"${transTag}`);
       } else {
         dialogueShots.push(`[Shot ${shotNum}]\n(No dialogue.)`);
       }
@@ -203,13 +204,14 @@ export class PromptCompiler {
         charSubject = isImageMode ? 'The subject from <Picture 1>' : 'The subject';
       }
 
+      const transTag = d.carriesAcrossCut ? ' <scenetrans>' : '';
       if (d.isOffScreenVoiceover) {
         parts.push(
-          `${charSubject} (${speakerId}) says in an off-screen voiceover: <d>[${lang}] ${d.dialogueText.trim()}</d> while their lips remain completely closed.`
+          `${charSubject} (${speakerId}) says in an off-screen voiceover: <d>[${lang}] ${d.dialogueText.trim()}</d>${transTag} while their lips remain completely closed.`
         );
       } else {
         parts.push(
-          `${charSubject} (${speakerId}) says: <d>[${lang}] ${d.dialogueText.trim()}</d>.`
+          `${charSubject} (${speakerId}) says: <d>[${lang}] ${d.dialogueText.trim()}</d>${transTag}.`
         );
       }
     }

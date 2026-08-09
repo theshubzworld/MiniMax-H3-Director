@@ -188,6 +188,8 @@ export const AIDirectorPanel: React.FC = () => {
     setDirectorMode,
     systemPromptPreset,
     setSystemPromptPreset,
+    directorProfile,
+    setDirectorProfile,
   } = useStudioStore();
 
   const [idea, setIdea] = useState(() => localStorage.getItem('minimax_h3_prompt_idea') || '');
@@ -198,6 +200,7 @@ export const AIDirectorPanel: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
+  const [showTechnicalOverrides, setShowTechnicalOverrides] = useState(false);
   const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action' | 'cinematic'>('all');
   const [narrativeCategoryFilter, setNarrativeCategoryFilter] = useState<'all' | 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic'>('all');
 
@@ -808,187 +811,156 @@ export const AIDirectorPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Advanced AI Director Controls (Model, Thinking Level & Director Mode) */}
+      {/* Advanced AI Director Intelligence Profiles & Technical Overrides */}
       <div className="space-y-4 pt-4 border-t border-zinc-800/80 bg-zinc-950/60 p-4 rounded-2xl border border-zinc-800">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* 1. AI Director Model */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-              Director AI Model
-            </label>
-            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
-              <button
-                type="button"
-                onClick={() => setDirectorModel('gemini-2.5-pro')}
-                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                  directorModel === 'gemini-2.5-pro'
-                    ? 'bg-violet-500/30 text-violet-300 border border-violet-500/50 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                2.5 Pro 🧠
-              </button>
-              <button
-                type="button"
-                onClick={() => setDirectorModel('gemini-3.5-flash')}
-                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                  directorModel === 'gemini-3.5-flash'
-                    ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-500/50 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                3.5 Flash ⚡
-              </button>
-              <button
-                type="button"
-                onClick={() => setDirectorModel('gemini-2.5-flash')}
-                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                  directorModel === 'gemini-2.5-flash'
-                    ? 'bg-blue-500/30 text-blue-300 border border-blue-500/50 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                2.5 Flash
-              </button>
-            </div>
+        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+          <div className="flex items-center gap-2">
+            <Brain className="w-4 h-4 text-cyan-400" />
+            <h3 className="text-xs font-bold text-zinc-200 uppercase tracking-wider">AI Director Intelligence Profile</h3>
           </div>
-
-          {/* 2. Thinking Level / Reasoning Budget */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Brain className="w-3.5 h-3.5 text-purple-400" />
-                Thinking Level
-              </span>
-              <span className="text-[10px] text-purple-300 font-mono font-bold">
-                {directorThinkingBudget >= 8192
-                  ? 'Deep (8k)'
-                  : directorThinkingBudget >= 4096
-                  ? 'Standard (4k)'
-                  : directorThinkingBudget >= 1024
-                  ? 'Fast (1k)'
-                  : 'Off (0)'}
-              </span>
-            </label>
-
-            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
-              {[
-                { budget: 8192, label: 'Deep 🧠' },
-                { budget: 4096, label: 'Std ⚖️' },
-                { budget: 1024, label: 'Fast ⚡' },
-                { budget: 0, label: 'Off 🚀' },
-              ].map((t) => (
-                <button
-                  key={t.budget}
-                  type="button"
-                  onClick={() => setDirectorThinkingBudget(t.budget)}
-                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                    directorThinkingBudget === t.budget
-                      ? 'bg-purple-500/30 text-purple-300 border border-purple-500/50 shadow-md'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. Director Creative Mode */}
-          <div className="space-y-1.5">
-            <label className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Gauge className="w-3.5 h-3.5 text-amber-400" />
-                Director Creative Mode
-              </span>
-              <span className="text-[10px] text-amber-300 font-mono font-bold">
-                {directorMode === 'strict' ? 'Temp 0.2' : directorMode === 'creative' ? 'Temp 0.8' : 'Temp 0.5'}
-              </span>
-            </label>
-
-            <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
-              {[
-                { mode: 'strict', label: 'Strict 🎯' },
-                { mode: 'balanced', label: 'Balanced 🎬' },
-                { mode: 'creative', label: 'Creative 🎨' },
-              ].map((m) => (
-                <button
-                  key={m.mode}
-                  type="button"
-                  onClick={() => setDirectorMode(m.mode as any)}
-                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
-                    directorMode === m.mode
-                      ? 'bg-amber-500/30 text-amber-300 border border-amber-500/50 shadow-md'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          
+          <button
+            type="button"
+            onClick={() => setShowTechnicalOverrides(!showTechnicalOverrides)}
+            className="text-[11px] text-zinc-400 hover:text-cyan-300 flex items-center gap-1 font-mono hover:underline cursor-pointer"
+          >
+            <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+            <span>{showTechnicalOverrides ? 'Hide Technical Overrides' : '⚙️ Custom Technical Overrides'}</span>
+          </button>
         </div>
 
-        {/* 4. System Prompt Architecture Mode Selector */}
-        <div className="pt-2 border-t border-zinc-800/60">
-          <label className="text-[11px] text-zinc-300 font-bold uppercase tracking-wider mb-2 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-              System Prompt Directive Architecture
-            </span>
-            <span className="text-[10px] text-rose-400 font-mono">
-              {systemPromptPreset === 'uncensored_nsfw' ? '🔥 Simple Language (Uncensored)' : '🎬 Standard Director (Cinematic)'}
-            </span>
-          </label>
+        {/* 3 Unified Director Profiles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Profile 1: Cinematic Director */}
+          <button
+            type="button"
+            onClick={() => setDirectorProfile('cinematic')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+              directorProfile === 'cinematic'
+                ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200 shadow-md shadow-cyan-500/10'
+                : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+            }`}
+          >
+            <div className="font-bold text-xs flex items-center justify-between mb-1">
+              <span className="flex items-center gap-1.5 text-cyan-300">🎬 Cinematic Director</span>
+              {directorProfile === 'cinematic' && <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+            </div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Gemini 3.5 Flash with 35mm optical lens physics, cinematic framing, depth of field, and lighting falloff.
+            </p>
+          </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            <button
-              type="button"
-              onClick={() => setSystemPromptPreset('standard')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                systemPromptPreset === 'standard'
-                  ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200 shadow-md shadow-cyan-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              <div className="font-bold text-xs flex items-center justify-between mb-0.5">
-                <span className="flex items-center gap-1.5 text-cyan-300">🎬 Standard Director Mode</span>
-                {systemPromptPreset === 'standard' && <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-mono">ACTIVE</span>}
-              </div>
-              <p className="text-[11px] text-zinc-400 leading-normal">
-                Formal cinematic framing, 35mm optical lens physics, strict audio guidelines, and detailed lighting falloff rules.
-              </p>
-            </button>
+          {/* Profile 2: Uncensored Real Motion */}
+          <button
+            type="button"
+            onClick={() => setDirectorProfile('uncensored')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+              directorProfile === 'uncensored'
+                ? 'bg-rose-950/70 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
+                : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+            }`}
+          >
+            <div className="font-bold text-xs flex items-center justify-between mb-1">
+              <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored Real Motion</span>
+              {directorProfile === 'uncensored' && <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+            </div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Gemini 3.5 Flash with simple natural English. Focuses on continuous physical human motion without camera jargon.
+            </p>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => setSystemPromptPreset('uncensored_nsfw')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                systemPromptPreset === 'uncensored_nsfw'
-                  ? 'bg-rose-950/70 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              <div className="font-bold text-xs flex items-center justify-between mb-0.5">
-                <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored NSFW (Simple Real Motion)</span>
-                {systemPromptPreset === 'uncensored_nsfw' && <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
-              </div>
-              <p className="text-[11px] text-zinc-400 leading-normal">
-                Simple, natural English. Focuses on continuous real physical human motion and bedroom actions without director jargon or artificial camera cuts.
-              </p>
-            </button>
-          </div>
+          {/* Profile 3: Deep Reasoning Director */}
+          <button
+            type="button"
+            onClick={() => setDirectorProfile('reasoning')}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+              directorProfile === 'reasoning'
+                ? 'bg-purple-950/60 border-purple-500 text-purple-200 shadow-md shadow-purple-500/20'
+                : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+            }`}
+          >
+            <div className="font-bold text-xs flex items-center justify-between mb-1">
+              <span className="flex items-center gap-1.5 text-purple-300">🧠 Deep Reasoning</span>
+              {directorProfile === 'reasoning' && <span className="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+            </div>
+            <p className="text-[11px] text-zinc-400 leading-normal">
+              Gemini 2.5 Pro with 4K thinking budget. Maximum logical consistency across complex multi-character plots.
+            </p>
+          </button>
         </div>
+
+        {/* Optional Technical Overrides Drawer */}
+        {showTechnicalOverrides && (
+          <div className="pt-3 border-t border-zinc-800 space-y-3 bg-zinc-950/80 p-3.5 rounded-xl border border-amber-500/30 animate-fade-in">
+            <div className="text-[10px] text-amber-400 font-mono flex items-center gap-1">
+              <Zap className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+              <span>Custom Overrides Active (Modifying raw parameters sets profile status to 'Custom')</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div>
+                <label className="text-[10px] font-bold text-zinc-400 uppercase block mb-1">Raw Model String</label>
+                <select
+                  value={directorModel}
+                  onChange={(e) => setDirectorModel(e.target.value as any)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500"
+                >
+                  <option value="gemini-3.5-flash">Gemini 3.5 Flash (Ultra Fast)</option>
+                  <option value="gemini-2.5-pro">Gemini 2.5 Pro (Deep Reasoning)</option>
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (Legacy)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-zinc-400 uppercase block mb-1">Thinking Token Budget</label>
+                <select
+                  value={directorThinkingBudget}
+                  onChange={(e) => setDirectorThinkingBudget(Number(e.target.value))}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500"
+                >
+                  <option value={0}>0 Tokens (Fast Direct Output)</option>
+                  <option value={1024}>1,024 Tokens (Balanced Reasoning)</option>
+                  <option value={4096}>4,096 Tokens (Deep Cinematic)</option>
+                  <option value={8192}>8,192 Tokens (Maximum Capacity)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-zinc-400 uppercase block mb-1">Rewriting Mode (Temp)</label>
+                <select
+                  value={directorMode}
+                  onChange={(e) => setDirectorMode(e.target.value as any)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500"
+                >
+                  <option value="strict">Strict / Faithful (Temp 0.2)</option>
+                  <option value="balanced">Balanced / Director (Temp 0.5)</option>
+                  <option value="creative">Creative / Imaginative (Temp 0.8)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-zinc-400 uppercase block mb-1">System Architecture</label>
+                <select
+                  value={systemPromptPreset}
+                  onChange={(e) => setSystemPromptPreset(e.target.value as any)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500"
+                >
+                  <option value="standard">🎬 Standard Cinematic</option>
+                  <option value="uncensored_nsfw">🔥 Uncensored Real Motion</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Live Gemini Director System Prompt Delivery Preview Box */}
-        <div className="space-y-1.5 pt-3 border-t border-zinc-800/80">
+        <div className="space-y-1.5 pt-2 border-t border-zinc-800/80">
           <div className="flex items-center justify-between">
             <label className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
               <Brain className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
               Final Gemini System Prompt Delivery Preview
             </label>
-            <span className="text-[10px] text-zinc-500 font-mono">Exact Compiled Payload sent to {directorModel}</span>
+            <span className="text-[10px] text-zinc-500 font-mono">Payload sent to {directorModel}</span>
           </div>
 
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 font-mono text-[11px] text-zinc-100 dark:text-cyan-300 leading-relaxed max-h-48 overflow-y-auto shadow-inner select-all">
