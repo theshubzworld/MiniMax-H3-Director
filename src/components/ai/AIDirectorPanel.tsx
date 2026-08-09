@@ -96,6 +96,11 @@ const NARRATIVE_PRESETS: NarrativePresetItem[] = [
 const NARRATIVE_STYLES: NarrativeStyle[] = NARRATIVE_PRESETS.map((p) => p.id);
 
 const STORY_SEED_PRESETS = [
+  // 📱 Uncensored NSFW Simple Real-Motion Seeds (Single Person S1)
+  { category: 'solo-sultry', label: '📱 Uncensored Mobile Video Call', prompt: 'A woman lying on an unmade bed holding her phone above her face on a video call. She looks into the camera with a playful smile, adjusting her top slightly as she talks into the screen. Include soft room tone, sheet rustle, and ambient lo-fi piano.' },
+  { category: 'solo-sultry', label: '🕯️ Uncensored Bedside Caress', prompt: 'A woman reclining on white hotel bedsheets under warm dim lamplight. In a continuous real-motion sequence, she arches her back gently and runs her fingers down her collarbone with a soft, relaxed gaze. Include quiet breathing foley, sheet rustle, and sultry ambient pads.' },
+  { category: 'solo-sultry', label: '💦 Uncensored Steamy Vanity', prompt: 'A woman standing before a steamy bathroom mirror wiping a circle clear on the foggy glass with her palm under warm vanity lights. She turns slowly, running her fingers down her collarbone with a soft sigh. Include water droplet foley, soft breath, and ambient synth.' },
+
   // 💃 Raw Third-Person Sensual & Boudoir (Single Person S1 - Wardrobe Agnostic)
   { category: 'solo-sultry', label: '💃 Raw 3rd-Person Sunset Walk', prompt: 'A raw handheld third-person mobile video of a solo woman walking gracefully across a sunlit room towards a window. In a candid 3/4 camera tracking shot, golden sunbeams backlight her silhouette against the gentle breeze. Include soft footsteps foley, quiet breath, and ambient lo-fi piano.' },
   { category: 'solo-sultry', label: '🕯️ Raw 3rd-Person Lounge Evening', prompt: 'A raw handheld third-person video of a solo woman relaxing on a plush velvet chaise lounge under warm tungsten lamplight. The camera tracks slowly around her in an unpolished mobile motion as she turns her head with a seductive gaze. Include quiet breathing foley, soft movement, and sultry jazz saxophone.' },
