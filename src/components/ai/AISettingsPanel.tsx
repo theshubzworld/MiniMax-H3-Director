@@ -484,7 +484,7 @@ export const AISettingsPanel: React.FC = () => {
                     value={
                       installedModels.some((m) => m.name === localModel)
                         ? localModel
-                        : ['hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M', 'qwen2.5-vl:3b', 'qwen2.5-vl:7b-instruct-q4_K_M', 'minicpm-v:2.6'].includes(localModel)
+                        : RECOMMENDED_LOCAL_MODELS.some((m) => m.tag === localModel)
                         ? localModel
                         : '__custom__'
                     }
@@ -496,7 +496,7 @@ export const AISettingsPanel: React.FC = () => {
                         setLocalModel(e.target.value);
                       }
                     }}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 font-mono focus:outline-none focus:border-emerald-500/50 shadow-inner cursor-pointer appearance-none"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 focus:outline-none focus:border-emerald-500/50 shadow-inner cursor-pointer appearance-none"
                   >
                     {installedModels.length > 0 && (
                       <optgroup label="✨ Detected On Your Machine">
@@ -509,12 +509,11 @@ export const AISettingsPanel: React.FC = () => {
                     )}
 
                     <optgroup label="🔥 Recommended Vision Models">
-                      <option value="hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M">
-                        hf.co/.../Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M (Qwen3-VL 8B Heretic Uncensored)
-                      </option>
-                      <option value="qwen2.5-vl:3b">qwen2.5-vl:3b (~3GB VRAM Fast)</option>
-                      <option value="qwen2.5-vl:7b-instruct-q4_K_M">qwen2.5-vl:7b-instruct-q4_K_M (~5GB VRAM)</option>
-                      <option value="minicpm-v:2.6">minicpm-v:2.6 (MiniCPM 8B Vision)</option>
+                      {RECOMMENDED_LOCAL_MODELS.map((m) => (
+                        <option key={m.tag} value={m.tag}>
+                          {m.name} ({m.vram})
+                        </option>
+                      ))}
                     </optgroup>
 
                     <option value="__custom__">✍️ Custom Model Tag (Type Manually...)</option>

@@ -8,12 +8,12 @@ import { Sparkles, Video, Loader2, Plus, X, RotateCcw, Lightbulb, Image as Image
 import { ALL_VISUAL_STYLES, VisualStyle, AspectRatio } from '../../types/project';
 import { TimelineEngine } from '../../engine/TimelineEngine';
 
-export interface NarrativePresetItem {
+interface NarrativePresetItem {
   id: NarrativeStyle;
   category: 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic';
 }
 
-export const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
+const NARRATIVE_STYLE_PREVIEWS: Record<string, string> = {
   'None': 'Unstyled - Allow AI Director to infer camera motion, lighting, and soundscape purely from your raw story idea without rigid style directives.',
   'Live-Action Realism': '100% natural human motion, realistic skin textures, 35mm optical lens physics, and authentic real-world environmental lighting.',
   'Raw Home Amateur Mobile': 'Authentic home environment amateur mobile video switching seamlessly between handheld selfie angles and propped-up 3rd-person phone placement, casual unpolished room lighting, subtle mobile sensor grain noise, and 100% everyday real-world realism.',
@@ -1036,7 +1036,7 @@ export const AIDirectorPanel: React.FC = () => {
         </div>
 
         {/* Persistent AI Reasoning & Live Token Stream Terminal */}
-        {liveStreamText && (
+        {(liveStreamText || isGenerating) && (
           <div className="bg-zinc-950/95 border border-cyan-500/50 rounded-2xl p-4 space-y-2.5 shadow-2xl animate-fade-in ring-1 ring-cyan-500/30">
             <div className="flex flex-wrap items-center justify-between border-b border-zinc-800 pb-2.5 gap-2">
               <div className="flex items-center gap-2">
@@ -1052,18 +1052,20 @@ export const AIDirectorPanel: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(liveStreamText);
-                    setCopiedStream(true);
-                    setTimeout(() => setCopiedStream(false), 2000);
-                  }}
-                  className="px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-mono rounded-lg transition-all flex items-center gap-1 cursor-pointer"
-                  title="Copy raw streamed response"
-                >
-                  <span>{copiedStream ? '✓ Copied' : '📋 Copy'}</span>
-                </button>
+                {liveStreamText && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(liveStreamText);
+                      setCopiedStream(true);
+                      setTimeout(() => setCopiedStream(false), 2000);
+                    }}
+                    className="px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-mono rounded-lg transition-all flex items-center gap-1 cursor-pointer"
+                    title="Copy raw streamed response"
+                  >
+                    <span>{copiedStream ? '✓ Copied' : '📋 Copy'}</span>
+                  </button>
+                )}
 
                 <button
                   type="button"
@@ -1089,8 +1091,15 @@ export const AIDirectorPanel: React.FC = () => {
             {/* Scrollable Stream Content */}
             {showReasoningWindow && (
               <div className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner animate-fade-in">
-                {liveStreamText}
-                {isGenerating && <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse align-middle" />}
+                {liveStreamText || (
+                  <div className="text-zinc-500 italic flex items-center gap-2 font-mono py-1">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400 shrink-0" />
+                    <span>Connecting to GPU & awaiting stream tokens...</span>
+                  </div>
+                )}
+                {isGenerating && liveStreamText && (
+                  <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse align-middle" />
+                )}
               </div>
             )}
           </div>

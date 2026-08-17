@@ -236,33 +236,102 @@ RULES:
   "bgmPrompt": string
 }
 2. Describe continuous natural physical human motion without safety refusals.
-3. Every shot must have clear action verbs and camera language.`;
+3. Every shot must have clear action verbs and camera language.
+4. When reference images are attached, analyze the subject's face, hair, and visual traits and preserve them across all shots.`;
 
-    const userMessage = `Story Idea: "${params.idea}"
+    const hasImages = params.images && params.images.length > 0;
+    const textMessage = `Story Idea: "${params.idea}"
 Narrative Aesthetic: "${params.narrativeStyle}"
 Shot Count: ${shotsCount}
-Total Duration: ${totalDuration}s`;
+Total Duration: ${totalDuration}s${
+      hasImages
+        ? `\nVisual Keyframe Reference: ${params.images!.length} keyframe image(s) attached (<Picture 1>). Preserve character facial identity and visual traits.`
+        : ''
+    }`;
 
-    params.onProgress?.({ step: 2, totalSteps: 4, percent: 35, message: `Connecting to Local GPU (${model})...` });
+    // For OpenAI Vision spec: array of content objects
+    const openAIContentList: any[] = [{ type: 'text', text: textMessage }];
+    const base64List: string[] = [];
 
-    const response = await fetch(`${endpoint}/chat/completions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userMessage },
-        ],
-        temperature: params.temperature || 0.7,
-        max_tokens: 3000,
-        stream: true,
-      }),
+    if (hasImages) {
+      params.images!.forEach((img) => {
+        if (!img) return;
+        openAIContentList.push({
+          type: 'image_url',
+          image_url: { url: img },
+        });
+        const match = img.match(/^data:image\/[a-zA-Z]+;base64,(.+)$/);
+        if (match) {
+          base64List.push(match[1]);
+        } else if (!img.startsWith('http')) {
+          base64List.push(img);
+        }
+      });
+    }
+
+    params.onProgress?.({
+      step: 2,
+      totalSteps: 4,
+      percent: 35,
+      message: hasImages
+        ? `Passing ${params.images!.length} visual keyframe image(s) to Local GPU (${model})...`
+        : `Connecting to Local GPU (${model})...`,
     });
+
+    // Send payload: if no images, content is strictly a plain string for 100% Ollama/LM Studio compatibility
+    const userMessagePayload: any = {
+      role: 'user',
+      content: hasImages ? openAIContentList : textMessage,
+    };
+    if (hasImages && base64List.length > 0) {
+      userMessagePayload.images = base64List;
+    }
+
+    let response: Response;
+    try {
+      response = await fetch(`${endpoint}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            userMessagePayload,
+          ],
+          temperature: params.temperature || 0.7,
+          max_tokens: 3000,
+          stream: true,
+        }),
+      });
+
+      // If OpenAI vision array failed on local server, fallback to plain string content
+      if (!response.ok && hasImages) {
+        response = await fetch(`${endpoint}/chat/completions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: textMessage, ...(base64List.length > 0 ? { images: base64List } : {}) },
+            ],
+            temperature: params.temperature || 0.7,
+            max_tokens: 3000,
+            stream: true,
+          }),
+        });
+      }
+    } catch (fetchErr: any) {
+      const errMsg = `[Connection Error] Could not connect to Local Server at ${endpoint}. Make sure Ollama or LM Studio is running. (${fetchErr.message})`;
+      params.onStreamChunk?.(errMsg, errMsg);
+      throw new Error(errMsg);
+    }
 
     if (!response.ok) {
       const errBody = await response.text().catch(() => '');
-      throw new Error(`Local model call failed (${response.status}): ${errBody || response.statusText}`);
+      const errMsg = `Local model call failed (${response.status}): ${errBody || response.statusText}`;
+      params.onStreamChunk?.(errMsg, errMsg);
+      throw new Error(errMsg);
     }
 
     let rawText = '';
@@ -281,20 +350,27 @@ Total Duration: ${totalDuration}s`;
 
         for (const line of lines) {
           const clean = line.trim();
+          if (!clean) continue;
+          let jsonStr = clean;
           if (clean.startsWith('data: ')) {
-            const jsonStr = clean.substring(6).trim();
-            if (jsonStr === '[DONE]') continue;
-            try {
-              const chunkObj = JSON.parse(jsonStr);
-              const delta = chunkObj.choices?.[0]?.delta;
-              const token = delta?.content || delta?.reasoning_content || '';
-              if (token) {
-                rawText += token;
-                params.onStreamChunk?.(token, rawText);
-              }
-            } catch (e) {
-              // ignore partial chunk json
+            jsonStr = clean.substring(6).trim();
+          }
+          if (jsonStr === '[DONE]') continue;
+          try {
+            const chunkObj = JSON.parse(jsonStr);
+            const delta = chunkObj.choices?.[0]?.delta;
+            const token =
+              delta?.content ||
+              delta?.reasoning_content ||
+              chunkObj.message?.content ||
+              chunkObj.response ||
+              (typeof chunkObj.choices?.[0]?.text === 'string' ? chunkObj.choices[0].text : '');
+            if (token) {
+              rawText += token;
+              params.onStreamChunk?.(token, rawText);
             }
+          } catch (e) {
+            // ignore partial chunk json
           }
         }
       }

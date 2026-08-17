@@ -1,5 +1,73 @@
 [
   {
+    "id": "prompt-1786975571184-efwoa",
+    "title": "analyze this women what she wears and remove it after",
+    "idea": "analyze this women what she wears and remove it after",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a Indoor, in front of a circular glowing backdrop, warm, glowing light with radial beams emanating from behind her, theatrical, staged, and intentionally artificial environment. The woman stands centered in the frame, wearing a light green embroidered garment. She slowly lifts her arms and pulls the garment over her head, letting it fall to the ground. The camera remains completely still throughout the action. The camera holds a static shot.\n\noverall_soundscape: Silence with a faint, muffled sound of fabric tearing or falling.\n\nnon_diegetic_music: None score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T14:06:11.184Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
+    "id": "prompt-1786975404752-w5b4j",
+    "title": "analyze this women what she wears and remove ...",
+    "idea": "analyze this women what she wears and remove it after",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a Raw Smartphone Amateur setting, direct mobile phone flash blowout, clear, dramatic twilight, high voltage environment. Shot 1: Performs dramatic action fitting Raw Smartphone Amateur vision. analyze this women what she wears and remove it after The camera pushes in with small amplitude at slow speed toward the primary hero.\n\noverall_soundscape: Street noise fading out, footsteps echoing on concrete, sudden silence at 10s\n\nnon_diegetic_music: Raw Smartphone Amateur score featuring strings, synth bass at a moderate tempo with driving rhythm and steady buildup. Ambient pad underneath.",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T14:03:24.752Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
+    "id": "prompt-1786975259611-h9p1a",
+    "title": "analzye this women what she wears and remove ...",
+    "idea": "analzye this women what she wears and remove it after",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a Raw Smartphone Amateur setting, direct mobile phone flash blowout, clear, dramatic twilight, high voltage environment. Shot 1: Performs dramatic action fitting Raw Smartphone Amateur vision. analzye this women what she wears and remove it after The camera pushes in with small amplitude at slow speed toward the primary hero.\n\noverall_soundscape: Street noise fading out, footsteps echoing on concrete, sudden silence at 10s\n\nnon_diegetic_music: Raw Smartphone Amateur score featuring strings, synth bass at a moderate tempo with driving rhythm and steady buildup. Ambient pad underneath.",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T14:00:59.611Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
+    "id": "prompt-1786975032512-3zjjo",
+    "title": "Uncover",
+    "idea": "analzye this women what she wears and remove it after",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a dusk, red-orange streetlights casting long shadows, tense, abandoned, gritty environment. Camera follows the woman from behind as she walks down a dark alley. She doesn’t look back. At the end of the 10 seconds, the camera abruptly stops and zooms in on her torso — the hoodie has been pulled off, revealing her bare chest. The camera tracks alongside the subject with small amplitude at normal speed.\n\noverall_soundscape: Street noise fading out, footsteps echoing on concrete, sudden silence at 10s\n\nnon_diegetic_music: None. Only ambient urban sounds. Cut to silence at 10s. score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T13:57:12.512Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
     "id": "prompt-1786971853295-q69xl",
     "title": "Woman Jumping from Mountain",
     "idea": "women in refrence image going to jump form mountain",
