@@ -1,10 +1,12 @@
 import { AIProvider } from './interfaces/AIProvider';
 import { GeminiProvider } from './providers/GeminiProvider';
 import { OpenAIProvider } from './providers/OpenAIProvider';
+import { LocalProvider } from './providers/LocalProvider';
 
 export class AIEngine {
   private static providers: Map<string, AIProvider> = new Map<string, AIProvider>([
     ['gemini', new GeminiProvider()],
+    ['local', new LocalProvider()],
     ['openai', new OpenAIProvider()],
   ]);
 

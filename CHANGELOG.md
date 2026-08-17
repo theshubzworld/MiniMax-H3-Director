@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[2026-08-09] Strip 'None.' Prefix from [Shot 1] Header**: Updated `PromptCompiler.ts` to exclude `${style}.` after `[Shot 1]` when `style === 'None'` or `'Unstyled'`, and added regex sanitization in `sanitizeShotProse` to strip residual `[Shot 1] None.` fragments. Cleaned all saved prompts on disk.
 
 ### Added
+- **[2026-08-17] Local GPU Vision-LLM Provider (Qwen3-VL / Ollama / LM Studio / ComfyUI)**:
+  - Added dedicated `LocalProvider.ts` implementing `AIProvider` to support running local Vision-LLMs (such as Pixaroma's `Qwen3-VL 8B Heretic`, `Qwen2.5-VL 8B`, and any OpenAI-compatible local server) 100% offline and free with zero API key costs.
+  - Added full configuration in `AISettingsPanel.tsx` supporting customizable endpoints (`http://localhost:11434/v1` for Ollama, `http://localhost:1234/v1` for LM Studio, `http://localhost:8000/v1` for vLLM), model names, and a live connection test button with latency feedback.
+  - Added **`💻 Local Qwen3-VL`** intelligence profile in `AIDirectorPanel.tsx` alongside *🎬 Cinematic*, *🔥 Uncensored*, and *🧠 Deep Reasoning*.
 - **[2026-08-17] Pixaroma Integration & Gold-Standard H3 Directorial Enhancements**:
   - **Exact 17n + 5 Frame Snapping Engine (`FrameMath.ts`)**: Built dedicated math engine that computes exact MiniMax H3 frame steps ($17n + 5$ at 24 fps) and displays runtime synchronization badges across the Inspector, ComfyUI exporter, and Markdown exports.
   - **👑 ComfyUI-Pixaroma Export Preset**: Added dedicated 1-click export tab in `ComfyUIModal.tsx` formatted specifically for `PixaromaVideoPrompt`, `PixaromaH3AudioSync`, and `PixaromaDuration` nodes with target frames, seconds, and mode detection.

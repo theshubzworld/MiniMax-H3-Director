@@ -842,12 +842,15 @@ export const AIDirectorPanel: React.FC = () => {
           </button>
         </div>
 
-        {/* 3 Unified Director Profiles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* 4 Unified Director Profiles */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           {/* Profile 1: Cinematic Director */}
           <button
             type="button"
-            onClick={() => setDirectorProfile('cinematic')}
+            onClick={() => {
+              setDirectorProfile('cinematic');
+              AIEngine.setActiveProvider('gemini');
+            }}
             className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               directorProfile === 'cinematic'
                 ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200 shadow-md shadow-cyan-500/10'
@@ -855,18 +858,21 @@ export const AIDirectorPanel: React.FC = () => {
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-cyan-400 dark:text-cyan-300">🎬 Cinematic Director</span>
-              {directorProfile === 'cinematic' && <span className="text-[10px] bg-cyan-500/20 text-cyan-400 dark:text-cyan-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-cyan-400 dark:text-cyan-300">🎬 Cinematic</span>
+              {directorProfile === 'cinematic' && <span className="text-[9px] bg-cyan-500/20 text-cyan-400 dark:text-cyan-300 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
-              Gemini 3.5 Flash with 35mm optical lens physics, cinematic framing, depth of field, and lighting falloff.
+              Gemini 3.5 Flash with 35mm optical lens physics and cinematic lighting falloff.
             </p>
           </button>
 
           {/* Profile 2: Uncensored Real Motion */}
           <button
             type="button"
-            onClick={() => setDirectorProfile('uncensored')}
+            onClick={() => {
+              setDirectorProfile('uncensored');
+              AIEngine.setActiveProvider('gemini');
+            }}
             className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               directorProfile === 'uncensored'
                 ? 'bg-rose-950/60 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
@@ -874,18 +880,21 @@ export const AIDirectorPanel: React.FC = () => {
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-rose-400 dark:text-rose-300">🔥 Uncensored Real Motion</span>
-              {directorProfile === 'uncensored' && <span className="text-[10px] bg-rose-500/20 text-rose-400 dark:text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-rose-400 dark:text-rose-300">🔥 Uncensored</span>
+              {directorProfile === 'uncensored' && <span className="text-[9px] bg-rose-500/20 text-rose-400 dark:text-rose-300 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
-              Gemini 3.5 Flash with simple natural English. Focuses on continuous physical human motion without camera jargon.
+              Gemini 3.5 Flash natural English. Focuses on continuous physical human motion.
             </p>
           </button>
 
           {/* Profile 3: Deep Reasoning Director */}
           <button
             type="button"
-            onClick={() => setDirectorProfile('reasoning')}
+            onClick={() => {
+              setDirectorProfile('reasoning');
+              AIEngine.setActiveProvider('gemini');
+            }}
             className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               directorProfile === 'reasoning'
                 ? 'bg-purple-950/60 border-purple-500 text-purple-200 shadow-md shadow-purple-500/20'
@@ -893,11 +902,33 @@ export const AIDirectorPanel: React.FC = () => {
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-purple-400 dark:text-purple-300">🧠 Deep Reasoning</span>
-              {directorProfile === 'reasoning' && <span className="text-[10px] bg-purple-500/20 text-purple-400 dark:text-purple-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-purple-400 dark:text-purple-300">🧠 4K Reasoning</span>
+              {directorProfile === 'reasoning' && <span className="text-[9px] bg-purple-500/20 text-purple-400 dark:text-purple-300 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
-              Gemini 2.5 Pro with 4K thinking budget. Maximum logical consistency across complex multi-character plots.
+              Gemini 2.5 Pro with 4K thinking budget. Maximum multi-shot narrative consistency.
+            </p>
+          </button>
+
+          {/* Profile 4: Local GPU Qwen3-VL */}
+          <button
+            type="button"
+            onClick={() => {
+              setDirectorProfile('local' as any);
+              AIEngine.setActiveProvider('local');
+            }}
+            className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+              (directorProfile as any) === 'local'
+                ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200 shadow-md shadow-emerald-500/20'
+                : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+            }`}
+          >
+            <div className="font-bold text-xs flex items-center justify-between mb-1">
+              <span className="flex items-center gap-1.5 text-emerald-400 dark:text-emerald-300">💻 Local Qwen3-VL</span>
+              {(directorProfile as any) === 'local' && <span className="text-[9px] bg-emerald-500/20 text-emerald-400 dark:text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+            </div>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
+              100% offline & private via Ollama / LM Studio. Zero API cost & unrestricted generation.
             </p>
           </button>
         </div>

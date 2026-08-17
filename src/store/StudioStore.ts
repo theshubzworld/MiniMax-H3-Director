@@ -118,7 +118,7 @@ interface StudioState {
   directorThinkingBudget: number;
   directorMode: 'strict' | 'balanced' | 'creative';
   systemPromptPreset: 'standard' | 'uncensored_nsfw';
-  directorProfile: 'cinematic' | 'uncensored' | 'reasoning' | 'custom';
+  directorProfile: 'cinematic' | 'uncensored' | 'reasoning' | 'local' | 'custom';
   isInspectorOpen: boolean;
   isInspectorExpanded: boolean;
   inspectorWidth: number;
