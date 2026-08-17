@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **[2026-08-17] Studio UI Decluttering & Workstation Architecture Reorganization**:
+  - Eliminated trashcan icons ("dustbins") cluttering each individual storyboard shot duration chip in `AIDirectorPanel.tsx`; simplified into sleek, clean badges (`Shot 1 [ 2.5s ▾ ]`).
+  - Replaced harsh red trashcan clear button with a subtle, modern `<RotateCcw>` Reset button on the Prompt Idea textarea.
+  - Consolidated duplicate visual style selectors and replaced the overwhelming 33-button and 57-button clouds with curated top-pick chips and clean collapsible drawers (`🎭 Browse All Styles ▾`, `💡 Browse Story Seeds ▾`).
+  - Compacted the top studio header and MiniMax mode switcher into a single elegant bar, eliminating redundant oversized spec cards.
 - **[2026-08-17] Git Configuration & Agent Guidelines Tracking**: Updated `.gitignore` to un-ignore `.agents/AGENTS.md` and `.agents/SESSION_HANDOFF_BACKUP.md` while keeping local agent cache folders ignored. Configured dev server port to 4000 in `vite.config.ts`.
 - **[2026-08-09] Uncensored NSFW Audio & Spoken Dialogue Mandate**: Updated `uncensored_nsfw` mode system prompt contract and JSON schema template in `GeminiProvider.ts` to mandate spoken dialogue (`hasDialogue: true`), intimate whispers, and rich multi-layer atmospheric soundscapes (`ambience` and `foley`).
 - **[2026-08-09] Per-Shot Duration Selectors & Mandatory Shot Count Contract**: Added interactive per-shot duration dropdown selectors (`0.5s` to `6.0s`) to `ShotCard.tsx` and `AIDirectorPanel.tsx`. Added `setShotsCount` dropdown selector (`1` to `9` shots) and enforced strict `MANDATORY SHOT COUNT CONTRACT` and array slicing in `GeminiProvider.ts` so generated storyboards always match requested shot count and preserve custom per-shot timings.

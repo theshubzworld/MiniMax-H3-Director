@@ -37,54 +37,48 @@ export const App: React.FC = () => {
         <main className="flex-1 overflow-y-auto p-6 space-y-6 bg-zinc-950">
           {activeView === 'gemini-director' && (
             <div className="space-y-6 w-full animate-fade-in">
-              {/* Standalone Header Banner */}
-              <div className="bg-gradient-to-r from-cyan-950/60 via-zinc-900 to-purple-950/40 border border-cyan-500/40 rounded-2xl p-5 flex items-center justify-between shadow-lg shadow-cyan-500/10">
-                <div className="space-y-1">
-                  <h2 className="text-base font-extrabold text-cyan-300 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-                    <span>Gemini Director AI Standalone Studio</span>
-                  </h2>
-                  <p className="text-xs text-zinc-300 leading-normal">
-                    Single-page AI prompt studio. Type your story concept & click Build — your compiled MiniMax H3 prompt renders live in the right-side Prompt Inspector for instant 1-click copy!
-                  </p>
-                </div>
-                <span className="text-xs bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 px-3.5 py-1.5 rounded-full font-mono font-extrabold shrink-0 hidden sm:inline-flex items-center gap-1.5 shadow-xs">
-                  ⚡ 1-Click Live Sidebar Copy
-                </span>
-              </div>
-
-              {/* MiniMax Mode Specs & Setup */}
-              <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4 shadow-sm">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-                  <h3 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
-                    <Video className="w-4 h-4 text-cyan-400" />
-                    <span>MiniMax H3 Generation Mode Specs</span>
-                  </h3>
-                  <span className="text-[11px] text-cyan-400 font-mono font-semibold">Active Mode: {project.settings.mode}</span>
+              {/* Sleek Compact Studio Header & MiniMax Mode Switcher */}
+              <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 shadow-sm">
+                    <Sparkles className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-extrabold text-zinc-100 flex items-center gap-2">
+                      <span>Gemini Director AI Studio</span>
+                      <span className="text-[10px] bg-cyan-950 border border-cyan-500/30 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold">
+                        H3 Engine
+                      </span>
+                    </h2>
+                    <p className="text-xs text-zinc-400">
+                      Single-page prompt studio with live timeline orchestration, 4K keyframes, and real-time inspector copy.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                {/* Compact Mode Switcher Bar */}
+                <div className="flex items-center gap-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 shrink-0">
                   {[
-                    { mode: 'T2VA', name: 'Text to Video + Audio', desc: 'No reference image. Builds timeline directly from prompt prose.' },
-                    { mode: 'I2VA', name: 'First-Frame I2VA', desc: '<Picture 1> anchors opening frame at 0.00s and develops forward.' },
-                    { mode: 'FL2VA', name: 'First & Last Frame', desc: 'Picture 1 (0.00s) to Picture 2 (ending mark) path interpolation.' },
-                    { mode: 'L2VA', name: 'Last-Frame L2VA', desc: 'Infers preceding state converging exactly on Picture 1 at the end.' },
+                    { mode: 'T2VA', label: 'T2VA (Text)', desc: 'Text to Video' },
+                    { mode: 'I2VA', label: 'I2VA (First Frame)', desc: 'First Frame Anchor' },
+                    { mode: 'FL2VA', label: 'FL2VA (First & Last)', desc: 'First & Last Frame' },
+                    { mode: 'L2VA', label: 'L2VA (Last Frame)', desc: 'Last Frame Anchor' },
                   ].map((m) => {
                     const isSelected = project.settings.mode === m.mode;
                     return (
-                      <div
+                      <button
                         key={m.mode}
+                        type="button"
                         onClick={() => updateSettings({ mode: m.mode as MiniMaxMode })}
-                        className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           isSelected
-                            ? 'bg-cyan-950/50 border-cyan-500 text-zinc-100 shadow-lg shadow-cyan-500/10 font-bold'
-                            : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                            ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20 font-extrabold'
+                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
                         }`}
+                        title={m.desc}
                       >
-                        <span className="text-xs font-bold uppercase text-cyan-400 block mb-1">{m.mode}</span>
-                        <h4 className="font-semibold text-xs text-zinc-200">{m.name}</h4>
-                        <p className="text-[11px] text-zinc-400 mt-1 leading-normal">{m.desc}</p>
-                      </div>
+                        <span>{m.label}</span>
+                      </button>
                     );
                   })}
                 </div>

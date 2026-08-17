@@ -4,8 +4,9 @@ import { AIEngine } from '../../ai/AIEngine';
 import { GeminiProvider, NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Plus, Trash2, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap, Clock } from 'lucide-react';
+import { Sparkles, Video, Loader2, Plus, RotateCcw, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap, Clock, ChevronDown, ChevronUp, Layers, Film, User, Users, Heart } from 'lucide-react';
 import { ALL_VISUAL_STYLES, VisualStyle, AspectRatio } from '../../types/project';
+import { TimelineEngine } from '../../engine/TimelineEngine';
 
 export interface NarrativePresetItem {
   id: NarrativeStyle;
@@ -95,6 +96,15 @@ const NARRATIVE_PRESETS: NarrativePresetItem[] = [
 
 const NARRATIVE_STYLES: NarrativeStyle[] = NARRATIVE_PRESETS.map((p) => p.id);
 
+const TOP_FEATURED_STYLES: VisualStyle[] = [
+  'Live-Action Realism',
+  'Raw Smartphone Amateur',
+  'Cinematic Film',
+  'Sultry Romance',
+  'Dark Fantasy',
+  'Anime',
+];
+
 const STORY_SEED_PRESETS = [
   // 📱 Uncensored NSFW Simple Real-Motion Seeds (Single Person S1)
   { category: 'solo-sultry', label: '📱 Uncensored Mobile Video Call', prompt: 'A woman lying on an unmade bed holding her phone above her face on a video call. She looks into the camera with a playful smile, adjusting her top slightly as she talks into the screen. Include soft room tone, sheet rustle, and ambient lo-fi piano.' },
@@ -148,37 +158,13 @@ const STORY_SEED_PRESETS = [
   { category: 'action', label: '⚡ Superhero Rooftop Vigil', prompt: 'An armored heroine standing on a skyscraper ledge overseeing a stormy metropolis as lightning strikes. Include heroic voiceover, thunder rumble foley, and swelling cinematic brass score.' },
   { category: 'action', label: '🐉 Dragon Siege & Battle Cry', prompt: 'A warrior riding an armored crimson dragon soaring through stormy clouds above a mountain fortress. Include dragon roar and wind howl foley, warrior shout, and epic orchestral drums.' },
   { category: 'action', label: '💼 Penthouse Espionage', prompt: 'A sleek operative hacking a glass server terminal inside a high-rise Tokyo penthouse. Include tense whispered dialogue, keypress clicks foley, and suspenseful pulse synth score.' },
-  { category: 'action', label: '🤖 Mecha Power-Up & System Voice', prompt: 'A 50-foot military mecha powering up its shoulder cannons as alarm strobes illuminate a hangar bay. Include robotic AI voice, heavy hydraulic servo foley, and industrial metal beat.' },
-  { category: 'action', label: '🥋 Bamboo Forest Sword Duel', prompt: 'Two martial arts masters facing off in a mist-covered bamboo forest at twilight as cherry blossom petals swirl. Include a sharp battle kiai shout, katana steel clashing foley, and traditional koto flute music.' },
-  { category: 'action', label: '🧪 Cyber Lab Awakening', prompt: 'A bio-android opening glowing blue eyes inside a glass fluid chamber as wires disconnect. Include synthetic female voice, glass hiss foley, and pulsing ambient electronic beat.' },
-
-  // 🌿 Nature & Cinema
-  { category: 'cinematic', label: '🏛️ Amazonian Battle & Narration', prompt: 'An Amazonian warrior princess in bronze armor standing before Greek temple pillars as sunlight glints off her sword. Include inspiring warrior narration, metal armor clanking foley, and orchestral brass music.' },
-  { category: 'cinematic', label: '🕵️ Noir Rain Investigation', prompt: 'A weary detective in a trenchcoat under a streetlamp smoking in rain-drenched 1950s Tokyo. Include gritty noir voiceover, rain drumming foley, and slow melancholy jazz trumpet.' },
-  { category: 'cinematic', label: '🌌 Deep Space Monolith', prompt: 'An astronaut discovering a glowing crystalline monolith on an alien moon under a purple nebula sky. Include static radio voiceover, helmet breathing foley, and dark atmospheric synth pads.' },
-  { category: 'cinematic', label: '🏛️ Jungle Temple Discovery', prompt: 'An explorer stepping through sunlit stone archways of a lost jungle temple covered in ancient moss. Include soft whispered commentary, jungle birds and crumbling stone foley, and acoustic guitar score.' },
-  { category: 'cinematic', label: '🎭 Venetian Masquerade', prompt: 'A mysterious figure in a gilded Venetian mask stepping across a marble ballroom floor under candlelight. Include poetic voiceover about secrets, rustling silk dress foley, and grand classical waltz.' },
-  { category: 'cinematic', label: '🌋 Volcanic Wasteland Trek', prompt: 'A lone traveler in a hooded cloak trekking across cracked obsidian volcanic ground under an orange ash sky. Include heavy breathing under hood, crunching ash footsteps foley, and dark drone music.' },
-  { category: 'cinematic', label: '🌲 Deep Forest Creature Hunt', prompt: 'A ranger moving silently through a misty ancient forest, her bow drawn. Include urgent whispered voiceover, twig snap foley, and suspenseful eerie cello score.' },
-  { category: 'cinematic', label: '⛵ Stormy Ocean Ship', prompt: 'A sea captain bracing against the wooden ship wheel as massive waves crash over the deck during a hurricane. Include loud captain command, roaring ocean storm foley, and dramatic sea shanty orchestra.' },
-  { category: 'cinematic', label: '🚀 Warp Speed Takeoff', prompt: 'A pilot pulling back flight controls in a starfighter as hyperspace stars stretch into light beams. Include cockpit voice countdown, engine hum foley, and cinematic sci-fi theme.' },
-  { category: 'cinematic', label: '🧙‍♂️ Wizard Spell Casting', prompt: 'An ancient wizard raising his carved wooden staff as golden arcane runes swirl in the air. Include Latin spell chant voiceover, crackling magic energy foley, and mystical fantasy orchestra.' },
-  { category: 'cinematic', label: '🪐 Saturn Ring Flyby', prompt: 'A research vessel gliding past the icy rings of Saturn with the gas giant filling the background. Include captain log narration, ship hum foley, and ambient space soundscape.' },
-  { category: 'cinematic', label: '🐺 Arctic Snow Hunt', prompt: 'A hunter clad in heavy furs tracking a majestic white wolf across a blinding blizzard snowscape. Include crunching snow footsteps foley, howling wind, and cold atmospheric string quartet.' },
-  { category: 'cinematic', label: '🧗 Mountain Peak Conquest', prompt: 'A climber reaching the sharp summit of a snowy peak and planting a flag as sunrise breaks over the clouds. Include triumphant exhaled breath, wind gust foley, and inspiring piano orchestra.' },
 ];
-
-import { TimelineEngine } from '../../engine/TimelineEngine';
 
 export const AIDirectorPanel: React.FC = () => {
   const {
     project,
     setProject,
     updateSettings,
-    setShotsCount,
-    addShot,
-    updateShot,
-    removeShot,
     autoFixProject,
     directorModel,
     setDirectorModel,
@@ -192,30 +178,89 @@ export const AIDirectorPanel: React.FC = () => {
     setDirectorProfile,
   } = useStudioStore();
 
-  const [idea, setIdea] = useState(() => localStorage.getItem('minimax_h3_prompt_idea') || '');
-  const [narrativeStyle, setNarrativeStyle] = useState<NarrativeStyle>(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem('minimax_narrative_style') : null;
-    return (stored as NarrativeStyle) || (project.settings.style as NarrativeStyle) || 'Live-Action Realism';
+  const [idea, setIdea] = useState<string>(() => {
+    return localStorage.getItem('minimax_h3_prompt_idea') || '';
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
-  const [showAllSeeds, setShowAllSeeds] = useState(false);
   const [showTechnicalOverrides, setShowTechnicalOverrides] = useState(false);
-  const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action' | 'cinematic'>('all');
+  const [showAllStyles, setShowAllStyles] = useState(false);
+  const [showAllSeeds, setShowAllSeeds] = useState(false);
+
   const [narrativeCategoryFilter, setNarrativeCategoryFilter] = useState<'all' | 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic'>('all');
+  const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action'>('all');
 
-  const activeShots = project.shots;
-  const currentShotCount = activeShots.length;
-  const totalDuration = project.settings.durationSeconds;
-  const isImageMode = project.settings.mode !== 'T2VA';
+  const narrativeStyle: NarrativeStyle = (project.settings.style as NarrativeStyle) || 'Live-Action Realism';
+
+  const handleSelectNarrativeStyle = (newStyle: NarrativeStyle) => {
+    updateSettings({ style: newStyle as VisualStyle });
+    localStorage.setItem('minimax_narrative_style', newStyle);
+  };
+
+  const isImageMode = project.settings.mode === 'I2VA' || project.settings.mode === 'FL2VA' || project.settings.mode === 'L2VA';
   const hasReferences = project.references && project.references.length > 0;
+  const totalDuration = project.settings.durationSeconds || 6;
+  const activeShots = project.shots || [];
+  const currentShotCount = activeShots.length || 1;
 
-  const handleSelectNarrativeStyle = (style: NarrativeStyle) => {
-    setNarrativeStyle(style);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('minimax_narrative_style', style);
+  const setShotsCount = (targetCount: number) => {
+    const safeCount = Math.max(1, Math.min(9, targetCount));
+    let newShots = [...activeShots];
+
+    if (safeCount > newShots.length) {
+      const added = safeCount - newShots.length;
+      for (let i = 0; i < added; i++) {
+        const nextNum = newShots.length + 1;
+        newShots.push({
+          id: `shot-${Date.now()}-${nextNum}`,
+          shotNumber: nextNum,
+          startTimeSeconds: 0,
+          durationSeconds: 2,
+          camera: {
+            motionType: 'Push In',
+            amplitude: 'small amplitude',
+            speed: 'slow speed',
+            targetSubject: 'the main subject',
+          },
+          character: {
+            speakerId: 'S1',
+            identity: 'The main protagonist',
+          },
+          environment: {
+            location: 'cinematic setting',
+            lighting: 'dramatic lighting',
+          },
+          rawActionDescription: `Shot ${nextNum} performs dramatic action fitting the narrative.`,
+        });
+      }
+    } else if (safeCount < newShots.length) {
+      newShots = newShots.slice(0, safeCount);
     }
-    updateSettings({ style });
+    const reTimed = TimelineEngine.divideShotsEvenly(newShots, totalDuration);
+    setProject({ ...project, shots: reTimed });
+  };
+
+  const updateShot = (index: number, partialShot: Partial<any>) => {
+    const updated = [...activeShots];
+    updated[index] = { ...updated[index], ...partialShot };
+    const reTimed = TimelineEngine.recalculateShotTimings(updated);
+    setProject({ ...project, shots: reTimed });
+  };
+
+  const addShot = () => {
+    if (currentShotCount < 9) {
+      setShotsCount(currentShotCount + 1);
+    }
+  };
+
+  const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
+    setIdea(seed.prompt);
+    localStorage.setItem('minimax_h3_prompt_idea', seed.prompt);
+    if (seed.category === 'solo-sultry' || seed.category === 'solo') {
+      updateSettings({ subjectComposition: 'solo' });
+    } else if (seed.category === 'couple-sultry') {
+      updateSettings({ subjectComposition: 'couple' });
+    }
   };
 
   const compiledGeminiPrompt = useMemo(() => {
@@ -234,16 +279,6 @@ export const AIDirectorPanel: React.FC = () => {
       subjectComposition: project.settings.subjectComposition || 'solo',
     }, project.settings.style);
   }, [project, narrativeStyle, idea, currentShotCount, totalDuration, directorModel, directorThinkingBudget, directorMode, systemPromptPreset]);
-
-  const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
-    setIdea(seed.prompt);
-    localStorage.setItem('minimax_h3_prompt_idea', seed.prompt);
-    if (seed.category === 'solo-sultry' || seed.category === 'solo' || seed.prompt.toLowerCase().includes('solo ')) {
-      updateSettings({ subjectComposition: 'solo' });
-    } else if (seed.category === 'couple-sultry' || seed.prompt.toLowerCase().includes('couple') || seed.prompt.toLowerCase().includes('two ')) {
-      updateSettings({ subjectComposition: 'couple' });
-    }
-  };
 
   const formattedModelName =
     directorModel === 'gemini-3.5-flash'
@@ -290,7 +325,6 @@ export const AIDirectorPanel: React.FC = () => {
         };
         setProject(updatedProj);
 
-        // Auto-save generated storyboard prompt to Prompt Library
         useStudioStore.getState().savePromptToLibrary({
           title: derivedTitle,
           idea: idea || project.description || `${narrativeStyle} Scene`,
@@ -309,145 +343,122 @@ export const AIDirectorPanel: React.FC = () => {
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6">
-      <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-        <div>
-          <h2 className="text-base font-bold text-zinc-100 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-cyan-400" />
-            AI Director Workstation
-          </h2>
-          <p className="text-xs text-zinc-400">
-            Automated visual storyboarding & prompt compiler for MiniMax H3.
-          </p>
+    <div className="space-y-5">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-5 shadow-sm">
+        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+          <div className="flex items-center gap-2">
+            <Film className="w-4 h-4 text-cyan-400" />
+            <h3 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+              1. Scene & Timeline Setup
+            </h3>
+          </div>
+          <span className="text-xs bg-cyan-950 border border-cyan-500/40 text-cyan-300 px-3 py-0.5 rounded-full font-mono font-bold">
+            {currentShotCount} {currentShotCount === 1 ? 'Shot' : 'Shots'} ({(totalDuration / currentShotCount).toFixed(1)}s / shot)
+          </span>
         </div>
 
-        <span className="text-xs bg-cyan-950 border border-cyan-500/40 text-cyan-300 px-3 py-1 rounded-full font-mono font-bold">
-          {currentShotCount} {currentShotCount === 1 ? 'Shot' : 'Shots'} ({(totalDuration / currentShotCount).toFixed(1)}s / shot)
-        </span>
-      </div>
+        {isImageMode && (
+          <div className="bg-zinc-950/70 border border-cyan-500/30 rounded-xl p-4 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5 text-cyan-400" />
+                Keyframe Anchor Dropzone ({project.settings.mode})
+              </span>
+              <span className="text-[11px] text-zinc-400">
+                Upload Picture 1 (0.00s) {project.settings.mode === 'FL2VA' ? '& Picture 2 (ending)' : ''}
+              </span>
+            </div>
+            <ReferenceImageDropzone />
+          </div>
+        )}
 
-      {/* Keyframe Reference Dropzone (Embedded for I2VA / FL2VA / L2VA) */}
-      {isImageMode && (
-        <div className="bg-zinc-950/80 border border-cyan-500/30 rounded-xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-cyan-400" />
-              Keyframe Anchor Dropzone ({project.settings.mode} Mode Active)
-            </h4>
-            <span className="text-[11px] text-zinc-400">
-              Upload Picture 1 (0.00s) {project.settings.mode === 'FL2VA' ? '& Picture 2 (ending)' : ''}
-            </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 bg-zinc-950/60 p-3.5 rounded-xl border border-zinc-800/80">
+          <div>
+            <label className="text-[11px] text-zinc-400 font-semibold mb-1 block">Effective Video Duration</label>
+            <div className="flex items-center bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5">
+              <input
+                type="number"
+                min={1}
+                max={15}
+                value={project.settings.durationSeconds}
+                onChange={(e) => updateSettings({ durationSeconds: parseFloat(e.target.value) || 6 })}
+                className="w-full bg-transparent text-xs text-zinc-100 font-mono font-bold focus:outline-none"
+              />
+              <span className="text-xs text-zinc-500 font-mono">sec</span>
+            </div>
           </div>
 
-          <ReferenceImageDropzone />
-        </div>
-      )}
+          <div>
+            <label className="text-[11px] text-zinc-400 font-semibold mb-1 block">Aspect Ratio</label>
+            <select
+              value={project.settings.aspectRatio}
+              onChange={(e) => updateSettings({ aspectRatio: e.target.value as AspectRatio })}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50 cursor-pointer font-medium"
+            >
+              {['16:9', '9:16', '1:1', '2.39:1', '4:3'].map((ar) => (
+                <option key={ar} value={ar}>
+                  {ar}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Aesthetic Visual Style, Duration & Aspect Ratio Bar (Positioned directly below Reference Images) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-zinc-950/60 p-4 rounded-xl border border-zinc-800">
-        <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1 block">Aesthetic Visual Style</label>
-          <select
-            value={project.settings.style}
-            onChange={(e) => updateSettings({ style: e.target.value as VisualStyle })}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
-          >
-            {ALL_VISUAL_STYLES.map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1 block">Effective Video Duration (Seconds)</label>
-          <input
-            type="number"
-            value={project.settings.durationSeconds}
-            onChange={(e) => updateSettings({ durationSeconds: parseFloat(e.target.value) || 6 })}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
-          />
-        </div>
-
-        <div>
-          <label className="text-xs text-zinc-400 font-medium mb-1 block">Aspect Ratio</label>
-          <select
-            value={project.settings.aspectRatio}
-            onChange={(e) => updateSettings({ aspectRatio: e.target.value as AspectRatio })}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50"
-          >
-            {['16:9', '9:16', '1:1', '2.39:1', '4:3'].map((ar) => (
-              <option key={ar} value={ar}>
-                {ar}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Inputs & Presets */}
-      <div className="space-y-4">
-        {/* Dynamic Per-Shot Duration & Shot Count Setup Controls */}
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/80 pb-2">
-            <div>
-              <label className="text-xs text-zinc-200 font-bold block flex items-center gap-1.5">
-                <Video className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Storyboard Shot Setup ({currentShotCount} Shot{currentShotCount > 1 ? 's' : ''} • Total {totalDuration}s)</span>
-              </label>
-              <p className="text-[11px] text-zinc-400">
-                Select target shot count or customize individual shot durations below.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {/* Preset Shot Count Selector */}
-              <div className="flex items-center gap-1.5 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1 text-xs">
-                <span className="text-[11px] text-zinc-400 font-semibold">Total Shots:</span>
-                <select
-                  value={currentShotCount}
-                  onChange={(e) => setShotsCount(parseInt(e.target.value, 10))}
-                  className="bg-transparent text-cyan-300 font-bold focus:outline-none cursor-pointer text-xs font-mono"
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <option key={num} value={num} className="bg-zinc-950 text-zinc-100">
-                      {num} {num === 1 ? 'Shot' : 'Shots'}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Equalize Durations Action Button */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-[11px] text-zinc-400 font-semibold block">Shot Count & Equalizer</label>
               <button
                 type="button"
                 onClick={() => {
                   const divided = TimelineEngine.divideShotsEvenly(project.shots, project.settings.durationSeconds);
                   setProject({ ...project, shots: divided });
                 }}
-                className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[11px] font-semibold rounded-xl border border-zinc-700 transition-all flex items-center gap-1"
+                className="text-[10px] text-cyan-400 hover:text-cyan-300 font-mono font-bold transition-all flex items-center gap-1 cursor-pointer"
                 title="Divide total duration evenly across all shots"
               >
-                <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                <Clock className="w-3 h-3 text-cyan-400" />
                 <span>⚡ Equalize</span>
               </button>
             </div>
+            <select
+              value={currentShotCount}
+              onChange={(e) => setShotsCount(parseInt(e.target.value, 10))}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-cyan-300 font-mono font-bold focus:outline-none focus:border-cyan-500/50 cursor-pointer"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                <option key={num} value={num}>
+                  {num} {num === 1 ? 'Shot' : 'Shots'} ({totalDuration}s Total)
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-zinc-400 font-medium">Individual Shot Durations:</span>
+            {currentShotCount < 9 && (
+              <button
+                type="button"
+                onClick={() => addShot()}
+                className="text-[11px] text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1 transition-all cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add Shot ({currentShotCount + 1})</span>
+              </button>
+            )}
           </div>
 
-          {/* Per-Shot Duration Chips */}
           <div className="flex flex-wrap gap-2">
             {activeShots.map((shot, idx) => (
               <div
                 key={shot.id}
-                className="bg-zinc-950 border border-cyan-500/40 text-cyan-300 rounded-xl px-3 py-1.5 text-xs font-bold flex items-center gap-2 shadow-xs"
+                className="bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2 shadow-xs transition-all"
               >
-                <span className="text-zinc-200">Shot {idx + 1}:</span>
-
-                {/* Per-Shot Duration Select */}
+                <span className="text-zinc-300 font-bold">Shot {idx + 1}</span>
                 <select
                   value={shot.durationSeconds}
                   onChange={(e) => updateShot(idx, { durationSeconds: parseFloat(e.target.value) || 2 })}
-                  className="bg-cyan-950/80 text-cyan-300 font-mono font-bold px-1.5 py-0.5 rounded border border-cyan-500/40 text-xs focus:outline-none cursor-pointer"
+                  className="bg-zinc-900 text-cyan-300 font-mono font-bold px-2 py-0.5 rounded-lg border border-zinc-700 text-xs focus:outline-none cursor-pointer"
                 >
                   {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6].map((sec) => (
                     <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
@@ -455,297 +466,41 @@ export const AIDirectorPanel: React.FC = () => {
                     </option>
                   ))}
                 </select>
-
-                {currentShotCount > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeShot(idx)}
-                    title="Remove Shot"
-                    className="text-zinc-500 hover:text-red-400 transition-colors p-0.5 rounded ml-0.5"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
               </div>
             ))}
-
-            {currentShotCount < 9 && (
-              <button
-                type="button"
-                onClick={() => addShot()}
-                className="bg-zinc-950 hover:bg-zinc-800 border border-dashed border-zinc-700 hover:border-cyan-500/50 text-zinc-300 hover:text-cyan-300 rounded-xl px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
-              >
-                <Plus className="w-4 h-4 text-cyan-400" />
-                <span>+ Add Shot</span>
-              </button>
-            )}
           </div>
         </div>
+      </div>
 
-        {/* Image Reference Behavior Mode Selector */}
-        {project.settings.mode !== 'T2VA' && (
-          <div>
-            <label className="text-xs text-zinc-400 font-medium mb-1.5 block">Image Reference Anchor Behavior</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => updateSettings({ referenceMode: 'strict' })}
-                className={`p-3 rounded-xl border text-left transition-all ${
-                  (project.settings.referenceMode || 'strict') === 'strict'
-                    ? 'bg-cyan-950/60 border-cyan-500 text-cyan-300 shadow-md shadow-cyan-500/10'
-                    : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                }`}
-              >
-                <div className="font-bold text-xs flex items-center gap-1.5">
-                  <span>🔒 Strict Keyframe Lock</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
-                  Shot 1 begins exactly from Picture 1, preserving its original environment, lighting, wardrobe, and composition.
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => updateSettings({ referenceMode: 'creative' })}
-                className={`p-3 rounded-xl border text-left transition-all ${
-                  project.settings.referenceMode === 'creative'
-                    ? 'bg-purple-950/60 border-purple-500 text-purple-300 shadow-md shadow-purple-500/10'
-                    : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                }`}
-              >
-                <div className="font-bold text-xs flex items-center gap-1.5">
-                  <span>🎨 Identity Lock Only</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 mt-1 leading-normal">
-                  Preserves the character's facial identity and hairstyle while allowing a new environment, lighting, and wardrobe.
-                </p>
-              </button>
-            </div>
+      {/* SECTION 2: Creative Vision & Directorial Settings Card */}
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-5 shadow-sm">
+        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <h3 className="text-xs font-bold text-zinc-100 uppercase tracking-wider">
+              2. Story Idea & Aesthetic Direction
+            </h3>
           </div>
-        )}
 
-        {/* Scene Subject & Character Composition Selector */}
-        <div>
-          <label className="text-xs text-zinc-300 font-bold mb-1.5 block">Scene Subject Composition</label>
-          <div className="grid grid-cols-3 gap-2">
+          {/* Reset Prompt Button (Clean & Modern) */}
+          {idea.trim() && (
             <button
               type="button"
-              onClick={() => updateSettings({ subjectComposition: 'solo' })}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
-                (project.settings.subjectComposition || 'solo') === 'solo'
-                  ? 'bg-amber-950/60 border-amber-500 text-amber-300 shadow-md shadow-amber-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
+              onClick={() => {
+                setIdea('');
+                localStorage.removeItem('minimax_h3_prompt_idea');
+              }}
+              className="text-[11px] text-zinc-400 hover:text-zinc-100 font-semibold px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+              title="Reset prompt idea"
             >
-              <div className="font-bold text-xs flex items-center gap-1.5">
-                <span>👤 Solo Character (Single S1)</span>
-              </div>
-              <p className="text-[10px] text-zinc-400 mt-0.5 leading-normal">
-                Strictly 1 solo protagonist. Zero couple or secondary character dialogue.
-              </p>
+              <RotateCcw className="w-3 h-3 text-zinc-400" />
+              <span>Reset Prompt</span>
             </button>
-
-            <button
-              type="button"
-              onClick={() => updateSettings({ subjectComposition: 'couple' })}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
-                project.settings.subjectComposition === 'couple'
-                  ? 'bg-cyan-950/60 border-cyan-500 text-cyan-300 shadow-md shadow-cyan-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              <div className="font-bold text-xs flex items-center gap-1.5">
-                <span>👩‍❤️‍👨 Couple / Duo (S1 + S2)</span>
-              </div>
-              <p className="text-[10px] text-zinc-400 mt-0.5 leading-normal">
-                Dual interaction between 2 main characters with shared spoken dialogue.
-              </p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => updateSettings({ subjectComposition: 'ensemble' })}
-              className={`p-2.5 rounded-xl border text-left transition-all ${
-                project.settings.subjectComposition === 'ensemble'
-                  ? 'bg-purple-950/60 border-purple-500 text-purple-300 shadow-md shadow-purple-500/10'
-                  : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-              }`}
-            >
-              <div className="font-bold text-xs flex items-center gap-1.5">
-                <span>👥 Group Ensemble</span>
-              </div>
-              <p className="text-[10px] text-zinc-400 mt-0.5 leading-normal">
-                Multi-character scene with group interaction and environmental crowd.
-              </p>
-            </button>
-          </div>
-        </div>
-
-        {/* Narrative Style Selector (Categorized Presets) */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-xs text-zinc-300 font-bold block">Narrative & Motion Style Presets ({NARRATIVE_STYLES.length} Presets)</label>
-            <span className="text-[10px] text-cyan-400 font-mono">Select "Live-Action Realism" for 100% natural human motion & real-world physics</span>
-          </div>
-
-          {/* Narrative Category Tabs */}
-          <div className="flex flex-wrap gap-1.5 mb-2.5">
-            {[
-              { id: 'all', label: `✨ All (${NARRATIVE_PRESETS.length})` },
-              { id: 'raw', label: '📱 Raw & Amateur' },
-              { id: 'sultry', label: '💋 Sultry & Romance' },
-              { id: 'cinema', label: '🎬 Cinema & Drama' },
-              { id: 'action', label: '⚔️ Action & Sci-Fi' },
-              { id: 'artistic', label: '🎨 Anime & Art' },
-            ].map((cat) => {
-              const isActive = narrativeCategoryFilter === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setNarrativeCategoryFilter(cat.id as any)}
-                  className={`px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all ${
-                    isActive
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-xs'
-                      : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
-            {(
-              narrativeCategoryFilter === 'all'
-                ? NARRATIVE_PRESETS
-                : [
-                    { id: 'None' as NarrativeStyle, category: narrativeCategoryFilter },
-                    ...NARRATIVE_PRESETS.filter((p) => p.id !== 'None' && p.category === narrativeCategoryFilter),
-                  ]
-            ).map((preset) => {
-              const isSelected = narrativeStyle === preset.id;
-              const displayLabel = preset.id === 'None' ? '🚫 None (Unstyled)' : preset.id;
-              return (
-                <button
-                  key={preset.id}
-                  type="button"
-                  onClick={() => handleSelectNarrativeStyle(preset.id)}
-                  className={`px-3 py-1.5 text-xs rounded-xl font-semibold transition-all ${
-                    isSelected
-                      ? 'bg-cyan-500 text-zinc-950 shadow-lg shadow-cyan-500/20 font-bold'
-                      : preset.id === 'None'
-                      ? 'bg-zinc-900 text-rose-300 border border-rose-500/30 hover:bg-zinc-800'
-                      : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
-                  }`}
-                >
-                  {displayLabel}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Live Narrative Style Prompt Directive Preview Box */}
-          {NARRATIVE_STYLE_PREVIEWS[narrativeStyle] && (
-            <div className="mt-2.5 p-3 bg-zinc-950/80 border border-cyan-500/30 rounded-xl text-xs space-y-1 animate-fade-in shadow-sm">
-              <div className="flex items-center justify-between text-cyan-400 font-bold font-mono text-[11px] uppercase tracking-wider">
-                <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  Active Style Directive: {narrativeStyle}
-                </span>
-                <span className="text-[10px] text-zinc-500 font-sans font-normal">AI Physics & Camera Injection Preview</span>
-              </div>
-              <p className="text-zinc-300 font-mono leading-relaxed text-[11px]">
-                "{NARRATIVE_STYLE_PREVIEWS[narrativeStyle]}"
-              </p>
-            </div>
           )}
         </div>
 
-        {/* Story Vision Seed Quick Presets */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-xs text-zinc-400 font-medium flex items-center gap-1.5">
-              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-              <span>Quick Story Seed Presets (Click to Load Idea)</span>
-            </label>
-            <button
-              type="button"
-              onClick={() => setShowAllSeeds(!showAllSeeds)}
-              className="text-[11px] text-cyan-400 hover:text-cyan-300 font-bold transition-all flex items-center gap-1"
-            >
-              <span>{showAllSeeds ? 'Show Less ▴' : `Browse All (${STORY_SEED_PRESETS.length}) ▾`}</span>
-            </button>
-          </div>
-
-          {/* Seed Category Filter Pills */}
-          <div className="flex flex-wrap gap-1.5 mb-2.5">
-            {[
-              { id: 'all', label: `✨ All (${STORY_SEED_PRESETS.length})` },
-              { id: 'solo-sultry', label: '💃 Solo Sultry & Boudoir' },
-              { id: 'couple-sultry', label: '👩‍❤️‍💋‍👨 Couple Sultry & Romance' },
-              { id: 'solo', label: '👤 Solo General' },
-              { id: 'action', label: '⚔️ Action & Sci-Fi' },
-              { id: 'cinematic', label: '🌿 Nature & Cinema' },
-            ].map((cat) => {
-              const isActive = seedCategoryFilter === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSeedCategoryFilter(cat.id as any)}
-                  className={`px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all ${
-                    isActive
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs'
-                      : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className={`flex flex-wrap gap-1.5 transition-all ${showAllSeeds ? 'max-h-56 overflow-y-auto pr-1 p-2 bg-zinc-950/80 rounded-xl border border-zinc-800' : ''}`}>
-            {(
-              seedCategoryFilter === 'all'
-                ? (showAllSeeds ? STORY_SEED_PRESETS : STORY_SEED_PRESETS.slice(0, 8))
-                : STORY_SEED_PRESETS.filter((s) => s.category === seedCategoryFilter)
-            ).map((seed) => (
-              <button
-                key={seed.label}
-                type="button"
-                onClick={() => handleSelectSeed(seed)}
-                className="px-2.5 py-1 text-[11px] bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 hover:border-cyan-500/40 text-zinc-300 rounded-lg transition-all"
-              >
-                {seed.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Vision Prompt Hints Textbox */}
+        {/* Prompt Idea Textarea */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs text-zinc-400 font-medium block">
-              Creative Vision Story Hints & Prompt Idea
-            </label>
-            {idea.trim() && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIdea('');
-                  localStorage.removeItem('minimax_h3_prompt_idea');
-                }}
-                className="text-[11px] text-red-400 hover:text-red-300 font-semibold px-2.5 py-0.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-all flex items-center gap-1 cursor-pointer shadow-xs"
-                title="Clear Prompt Idea"
-              >
-                <Trash2 className="w-3 h-3 text-red-400" />
-                <span>Clear Prompt</span>
-              </button>
-            )}
-          </div>
           <textarea
             rows={3}
             value={idea}
@@ -754,8 +509,8 @@ export const AIDirectorPanel: React.FC = () => {
               setIdea(val);
               localStorage.setItem('minimax_h3_prompt_idea', val);
             }}
-            placeholder="e.g. A young female cyborg warrior drawing her katana in a rain-soaked neon Neo-Tokyo alleyway..."
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-cyan-500/50 font-mono"
+            placeholder="Type your story vision, character actions, emotional beats, or camera movement ideas here..."
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-100 focus:outline-none focus:border-cyan-500/50 font-mono leading-relaxed placeholder:text-zinc-600 shadow-inner"
           />
 
           {/* Smart Contradiction Warning Alert */}
@@ -766,19 +521,17 @@ export const AIDirectorPanel: React.FC = () => {
 
             if (isContradiction) {
               return (
-                <div className="p-3 bg-amber-500/15 border border-amber-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-amber-300 shadow-sm animate-fade-in">
+                <div className="p-2.5 bg-amber-500/15 border border-amber-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-amber-300 shadow-sm animate-fade-in">
                   <div className="flex items-center gap-2">
                     <span className="text-base">⚠️</span>
-                    <span>
-                      <strong>Setting Contradiction Detected:</strong> Your prompt describes a couple, but <strong>Solo Character</strong> is selected.
-                    </span>
+                    <span>Prompt describes a couple, but <strong>Solo Character</strong> is selected.</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => updateSettings({ subjectComposition: 'couple' })}
-                    className="px-3 py-1 bg-amber-500 text-zinc-950 font-bold rounded-lg hover:bg-amber-400 transition-all text-xs shrink-0 shadow-sm"
+                    className="px-2.5 py-0.5 bg-amber-500 text-zinc-950 font-bold rounded-lg hover:bg-amber-400 transition-all text-xs shrink-0 cursor-pointer shadow-xs"
                   >
-                    Switch to Couple Mode
+                    Switch to Couple
                   </button>
                 </div>
               );
@@ -788,26 +541,249 @@ export const AIDirectorPanel: React.FC = () => {
             const hasSoloKeywords = /\b(solo woman|solo female|solo male|solo protagonist|lone traveler|single person)\b/i.test(idea);
             if (isCoupleSelected && hasSoloKeywords) {
               return (
-                <div className="p-3 bg-cyan-500/15 border border-cyan-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-cyan-300 shadow-sm animate-fade-in">
+                <div className="p-2.5 bg-cyan-500/15 border border-cyan-500/40 rounded-xl flex items-center justify-between gap-3 text-xs text-cyan-300 shadow-sm animate-fade-in">
                   <div className="flex items-center gap-2">
                     <span className="text-base">💡</span>
-                    <span>
-                      <strong>Setting Notice:</strong> Your prompt describes a solo person, but <strong>Couple Mode</strong> is selected.
-                    </span>
+                    <span>Prompt describes a solo person, but <strong>Couple Mode</strong> is selected.</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => updateSettings({ subjectComposition: 'solo' })}
-                    className="px-3 py-1 bg-cyan-500 text-zinc-950 font-bold rounded-lg hover:bg-cyan-400 transition-all text-xs shrink-0 shadow-sm"
+                    className="px-2.5 py-0.5 bg-cyan-500 text-zinc-950 font-bold rounded-lg hover:bg-cyan-400 transition-all text-xs shrink-0 cursor-pointer shadow-xs"
                   >
-                    Switch to Solo Mode
+                    Switch to Solo
                   </button>
                 </div>
               );
             }
-
             return null;
           })()}
+        </div>
+
+        {/* Unified Visual Style & Preset Selector */}
+        <div className="space-y-2.5 bg-zinc-950/50 p-3.5 rounded-xl border border-zinc-800/80">
+          <div className="flex items-center justify-between">
+            <label className="text-xs text-zinc-300 font-bold flex items-center gap-1.5">
+              <span>🎭 Visual Aesthetic Style</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowAllStyles(!showAllStyles)}
+              className="text-[11px] text-cyan-400 hover:text-cyan-300 font-bold transition-all flex items-center gap-1 cursor-pointer"
+            >
+              <span>{showAllStyles ? 'Hide Presets ▴' : `Browse All Styles (${NARRATIVE_STYLES.length}) ▾`}</span>
+            </button>
+          </div>
+
+          {/* Curated Top Quick-Pick Pills */}
+          <div className="flex flex-wrap gap-1.5">
+            {TOP_FEATURED_STYLES.map((st) => {
+              const isSelected = narrativeStyle === st;
+              return (
+                <button
+                  key={st}
+                  type="button"
+                  onClick={() => handleSelectNarrativeStyle(st as NarrativeStyle)}
+                  className={`px-3 py-1.5 text-xs rounded-xl font-bold transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20'
+                      : 'bg-zinc-950 text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:border-zinc-700'
+                  }`}
+                >
+                  {st}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Expandable Categorized Styles Drawer */}
+          {showAllStyles && (
+            <div className="pt-3 border-t border-zinc-800 space-y-2 animate-fade-in">
+              <div className="flex flex-wrap gap-1">
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'raw', label: '📱 Raw & Mobile' },
+                  { id: 'sultry', label: '💋 Sultry & Romance' },
+                  { id: 'cinema', label: '🎬 Cinema & Drama' },
+                  { id: 'action', label: '⚔️ Action & Sci-Fi' },
+                  { id: 'artistic', label: '🎨 Anime & Art' },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setNarrativeCategoryFilter(cat.id as any)}
+                    className={`px-2 py-0.5 text-[11px] font-semibold rounded-lg transition-all cursor-pointer ${
+                      narrativeCategoryFilter === cat.id
+                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                        : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 bg-zinc-950 rounded-xl border border-zinc-800/80">
+                {(
+                  narrativeCategoryFilter === 'all'
+                    ? NARRATIVE_PRESETS
+                    : [
+                        { id: 'None' as NarrativeStyle, category: narrativeCategoryFilter },
+                        ...NARRATIVE_PRESETS.filter((p) => p.id !== 'None' && p.category === narrativeCategoryFilter),
+                      ]
+                ).map((preset) => {
+                  const isSelected = narrativeStyle === preset.id;
+                  return (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => handleSelectNarrativeStyle(preset.id)}
+                      className={`px-2.5 py-1 text-[11px] rounded-lg font-medium transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-cyan-500 text-zinc-950 font-bold'
+                          : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
+                      }`}
+                    >
+                      {preset.id === 'None' ? '🚫 None' : preset.id}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Active Style Directive Preview */}
+          {NARRATIVE_STYLE_PREVIEWS[narrativeStyle] && (
+            <div className="p-2.5 bg-zinc-950/90 border border-cyan-500/20 rounded-xl text-[11px] text-zinc-400 font-mono flex items-start gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+              <span><strong>{narrativeStyle}:</strong> "{NARRATIVE_STYLE_PREVIEWS[narrativeStyle]}"</span>
+            </div>
+          )}
+        </div>
+
+        {/* Collapsible Story Seed Inspiration Accordion */}
+        <div className="bg-zinc-950/40 p-3 rounded-xl border border-zinc-800/80">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setShowAllSeeds(!showAllSeeds)}
+              className="text-xs font-bold text-zinc-300 hover:text-cyan-300 flex items-center gap-1.5 transition-all cursor-pointer"
+            >
+              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <span>💡 Need Story Inspiration? Browse 57 Story Seeds</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 transition-transform ${showAllSeeds ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+
+          {showAllSeeds && (
+            <div className="mt-3 pt-3 border-t border-zinc-800 space-y-2 animate-fade-in">
+              <div className="flex flex-wrap gap-1 mb-2">
+                {[
+                  { id: 'all', label: 'All Seeds' },
+                  { id: 'solo-sultry', label: '💃 Solo Sultry' },
+                  { id: 'couple-sultry', label: '👩‍❤️‍💋‍👨 Couple' },
+                  { id: 'solo', label: '👤 Solo General' },
+                  { id: 'action', label: '⚔️ Action' },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSeedCategoryFilter(cat.id as any)}
+                    className={`px-2 py-0.5 text-[11px] font-semibold rounded-lg transition-all cursor-pointer ${
+                      seedCategoryFilter === cat.id
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                        : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto p-2 bg-zinc-950 rounded-xl border border-zinc-800">
+                {(
+                  seedCategoryFilter === 'all'
+                    ? STORY_SEED_PRESETS
+                    : STORY_SEED_PRESETS.filter((s) => s.category === seedCategoryFilter)
+                ).map((seed) => (
+                  <button
+                    key={seed.label}
+                    type="button"
+                    onClick={() => handleSelectSeed(seed)}
+                    className="px-2.5 py-1 text-[11px] bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-amber-500/40 text-zinc-300 rounded-lg transition-all text-left cursor-pointer"
+                  >
+                    {seed.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Scene Subject Composition & Reference Behavior Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {/* Subject Composition Card */}
+          <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-zinc-800/80 space-y-2">
+            <label className="text-xs text-zinc-300 font-bold block">Subject Composition</label>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { id: 'solo', label: '👤 Solo', sub: '1 Character (S1)' },
+                { id: 'couple', label: '👩‍❤️‍👨 Couple', sub: '2 Duo (S1+S2)' },
+                { id: 'ensemble', label: '👥 Group', sub: 'Ensemble Cast' },
+              ].map((item) => {
+                const isSelected = (project.settings.subjectComposition || 'solo') === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => updateSettings({ subjectComposition: item.id as any })}
+                    className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-cyan-950/60 border-cyan-500 text-cyan-300 font-bold shadow-xs'
+                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="text-xs">{item.label}</div>
+                    <div className="text-[9px] text-zinc-500 mt-0.5">{item.sub}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Reference Anchor Behavior (if image mode) */}
+          {project.settings.mode !== 'T2VA' ? (
+            <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-zinc-800/80 space-y-2">
+              <label className="text-xs text-zinc-300 font-bold block">Reference Anchor Lock</label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {[
+                  { id: 'strict', label: '🔒 Strict Lock', sub: 'Keep Room & Lighting' },
+                  { id: 'creative', label: '🎨 Identity Only', sub: 'Keep Face & Hairstyle' },
+                ].map((item) => {
+                  const isSelected = (project.settings.referenceMode || 'strict') === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => updateSettings({ referenceMode: item.id as any })}
+                      className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-purple-950/60 border-purple-500 text-purple-300 font-bold shadow-xs'
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                      }`}
+                    >
+                      <div className="text-xs">{item.label}</div>
+                      <div className="text-[9px] text-zinc-500 mt-0.5">{item.sub}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-zinc-800/80 flex items-center justify-center text-center">
+              <span className="text-xs text-zinc-500 font-mono">T2VA Mode: Pure text generation (Zero image constraints)</span>
+            </div>
+          )}
         </div>
       </div>
 
