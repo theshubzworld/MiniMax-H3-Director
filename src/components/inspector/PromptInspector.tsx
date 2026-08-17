@@ -49,7 +49,7 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
   const lines = text.split('\n');
 
   return (
-    <div className="font-mono text-[13px] leading-[2.2] text-zinc-800 dark:text-zinc-100 select-all space-y-3">
+    <div className="font-mono text-[13px] leading-[2.2] text-zinc-100 select-all space-y-3 font-normal">
       {lines.map((line, idx) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={idx} className="h-1" />;
@@ -63,7 +63,7 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
         ) {
           return (
             <div key={idx} className="pt-2 pb-0.5 font-bold">
-              <span className="inline-flex items-center px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/40 text-cyan-600 dark:text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider leading-tight shadow-xs">
+              <span className="inline-flex items-center px-2 py-0.5 rounded bg-cyan-500/15 border border-cyan-500/40 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider leading-tight shadow-xs">
                 {trimmed}
               </span>
             </div>
@@ -77,18 +77,18 @@ const RenderSyntaxHighlightedPrompt: React.FC<{ text: string }> = ({ text }) => 
           const restOfLine = shotMatch[2];
 
           return (
-            <div key={idx} className="text-zinc-800 dark:text-zinc-100 leading-[2.2] pt-1">
-              <span className="inline-flex items-center px-2 py-0 mr-2 rounded bg-amber-500/15 border border-amber-500/40 text-amber-600 dark:text-amber-400 font-bold text-xs font-mono leading-tight align-baseline shadow-xs">
+            <div key={idx} className="text-zinc-100 leading-[2.2] pt-1">
+              <span className="inline-flex items-center px-2 py-0 mr-2 rounded bg-amber-500/15 border border-amber-500/40 text-amber-400 font-bold text-xs font-mono leading-tight align-baseline shadow-xs">
                 {shotTag}
               </span>
-              <span>{highlightInlineTokens(restOfLine)}</span>
+              <span className="text-zinc-100">{highlightInlineTokens(restOfLine)}</span>
             </div>
           );
         }
 
         // 3. Dialogue & Default Prose Lines
         return (
-          <div key={idx} className="text-zinc-800 dark:text-zinc-100 leading-[2.2]">
+          <div key={idx} className="text-zinc-100 leading-[2.2]">
             {highlightInlineTokens(line)}
           </div>
         );

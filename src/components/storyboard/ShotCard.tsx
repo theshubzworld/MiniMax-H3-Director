@@ -3,7 +3,7 @@ import { Shot } from '../../types/shot';
 import { CameraBuilder } from '../builders/CameraBuilder';
 import { CharacterBuilder } from '../builders/CharacterBuilder';
 import { EnvironmentBuilder } from '../builders/EnvironmentBuilder';
-import { ChevronDown, ChevronUp, Trash2, Film, Clock, MessageSquare, Video, User, Sun } from 'lucide-react';
+import { ChevronDown, ChevronUp, X, Film, Clock, MessageSquare, Video, User, Sun } from 'lucide-react';
 import { TimelineEngine } from '../../engine/TimelineEngine';
 
 interface ShotCardProps {
@@ -77,16 +77,16 @@ export const ShotCard: React.FC<ShotCardProps> = ({
             type="button"
             onClick={onRemove}
             disabled={totalShots <= 1}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-950/40 disabled:opacity-30 transition-all"
-            title="Delete Shot"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 disabled:opacity-20 transition-all cursor-pointer"
+            title="Remove Shot"
           >
-            <Trash2 className="w-4 h-4" />
+            <X className="w-4 h-4" />
           </button>
 
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 cursor-pointer"
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
