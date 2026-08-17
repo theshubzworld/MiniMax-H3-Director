@@ -57,34 +57,34 @@ export const AISettingsPanel: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
       {/* Header Banner */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold shadow-md shadow-cyan-500/10">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold shadow-md shadow-cyan-500/10 shrink-0">
             <Sliders className="w-6 h-6" />
           </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-zinc-100 flex items-center gap-2.5">
+          <div className="min-w-0">
+            <h1 className="text-xl font-extrabold text-zinc-100 flex items-center gap-2.5 whitespace-nowrap">
               <span>AI Director Engine Settings</span>
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5 leading-normal">
               Configure Cloud Gemini (Vertex Express / AI Studio) or Local GPU (Qwen3-VL / Ollama / LM Studio).
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-300 px-3.5 py-1.5 rounded-full font-mono font-bold flex items-center gap-2">
-            <Shield className="w-4 h-4 text-emerald-400" />
-            <span>Active Engine: {providerId.toUpperCase()}</span>
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-300 px-3.5 py-2 rounded-xl font-mono font-bold flex items-center gap-2 whitespace-nowrap shrink-0">
+            <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap">Active Engine: {providerId.toUpperCase()}</span>
           </span>
 
           <button
             type="button"
             onClick={handleSave}
-            className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 font-extrabold rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all cursor-pointer"
+            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 font-extrabold rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all cursor-pointer whitespace-nowrap shrink-0"
           >
-            {saved ? <Check className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
-            <span>{saved ? 'Settings Saved!' : 'Save AI Settings'}</span>
+            {saved ? <Check className="w-4 h-4 shrink-0" /> : <Sparkles className="w-4 h-4 shrink-0" />}
+            <span className="whitespace-nowrap">{saved ? 'Settings Saved!' : 'Save AI Settings'}</span>
           </button>
         </div>
       </div>
