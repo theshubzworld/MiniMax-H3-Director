@@ -11,7 +11,8 @@ interface RecommendedModel {
   badge: string;
   badgeColor: string;
   desc: string;
-  downloadUrl: string;
+  hfUrl: string;
+  ollamaUrl: string;
   ollamaCmd: string;
 }
 
@@ -23,7 +24,8 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
     badge: '👑 TOP CHOICE / UNCENSORED',
     badgeColor: 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/40',
     desc: 'Unfiltered vision-language model for candid, intimate, raw smartphone, and unfiltered cinematic scene reasoning.',
-    downloadUrl: 'https://huggingface.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF',
+    hfUrl: 'https://huggingface.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF',
+    ollamaUrl: 'https://huggingface.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF',
     ollamaCmd: 'ollama run hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M',
   },
   {
@@ -33,7 +35,8 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
     badge: '⚡ ULTRA LIGHTWEIGHT',
     badgeColor: 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border-cyan-500/40',
     desc: 'Super-fast, low VRAM model ideal for laptop GPUs, GTX 1660 / RTX 3050, or instant generation.',
-    downloadUrl: 'https://ollama.com/library/qwen2.5-vl:3b',
+    hfUrl: 'https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct',
+    ollamaUrl: 'https://ollama.com/library/qwen2.5-vl',
     ollamaCmd: 'ollama run qwen2.5-vl:3b',
   },
   {
@@ -43,7 +46,8 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
     badge: '🎯 HIGH PRECISION',
     badgeColor: 'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/40',
     desc: 'Official Alibaba vision model with high image understanding and sharp camera trajectory breakdown.',
-    downloadUrl: 'https://ollama.com/library/qwen2.5-vl:7b',
+    hfUrl: 'https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct',
+    ollamaUrl: 'https://ollama.com/library/qwen2.5-vl',
     ollamaCmd: 'ollama run qwen2.5-vl:7b',
   },
   {
@@ -53,7 +57,8 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
     badge: '🖼️ MULTI-IMAGE VISION',
     badgeColor: 'bg-purple-500/20 text-purple-800 dark:text-purple-300 border-purple-500/40',
     desc: 'Exceptional visual OCR and spatial image recognition with dense visual captioning.',
-    downloadUrl: 'https://ollama.com/library/minicpm-v',
+    hfUrl: 'https://huggingface.co/openbmb/MiniCPM-V-2_6',
+    ollamaUrl: 'https://ollama.com/library/minicpm-v',
     ollamaCmd: 'ollama run minicpm-v:2.6',
   },
 ];
@@ -626,15 +631,31 @@ export const AISettingsPanel: React.FC = () => {
                           <span>{isActive ? '✓ Active' : '⚡ Use Model'}</span>
                         </button>
 
-                        <a
-                          href={item.downloadUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-cyan-300 rounded-xl transition-all flex items-center justify-center shrink-0"
-                          title="Open Model Page / Download GGUF"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {item.ollamaUrl !== item.hfUrl && (
+                            <a
+                              href={item.ollamaUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-emerald-400 rounded-xl transition-all flex items-center gap-1 text-[11px] font-mono"
+                              title="Open Ollama Model Page"
+                            >
+                              <span>🦙 Ollama</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+
+                          <a
+                            href={item.hfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-2 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-amber-400 rounded-xl transition-all flex items-center gap-1 text-[11px] font-mono"
+                            title="Open Hugging Face / Download GGUF"
+                          >
+                            <span>🤗 GGUF</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
                       </div>
                     </div>
                   );
