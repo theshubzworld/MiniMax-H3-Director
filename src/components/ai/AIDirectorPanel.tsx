@@ -190,6 +190,25 @@ export const AIDirectorPanel: React.FC = () => {
   const [showAllStyles, setShowAllStyles] = useState(false);
   const [showAllSeeds, setShowAllSeeds] = useState(false);
 
+  const streamTerminalRef = React.useRef<HTMLDivElement>(null);
+  const streamScrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll page down to the streaming terminal when generation starts
+  useEffect(() => {
+    if (isGenerating && streamTerminalRef.current) {
+      setTimeout(() => {
+        streamTerminalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 150);
+    }
+  }, [isGenerating]);
+
+  // Auto-scroll stream content to bottom as new tokens arrive
+  useEffect(() => {
+    if (liveStreamText && streamScrollContainerRef.current) {
+      streamScrollContainerRef.current.scrollTop = streamScrollContainerRef.current.scrollHeight;
+    }
+  }, [liveStreamText]);
+
   const [narrativeCategoryFilter, setNarrativeCategoryFilter] = useState<'all' | 'raw' | 'sultry' | 'cinema' | 'action' | 'artistic'>('all');
   const [seedCategoryFilter, setSeedCategoryFilter] = useState<'all' | 'solo-sultry' | 'couple-sultry' | 'solo' | 'action'>('all');
 
@@ -1037,7 +1056,10 @@ export const AIDirectorPanel: React.FC = () => {
 
         {/* Persistent AI Reasoning & Live Token Stream Terminal */}
         {(liveStreamText || isGenerating) && (
-          <div className="bg-zinc-950/95 border border-cyan-500/50 rounded-2xl p-4 space-y-2.5 shadow-2xl animate-fade-in ring-1 ring-cyan-500/30">
+          <div
+            ref={streamTerminalRef}
+            className="bg-zinc-950/95 border border-cyan-500/50 rounded-2xl p-4 space-y-2.5 shadow-2xl animate-fade-in ring-1 ring-cyan-500/30 scroll-mt-6"
+          >
             <div className="flex flex-wrap items-center justify-between border-b border-zinc-800 pb-2.5 gap-2">
               <div className="flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${isGenerating ? 'bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/80' : 'bg-cyan-400'}`} />
@@ -1090,7 +1112,10 @@ export const AIDirectorPanel: React.FC = () => {
 
             {/* Scrollable Stream Content */}
             {showReasoningWindow && (
-              <div className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner animate-fade-in">
+              <div
+                ref={streamScrollContainerRef}
+                className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner animate-fade-in scroll-smooth"
+              >
                 {liveStreamText || (
                   <div className="text-zinc-500 italic flex items-center gap-2 font-mono py-1">
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400 shrink-0" />

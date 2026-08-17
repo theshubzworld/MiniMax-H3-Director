@@ -5,6 +5,13 @@ All notable changes to the MiniMax H3 Prompt Studio codebase will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.2] - 2026-08-17
+
+### Added
+- **Unified Side-by-Side Reference Image Gallery & Large Preview**: Eliminated oversized separate top upload boxes in favor of a cohesive side-by-side grid with prominent 80x80px previews and inline right-side upload slot.
+- **Hands-Free Smooth Auto-Scrolling**: Added automatic page scrolling to the Live GPU Token Stream terminal on generation start and continuous bottom-following token autoscroll.
+- **Reference Card Decluttering**: Removed obsolete trait pills and streamlined cards with `<Picture 1>` cyan badge, subtitle timing, and one-click delete.
+
 ## [2.4.1] - 2026-08-17
 
 ### Fixed
