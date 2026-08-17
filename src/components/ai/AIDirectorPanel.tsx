@@ -4,7 +4,7 @@ import { AIEngine } from '../../ai/AIEngine';
 import { GeminiProvider, NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
 import { NarrativeStyle } from '../../ai/interfaces/AIProvider';
 import { ReferenceImageDropzone } from '../reference/ReferenceImageDropzone';
-import { Sparkles, Video, Loader2, Plus, RotateCcw, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap, Clock, ChevronDown, ChevronUp, Layers, Film, User, Users, Heart } from 'lucide-react';
+import { Sparkles, Video, Loader2, Plus, X, RotateCcw, Lightbulb, Image as ImageIcon, Cpu, Brain, Sliders, Gauge, Zap, Clock, ChevronDown, ChevronUp, Layers, Film, User, Users, Heart } from 'lucide-react';
 import { ALL_VISUAL_STYLES, VisualStyle, AspectRatio } from '../../types/project';
 import { TimelineEngine } from '../../engine/TimelineEngine';
 
@@ -253,6 +253,13 @@ export const AIDirectorPanel: React.FC = () => {
     }
   };
 
+  const removeShotByIndex = (index: number) => {
+    if (activeShots.length <= 1) return;
+    const filtered = activeShots.filter((_, i) => i !== index);
+    const reTimed = TimelineEngine.divideShotsEvenly(filtered, totalDuration);
+    setProject({ ...project, shots: reTimed });
+  };
+
   const handleSelectSeed = (seed: { label: string; prompt: string; category?: string }) => {
     setIdea(seed.prompt);
     localStorage.setItem('minimax_h3_prompt_idea', seed.prompt);
@@ -471,7 +478,7 @@ export const AIDirectorPanel: React.FC = () => {
               return (
                 <div
                   key={shot.id}
-                  className="bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2 shadow-xs transition-all"
+                  className="bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2 shadow-xs transition-all group"
                 >
                   <span className="text-zinc-300 font-bold">Shot {idx + 1}</span>
                   <select
@@ -485,6 +492,16 @@ export const AIDirectorPanel: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                  {activeShots.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeShotByIndex(idx)}
+                      className="p-0.5 text-zinc-400 hover:text-red-400 hover:bg-zinc-800 rounded transition-all cursor-pointer"
+                      title={`Delete Shot ${idx + 1}`}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               );
             })}
