@@ -273,43 +273,45 @@ export const PromptInspector: React.FC = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-zinc-800/80 bg-zinc-900/40">
-        <button
-          type="button"
-          onClick={() => setActiveTab('prompt')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all cursor-pointer ${
-            activeTab === 'prompt'
-              ? 'border-cyan-500 text-cyan-400 dark:text-cyan-300 bg-zinc-950 dark:bg-zinc-900 font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
-          }`}
-        >
-          Prompt Text
-        </button>
+      {/* Sleek Segmented Tabs */}
+      <div className="p-2 border-b border-zinc-800 bg-zinc-950">
+        <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('prompt')}
+            className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+              activeTab === 'prompt'
+                ? 'bg-zinc-950 text-cyan-400 dark:text-cyan-300 font-bold shadow-xs border border-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Prompt Text
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('health')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-            activeTab === 'health'
-              ? 'border-cyan-500 text-cyan-400 dark:text-cyan-300 bg-zinc-950 dark:bg-zinc-900 font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
-          }`}
-        >
-          Health ({diagnostics.overallHealthScore}%)
-        </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('health')}
+            className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+              activeTab === 'health'
+                ? 'bg-zinc-950 text-emerald-400 dark:text-emerald-300 font-bold shadow-xs border border-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Health ({diagnostics.overallHealthScore}%)
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('json')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all cursor-pointer ${
-            activeTab === 'json'
-              ? 'border-pink-500 text-pink-400 dark:text-pink-300 bg-zinc-950 dark:bg-zinc-900 font-bold'
-              : 'border-transparent text-zinc-400 hover:text-zinc-200'
-          }`}
-        >
-          ComfyUI Payload
-        </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('json')}
+            className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+              activeTab === 'json'
+                ? 'bg-zinc-950 text-pink-400 dark:text-pink-300 font-bold shadow-xs border border-zinc-800'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            ComfyUI Payload
+          </button>
+        </div>
       </div>
 
       {/* Content */}
