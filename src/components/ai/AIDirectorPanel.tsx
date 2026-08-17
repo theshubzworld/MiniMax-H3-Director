@@ -183,6 +183,8 @@ export const AIDirectorPanel: React.FC = () => {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [liveStreamText, setLiveStreamText] = useState<string>('');
+  const [showReasoningWindow, setShowReasoningWindow] = useState(true);
+  const [copiedStream, setCopiedStream] = useState(false);
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
   const [showTechnicalOverrides, setShowTechnicalOverrides] = useState(false);
   const [showAllStyles, setShowAllStyles] = useState(false);
@@ -1033,23 +1035,64 @@ export const AIDirectorPanel: React.FC = () => {
           </div>
         </div>
 
-        {/* Live GPU Reasoning & Token Stream Terminal */}
-        {isGenerating && liveStreamText && (
+        {/* Persistent AI Reasoning & Live Token Stream Terminal */}
+        {liveStreamText && (
           <div className="bg-zinc-950/95 border border-cyan-500/50 rounded-2xl p-4 space-y-2.5 shadow-2xl animate-fade-in ring-1 ring-cyan-500/30">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-              <span className="text-[11px] font-mono font-extrabold text-cyan-400 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/80" />
-                <span>Live GPU Token Stream ({formattedModelName})</span>
-              </span>
-              <span className="text-[10px] text-zinc-500 font-mono">
-                {liveStreamText.length} chars streamed
-              </span>
+            <div className="flex flex-wrap items-center justify-between border-b border-zinc-800 pb-2.5 gap-2">
+              <div className="flex items-center gap-2">
+                <span className={`w-2.5 h-2.5 rounded-full ${isGenerating ? 'bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/80' : 'bg-cyan-400'}`} />
+                <span className="text-xs font-mono font-extrabold text-cyan-300 flex items-center gap-1.5">
+                  <span>{isGenerating ? 'Live GPU Token Stream' : 'AI Reasoning & Raw Stream Log'}</span>
+                  <span className="text-[10px] text-zinc-500 font-normal">({formattedModelName})</span>
+                </span>
+                <span className="text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5 rounded-md font-mono">
+                  {liveStreamText.length} chars
+                </span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(liveStreamText);
+                    setCopiedStream(true);
+                    setTimeout(() => setCopiedStream(false), 2000);
+                  }}
+                  className="px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-mono rounded-lg transition-all flex items-center gap-1 cursor-pointer"
+                  title="Copy raw streamed response"
+                >
+                  <span>{copiedStream ? '✓ Copied' : '📋 Copy'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowReasoningWindow(!showReasoningWindow)}
+                  className="px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-mono rounded-lg transition-all flex items-center gap-1 cursor-pointer"
+                >
+                  <span>{showReasoningWindow ? '▴ Minimize' : '▾ View Reasoning'}</span>
+                </button>
+
+                {!isGenerating && (
+                  <button
+                    type="button"
+                    onClick={() => setLiveStreamText('')}
+                    className="p-1 text-zinc-500 hover:text-zinc-300 rounded-lg hover:bg-zinc-800 transition-all cursor-pointer"
+                    title="Dismiss log"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-52 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner">
-              {liveStreamText}
-              <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse align-middle" />
-            </div>
+            {/* Scrollable Stream Content */}
+            {showReasoningWindow && (
+              <div className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-60 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner animate-fade-in">
+                {liveStreamText}
+                {isGenerating && <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse align-middle" />}
+              </div>
+            )}
           </div>
         )}
 

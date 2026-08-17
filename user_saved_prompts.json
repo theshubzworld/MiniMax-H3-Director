@@ -1,5 +1,39 @@
 [
   {
+    "id": "prompt-1786970747139-efng5",
+    "title": "Under Blanket Selfie",
+    "idea": "women in refrence image taking nude selfie video under blanket",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a bedroom, messy, cluttered, dim, red-tinged from phone screen, private, vulnerable, chaotic environment. Woman sits up abruptly under blanket, phone in hand, adjusts fabric, pulls blanket down to expose torso, then lifts phone to face, screen glowing red, camera zooms in as she presses record button. The camera pushes in with small amplitude at normal speed.\n\noverall_soundscape: soft breathing, phone camera shutter click, blanket rustle, distant city hum\n\nnon_diegetic_music: no music — only ambient room noise and phone beep score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 5,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T12:45:47.139Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
+    "id": "prompt-1786970658430-9xc3l",
+    "title": "Under Blanket Selfie",
+    "idea": "women in refrence image taking nude selfie video under blanket",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Live-Action Realism. The opening frame references character facial identity from <Picture 1>. Set in a Bedroom, bed with blanket, soft ambient light from window, phone screen glow, intimate, private, slightly chaotic environment. Woman sits up under blanket, phone in hand, adjusts position, looks into phone camera, begins recording nude selfie video. The camera holds a static shot.\n\noverall_soundscape: Soft ambient bedroom noise, faint phone camera shutter sound, distant city noise\n\nnon_diegetic_music: Minimalist ambient electronic with sub-bass pulses, no vocals score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Live-Action Realism",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 5,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T12:44:18.430Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Live-Action Realism"
+    ]
+  },
+  {
     "id": "prompt-1786970477023-cejg8",
     "title": "Under Blanket Selfie",
     "idea": "women in refrence image taking nude selfie video under blanket",
