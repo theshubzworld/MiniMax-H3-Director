@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import {
   Sparkles, Film, ShieldCheck, Grid3x3, Cpu, FolderPlus,
@@ -55,7 +55,7 @@ export const Sidebar: React.FC = () => {
         <section>
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600 px-2 mb-1.5">AI Modes</p>
           <nav className="space-y-0.5">
-            {navItem({ view: 'gemini-director', label: 'Gemini Director', icon: Sparkles, iconColor: 'text-cyan-400', activeColor: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30' })}
+            {navItem({ view: 'gemini-director', label: 'AI Director Studio', icon: Sparkles, iconColor: 'text-cyan-400', activeColor: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30' })}
             {navItem({ view: 'wizard', label: 'Director Wizard', icon: Clapperboard, iconColor: 'text-violet-400', activeColor: 'bg-violet-500/15 text-violet-300 border border-violet-500/30' })}
             {navItem({ view: 'scene-creator', label: 'Scene Creator', icon: Film, iconColor: 'text-amber-400', activeColor: 'bg-amber-500/15 text-amber-300 border border-amber-500/30' })}
           </nav>

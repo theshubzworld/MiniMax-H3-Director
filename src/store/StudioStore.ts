@@ -10,6 +10,7 @@ import { TimelineEngine } from '../engine/TimelineEngine';
 import { GeneratedKeyframe } from '../ai/providers/ImageGenProvider';
 import { KeyframeStorageService } from '../utils/KeyframeStorageService';
 import { TitleGenerator } from '../engine/TitleGenerator';
+import { AIEngine } from '../ai/AIEngine';
 
 import userSavedPromptsData from '../data/user_saved_prompts.json';
 
@@ -156,7 +157,7 @@ interface StudioState {
   setDirectorThinkingBudget: (budget: number) => void;
   setDirectorMode: (mode: 'strict' | 'balanced' | 'creative') => void;
   setSystemPromptPreset: (preset: 'standard' | 'uncensored_nsfw') => void;
-  setDirectorProfile: (profile: 'cinematic' | 'uncensored' | 'reasoning' | 'custom') => void;
+  setDirectorProfile: (profile: 'cinematic' | 'uncensored' | 'reasoning' | 'local' | 'custom') => void;
   
   // Prompt Library Actions
   savePromptToLibrary: (customPrompt?: Partial<SavedPrompt>) => void;
@@ -367,6 +368,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
       if (typeof window !== 'undefined') localStorage.setItem('minimax_director_profile', profile);
 
       if (profile === 'cinematic') {
+        AIEngine.setActiveProvider('gemini');
         const nextState = {
           directorProfile: 'cinematic' as const,
           directorModel: 'gemini-3.5-flash' as const,
@@ -382,6 +384,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
         }
         set(nextState);
       } else if (profile === 'uncensored') {
+        AIEngine.setActiveProvider('gemini');
         const nextState = {
           directorProfile: 'uncensored' as const,
           directorModel: 'gemini-3.5-flash' as const,
@@ -397,6 +400,7 @@ export const useStudioStore = create<StudioState>((set, get) => {
         }
         set(nextState);
       } else if (profile === 'reasoning') {
+        AIEngine.setActiveProvider('gemini');
         const nextState = {
           directorProfile: 'reasoning' as const,
           directorModel: 'gemini-2.5-pro' as const,
@@ -407,6 +411,23 @@ export const useStudioStore = create<StudioState>((set, get) => {
         if (typeof window !== 'undefined') {
           localStorage.setItem('minimax_director_model', nextState.directorModel);
           localStorage.setItem('minimax_thinking_budget', '4096');
+          localStorage.setItem('minimax_director_mode', nextState.directorMode);
+          localStorage.setItem('minimax_system_prompt_preset', nextState.systemPromptPreset);
+        }
+        set(nextState);
+      } else if (profile === 'local') {
+        AIEngine.setActiveProvider('local');
+        const localModel = (typeof window !== 'undefined' ? localStorage.getItem('minimax_local_model') : '') || 'qwen3-vl-8b-heretic';
+        const nextState = {
+          directorProfile: 'local' as const,
+          directorModel: localModel as any,
+          directorThinkingBudget: 0,
+          directorMode: 'balanced' as const,
+          systemPromptPreset: 'uncensored_nsfw' as const,
+        };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('minimax_director_model', localModel);
+          localStorage.setItem('minimax_thinking_budget', '0');
           localStorage.setItem('minimax_director_mode', nextState.directorMode);
           localStorage.setItem('minimax_system_prompt_preset', nextState.systemPromptPreset);
         }

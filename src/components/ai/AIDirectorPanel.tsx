@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useStudioStore } from '../../store/StudioStore';
 import { AIEngine } from '../../ai/AIEngine';
 import { GeminiProvider, NARRATIVE_STYLE_DIRECTIVES } from '../../ai/providers/GeminiProvider';
@@ -287,8 +287,22 @@ export const AIDirectorPanel: React.FC = () => {
     }, project.settings.style);
   }, [project, narrativeStyle, idea, currentShotCount, totalDuration, directorModel, directorThinkingBudget, directorMode, systemPromptPreset]);
 
+  // Synchronize AIEngine active provider with directorProfile
+  useEffect(() => {
+    if (directorProfile === 'local') {
+      AIEngine.setActiveProvider('local');
+    } else {
+      AIEngine.setActiveProvider('gemini');
+    }
+  }, [directorProfile]);
+
+  const localModelName = (typeof window !== 'undefined' ? localStorage.getItem('minimax_local_model') : '') || 'Qwen3-VL';
+  const cleanLocalName = localModelName.split('/').pop() || localModelName;
+
   const formattedModelName =
-    directorModel === 'gemini-3.5-flash'
+    directorProfile === 'local'
+      ? `Local GPU (${cleanLocalName})`
+      : directorModel === 'gemini-3.5-flash'
       ? 'Gemini 3.5 Flash'
       : directorModel === 'gemini-2.5-flash'
       ? 'Gemini 2.5 Flash'
@@ -997,14 +1011,16 @@ export const AIDirectorPanel: React.FC = () => {
           </div>
         )}
 
-        {/* Live Gemini Director System Prompt Delivery Preview Box */}
+        {/* Live AI Director System Prompt Delivery Preview Box */}
         <div className="space-y-1.5 pt-2 border-t border-zinc-800/80">
           <div className="flex items-center justify-between">
             <label className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
               <Brain className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              Final Gemini System Prompt Delivery Preview
+              Final AI Director System Prompt Delivery Preview
             </label>
-            <span className="text-[10px] text-zinc-500 font-mono">Payload sent to {directorModel}</span>
+            <span className="text-[10px] text-zinc-400 font-mono font-bold">
+              Payload sent to: <span className="text-cyan-300">{formattedModelName}</span>
+            </span>
           </div>
 
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 font-mono text-[11px] text-zinc-100 dark:text-cyan-300 leading-relaxed max-h-48 overflow-y-auto shadow-inner select-all">
@@ -1012,7 +1028,7 @@ export const AIDirectorPanel: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Real-Time Gemini Progress Status Tracker */}
+        {/* Live Real-Time AI Progress Status Tracker */}
         {isGenerating && progressState && (
           <div className="bg-cyan-950/80 border border-cyan-500/50 rounded-xl p-3.5 space-y-2 shadow-lg shadow-cyan-500/10">
             <div className="flex items-center justify-between text-xs">
@@ -1041,12 +1057,12 @@ export const AIDirectorPanel: React.FC = () => {
             type="button"
             onClick={handleAutoBuild}
             disabled={isGenerating}
-            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all flex-1 justify-center"
+            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 transition-all flex-1 justify-center cursor-pointer"
           >
             {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             <span>
               {isGenerating
-                ? `Gemini Director (${formattedModelName}) Generating...`
+                ? `AI Director (${formattedModelName}) Generating...`
                 : hasReferences
                 ? `✨ Build ${currentShotCount}-Shot Storyboard Using Visual Keyframes (${project.references.length})`
                 : `✨ Build ${currentShotCount}-Shot Storyboard with ${formattedModelName}`}
@@ -1056,7 +1072,7 @@ export const AIDirectorPanel: React.FC = () => {
           <button
             type="button"
             onClick={autoFixProject}
-            className="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all"
+            className="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <Video className="w-4 h-4 text-cyan-400" />
             <span>✨ Polish Camera 3D</span>

@@ -85,8 +85,8 @@ export const Header: React.FC = () => {
             }`}
           >
             <Sparkles className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'gemini-director' ? 'text-cyan-400' : 'text-zinc-500'}`} />
-            <span className="hidden sm:inline">Gemini AI</span>
-            <span className="sm:hidden">AI</span>
+            <span className="hidden sm:inline">AI Director</span>
+            <span className="sm:hidden">Director</span>
           </button>
 
           {/* Story Wizard */}
