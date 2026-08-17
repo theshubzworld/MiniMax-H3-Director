@@ -53,7 +53,9 @@ Thumbs.db
 ehthumbs.db
 
 # Agent / AI local workspace caches
-.agents/
+.agents/*
+!.agents/AGENTS.md
+!.agents/SESSION_HANDOFF_BACKUP.md
 .gemini/
 .planning/
 
