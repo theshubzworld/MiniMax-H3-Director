@@ -93,27 +93,31 @@ export const Sidebar: React.FC = () => {
         </section>
       </div>
 
-      <div className="p-3 border-t border-zinc-800/60 space-y-2">
+      {/* Sidebar Footer with Version */}
+      <div className="p-3 border-t border-zinc-800/80 space-y-2.5 bg-zinc-950/60">
         <div className="flex items-center justify-between px-2">
-          <span className="text-[10px] font-mono text-zinc-600">MiniMax H3 Engine</span>
-          <span className="px-1.5 py-px rounded-full bg-zinc-900 border border-zinc-800 text-[9px] font-mono text-cyan-500">v1.0</span>
+          <div className="flex flex-col">
+            <span className="text-[11px] font-bold text-zinc-300">MiniMax H3 Studio</span>
+            <span className="text-[9px] font-mono text-zinc-500">T2V · I2V · FL2V · L2V</span>
+          </div>
+          <span className="px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-[10px] font-mono font-bold text-cyan-400 shadow-xs">
+            v2.4.0
+          </span>
         </div>
-        <div className="px-2">
-          <span className="text-[9px] font-mono text-zinc-700 tracking-wider">T2VA · I2VA · FL2VA · L2VA</span>
-        </div>
+
         <a
           href="https://buymeacoffee.com/shubzworld"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-zinc-900 hover:bg-amber-500/10 border border-zinc-800 hover:border-amber-500/30 transition-all group"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-zinc-900/90 hover:bg-amber-500/10 border border-zinc-800 hover:border-amber-500/30 transition-all group"
           title="Support project on Buy Me a Coffee"
         >
-          <div className="w-6 h-6 rounded-md bg-amber-500/10 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+          <div className="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
             <Coffee className="w-3.5 h-3.5 text-amber-400" />
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-[11px] font-semibold text-zinc-300 group-hover:text-amber-300 transition-colors leading-none">Support Development</span>
-            <span className="text-[9px] text-zinc-600 mt-0.5">buymeacoffee.com</span>
+            <span className="text-[9px] text-zinc-500 mt-0.5">buymeacoffee.com/shubzworld</span>
           </div>
         </a>
       </div>

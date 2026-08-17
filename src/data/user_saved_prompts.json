@@ -1,5 +1,39 @@
 [
   {
+    "id": "prompt-1786971853295-q69xl",
+    "title": "Woman Jumping from Mountain",
+    "idea": "women in refrence image going to jump form mountain",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a Mountain cliff edge, rocky terrain, isolated, dangerous, adrenaline-fueled environment. The camera is held by an unseen person, pointed directly at the woman standing at the edge. She looks down, then suddenly leaps forward off the cliff, arms windmilling as she plummets downward. The shot ends with her falling out of frame. The camera holds a static shot.\n\noverall_soundscape: Wind howling, distant thunder, muffled scream as she falls\n\nnon_diegetic_music: None — raw, unedited ambient sounds only score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T13:04:13.295Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
+    "id": "prompt-1786971746619-33zxl",
+    "title": "Unauthorized Bathroom Selfie",
+    "idea": "women in refrence image taking nude selfie video in her bathroom",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Raw Smartphone Amateur. The opening frame references character facial identity from <Picture 1>. Set in a Small, cluttered bathroom with tiled walls, dim, single overhead bathroom light casting harsh shadows, private, vulnerable, unedited environment. The camera slowly pushes in on the woman’s torso as she holds up her phone to record herself in the mirror. She doesn’t look at the screen — she’s looking directly at the lens, unblinking. Her body is fully exposed, no filter, no censorship. The camera shakes slightly as she adjusts her grip. The bathroom fan hums in the background. She lifts her hand to adjust her hair — a moment of self-awareness — but doesn’t stop recording. The camera pushes in with small amplitude at normal speed.\n\noverall_soundscape: Dripping water, faint toilet flush, distant bathroom fan hum, phone camera shutter click\n\nnon_diegetic_music: None — silent except for ambient bathroom sounds and phone camera shutter noise score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Raw Smartphone Amateur",
+    "mode": "I2VA",
+    "shotsCount": 1,
+    "durationSeconds": 10,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T13:02:26.619Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Raw Smartphone Amateur"
+    ]
+  },
+  {
     "id": "prompt-1786970747139-efng5",
     "title": "Under Blanket Selfie",
     "idea": "women in refrence image taking nude selfie video under blanket",
