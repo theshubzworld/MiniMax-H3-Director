@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-14 bg-zinc-950 border-b border-zinc-800/60 px-4 flex items-center justify-between gap-4 sticky top-0 z-40 backdrop-blur-xl">
+    <header className="h-14 bg-zinc-950 border-b border-zinc-800/60 px-4 flex items-center justify-between gap-2 sticky top-0 z-40 backdrop-blur-xl flex-nowrap min-w-0">
 
       {/* ── LEFT: Brand ── */}
       <div className="flex items-center gap-3 flex-shrink-0">
@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
         <div className="w-px h-6 bg-zinc-800 mx-1 hidden sm:block" />
 
         {/* Stats pill */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-500">
+        <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-500">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span>{project.shots.length} shots</span>
           <span className="text-zinc-700">·</span>
@@ -72,7 +72,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* ── CENTER: View Switcher ── */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center min-w-0 px-2">
         <nav className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-0.5" aria-label="View switcher">
 
           {/* Gemini AI */}
@@ -80,14 +80,15 @@ export const Header: React.FC = () => {
             type="button"
             id="view-tab-gemini"
             onClick={() => setActiveView('gemini-director')}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
               activeView === 'gemini-director'
                 ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/10 text-cyan-300 border border-cyan-500/40 shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
             }`}
           >
             <Sparkles className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'gemini-director' ? 'text-cyan-400' : 'text-zinc-600'}`} />
-            <span>Gemini AI</span>
+            <span className="hidden sm:inline">Gemini AI</span>
+            <span className="sm:hidden">AI</span>
           </button>
 
           {/* Wizard */}
@@ -95,7 +96,7 @@ export const Header: React.FC = () => {
             type="button"
             id="view-tab-wizard"
             onClick={() => setActiveView('wizard')}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
               activeView === 'wizard'
                 ? 'bg-zinc-800 text-violet-300 border border-violet-500/30 shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
@@ -110,23 +111,24 @@ export const Header: React.FC = () => {
             type="button"
             id="view-tab-studio"
             onClick={() => setActiveView('studio')}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
               activeView === 'studio'
                 ? 'bg-zinc-800 text-sky-300 border border-sky-500/30 shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
             }`}
           >
             <LayoutDashboard className={`w-3.5 h-3.5 flex-shrink-0 ${activeView === 'studio' ? 'text-sky-400' : 'text-zinc-600'}`} />
-            <span>Pro Studio</span>
+            <span className="hidden sm:inline">Pro Studio</span>
+            <span className="sm:hidden">Studio</span>
           </button>
         </nav>
       </div>
 
       {/* ── RIGHT: Controls ── */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-1.5 flex-shrink-0">
 
         {/* Mode Badges */}
-        <div className="hidden md:flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-0.5">
+        <div className="hidden lg:flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1 gap-0.5">
           {(['T2VA', 'I2VA', 'FL2VA', 'L2VA'] as MiniMaxMode[]).map((m) => {
             const isActive = project.settings.mode === m;
             return (
@@ -135,7 +137,7 @@ export const Header: React.FC = () => {
                 type="button"
                 id={`mode-badge-${m}`}
                 onClick={() => setMode(m)}
-                className={`px-2.5 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-2 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
                   isActive
                     ? 'bg-cyan-500 text-zinc-950 shadow-sm shadow-cyan-500/30'
                     : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
@@ -148,7 +150,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Sep */}
-        <div className="w-px h-5 bg-zinc-800 hidden md:block" />
+        <div className="w-px h-5 bg-zinc-800 hidden lg:block" />
 
         {/* Undo / Redo */}
         <div className="flex items-center gap-0.5">
