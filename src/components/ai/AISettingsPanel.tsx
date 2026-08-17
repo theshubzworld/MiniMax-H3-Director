@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AIEngine } from '../../ai/AIEngine';
 import { LocalProvider } from '../../ai/providers/LocalProvider';
+import { GeminiProvider } from '../../ai/providers/GeminiProvider';
 import { Key, Sliders, Check, Shield, Cpu, Activity, Loader2, Sparkles } from 'lucide-react';
 
 export const AISettingsPanel: React.FC = () => {
@@ -10,6 +11,8 @@ export const AISettingsPanel: React.FC = () => {
   const [localModel, setLocalModel] = useState('hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M');
   const [isPinging, setIsPinging] = useState(false);
   const [isScanningModels, setIsScanningModels] = useState(false);
+  const [isTestingGemini, setIsTestingGemini] = useState(false);
+  const [geminiTestResult, setGeminiTestResult] = useState<{ ok: boolean; model: string; error?: string } | null>(null);
   const [installedModels, setInstalledModels] = useState<{ name: string; size?: string }[]>([]);
   const [pingResult, setPingResult] = useState<{ ok: boolean; latencyMs: number; error?: string } | null>(null);
   const [saved, setSaved] = useState(false);
@@ -33,6 +36,20 @@ export const AISettingsPanel: React.FC = () => {
     // Auto-scan installed models if local endpoint is reachable
     scanInstalledModels(storedEndpoint || 'http://localhost:11434/v1');
   }, []);
+
+  const handleTestGeminiKey = async () => {
+    setIsTestingGemini(true);
+    setGeminiTestResult(null);
+    try {
+      localStorage.setItem('minimax_gemini_api_key', apiKey);
+      const res = await GeminiProvider.testApiKey(apiKey);
+      setGeminiTestResult(res);
+    } catch (err: any) {
+      setGeminiTestResult({ ok: false, model: '', error: err.message || 'Key validation failed' });
+    } finally {
+      setIsTestingGemini(false);
+    }
+  };
 
   const scanInstalledModels = async (endpointToTest?: string) => {
     setIsScanningModels(true);
@@ -226,25 +243,83 @@ export const AISettingsPanel: React.FC = () => {
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
         {/* Gemini Config */}
         {providerId === 'gemini' && (
-          <div className="space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div className="space-y-5 animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-3 gap-2">
               <div className="flex items-center gap-2">
                 <Key className="w-4 h-4 text-cyan-400" />
-                <h3 className="text-sm font-bold text-zinc-100">Google Gemini API Credentials</h3>
+                <h3 className="text-sm font-bold text-zinc-100">Google Gemini & Vertex AI Credentials</h3>
               </div>
-              <a
-                href="https://aistudio.google.com/app/apikey"
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-cyan-400 hover:text-cyan-300 font-bold underline"
+
+              <button
+                type="button"
+                onClick={handleTestGeminiKey}
+                disabled={isTestingGemini}
+                className="px-4 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-400 dark:text-cyan-300 text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto shrink-0"
               >
-                Get Free API Key from Google AI Studio ↗
-              </a>
+                {isTestingGemini ? <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400" /> : <Activity className="w-3.5 h-3.5 text-cyan-400" />}
+                <span>{isTestingGemini ? 'Validating Key...' : '⚡ Test Google API Key'}</span>
+              </button>
             </div>
 
+            {/* Dual Method Setup Cards (AI Studio vs Vertex AI) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Option A: Google AI Studio (Free) */}
+              <div className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-4.5 flex flex-col justify-between space-y-3">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-extrabold text-xs text-zinc-100 flex items-center gap-1.5">
+                      <span>✨ Method 1: Google AI Studio</span>
+                      <span className="text-[9px] bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                        FREE & INSTANT
+                      </span>
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Zero credit card required. Free tier includes Gemini 3.5 Flash, 2.5 Flash, and Gemini 2.5 Pro reasoning models.
+                  </p>
+                </div>
+
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 py-2 bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-400 dark:text-cyan-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all text-center"
+                >
+                  <span>Get Free Key at Google AI Studio ↗</span>
+                </a>
+              </div>
+
+              {/* Option B: Google Cloud Vertex AI */}
+              <div className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-4.5 flex flex-col justify-between space-y-3">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-extrabold text-xs text-zinc-100 flex items-center gap-1.5">
+                      <span>🏢 Method 2: Google Cloud Vertex AI</span>
+                      <span className="text-[9px] bg-purple-500/20 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-bold">
+                        HIGH QUOTA
+                      </span>
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    For enterprise high-throughput generation. Uses global Vertex AI Express endpoints with custom project quota.
+                  </p>
+                </div>
+
+                <a
+                  href="https://console.cloud.google.com/apis/credentials"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 py-2 bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-400 dark:text-purple-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all text-center"
+                >
+                  <span>Get Vertex Key in Google Cloud Console ↗</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Input Field */}
             <div className="space-y-2">
-              <label className="text-xs text-zinc-400 font-medium block">
-                Google Gemini API Key (or Vertex AI Express Mode)
+              <label className="text-xs text-zinc-300 font-bold block">
+                Enter Your Google Gemini / Vertex API Key:
               </label>
               <input
                 type="password"
@@ -254,9 +329,29 @@ export const AISettingsPanel: React.FC = () => {
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 focus:outline-none focus:border-cyan-500/50 font-mono shadow-inner"
               />
               <p className="text-[11px] text-zinc-500 leading-normal">
-                Keys starting with <code>AIzaSy...</code> work directly with Google AI Studio (Free) and Vertex AI Express endpoints.
+                Your key is stored strictly in local browser storage (<code>localStorage</code>) and is never sent to third-party tracking servers.
               </p>
             </div>
+
+            {/* Live Verification Status Banner */}
+            {geminiTestResult && (
+              <div
+                className={`p-3.5 rounded-2xl border text-xs sm:text-sm flex items-center justify-between animate-fade-in ${
+                  geminiTestResult.ok
+                    ? 'bg-emerald-950 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm'
+                    : 'bg-red-950 border-red-500 text-red-900 dark:text-red-200 shadow-sm'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span>{geminiTestResult.ok ? '✅' : '❌'}</span>
+                  <span className="font-bold">
+                    {geminiTestResult.ok
+                      ? `Google API Key Verified & Active! (${geminiTestResult.model})`
+                      : geminiTestResult.error}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

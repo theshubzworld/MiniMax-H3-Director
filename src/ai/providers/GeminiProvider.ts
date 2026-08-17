@@ -832,4 +832,32 @@ Return JSON object:
       },
     };
   }
+
+  public static async testApiKey(apiKey: string): Promise<{ ok: boolean; model: string; error?: string }> {
+    const key = (apiKey || '').trim();
+    if (!key) {
+      return { ok: false, model: '', error: 'Please enter an API key first' };
+    }
+
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: 'ping' }] }],
+          generationConfig: { maxOutputTokens: 5 },
+        }),
+      });
+
+      if (res.ok) {
+        return { ok: true, model: 'gemini-2.5-flash / Gemini 3.5 Flash' };
+      }
+
+      const errJson = await res.json().catch(() => ({}));
+      const msg = errJson.error?.message || `HTTP ${res.status}: ${res.statusText}`;
+      return { ok: false, model: '', error: msg };
+    } catch (err: any) {
+      return { ok: false, model: '', error: err.message || 'Network error' };
+    }
+  }
 }
