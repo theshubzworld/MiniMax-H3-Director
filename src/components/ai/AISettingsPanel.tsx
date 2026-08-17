@@ -155,47 +155,47 @@ export const AISettingsPanel: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-12">
+    <div className="w-full space-y-5 pb-8">
       {/* Header Banner */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-        <div className="flex items-center gap-4 min-w-0">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold shadow-md shadow-cyan-500/10 shrink-0">
-            <Sliders className="w-6 h-6" />
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold shadow-md shadow-cyan-500/10 shrink-0">
+            <Sliders className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-extrabold text-zinc-100 flex items-center gap-2.5 whitespace-nowrap">
+            <h1 className="text-lg font-extrabold text-zinc-100 flex items-center gap-2 whitespace-nowrap">
               <span>AI Director Engine Settings</span>
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5 leading-normal">
+            <p className="text-xs text-zinc-400 mt-0.5 leading-normal">
               Configure Cloud Gemini (Vertex Express / AI Studio) or Local GPU (Qwen3-VL / Ollama / LM Studio).
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 px-3.5 py-2 rounded-xl font-mono font-bold flex items-center gap-2 whitespace-nowrap shrink-0">
-            <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-            <span className="whitespace-nowrap">Active Engine: {providerId.toUpperCase()}</span>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-xl font-mono font-bold flex items-center gap-2 whitespace-nowrap shrink-0">
+            <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap">Active: {providerId.toUpperCase()}</span>
           </span>
 
           <button
             type="button"
             onClick={handleSave}
-            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 font-extrabold rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all cursor-pointer whitespace-nowrap shrink-0"
+            className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-md shadow-cyan-500/20 transition-all cursor-pointer whitespace-nowrap shrink-0"
           >
-            {saved ? <Check className="w-4 h-4 shrink-0" /> : <Sparkles className="w-4 h-4 shrink-0" />}
-            <span className="whitespace-nowrap">{saved ? 'Settings Saved!' : 'Save AI Settings'}</span>
+            {saved ? <Check className="w-3.5 h-3.5 shrink-0" /> : <Sparkles className="w-3.5 h-3.5 shrink-0" />}
+            <span className="whitespace-nowrap">{saved ? 'Saved!' : 'Save AI Settings'}</span>
           </button>
         </div>
       </div>
 
       {/* Provider Selector Cards Grid */}
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider block">
           1. Select Active AI Provider Engine
         </label>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {/* Option 1: Gemini */}
           <button
             type="button"
@@ -203,29 +203,29 @@ export const AISettingsPanel: React.FC = () => {
               setProviderId('gemini');
               AIEngine.setActiveProvider('gemini');
             }}
-            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+            className={`p-4 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
               providerId === 'gemini'
-                ? 'bg-cyan-950/40 border-cyan-500 text-cyan-200 shadow-xl shadow-cyan-500/10 ring-1 ring-cyan-500/50'
+                ? 'bg-cyan-950/40 border-cyan-500 text-cyan-200 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-500/50'
                 : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
             }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
-                  <Sparkles className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 {providerId === 'gemini' && (
-                  <span className="text-[10px] bg-cyan-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase">
+                  <span className="text-[9px] bg-cyan-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase font-mono">
                     ACTIVE
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-bold text-zinc-100 mb-1">Google Cloud Gemini</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <h3 className="text-xs font-bold text-zinc-100 mb-0.5">Google Cloud Gemini</h3>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Gemini 3.5 Flash, 2.5 Flash, and 2.5 Pro with 4K thinking budget. Instant cloud inference.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 text-[11px] text-cyan-400 font-mono">
+            <div className="mt-3 pt-2.5 border-t border-zinc-800/80 text-[10px] text-cyan-400 font-mono">
               Vertex Express / AI Studio
             </div>
           </button>
@@ -237,29 +237,29 @@ export const AISettingsPanel: React.FC = () => {
               setProviderId('local');
               AIEngine.setActiveProvider('local');
             }}
-            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+            className={`p-4 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
               providerId === 'local'
-                ? 'bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-200 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50'
+                ? 'bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-200 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/50'
                 : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
             }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
-                  <Cpu className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
+                  <Cpu className="w-4 h-4" />
                 </div>
                 {providerId === 'local' && (
-                  <span className="text-[10px] bg-emerald-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase">
+                  <span className="text-[9px] bg-emerald-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase font-mono">
                     ACTIVE
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-bold text-zinc-100 mb-1">Local GPU (Qwen3-VL / Ollama)</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <h3 className="text-xs font-bold text-zinc-100 mb-0.5">Local GPU (Qwen3-VL / Ollama)</h3>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 100% offline & private local Vision-LLM via Ollama, LM Studio, or ComfyUI. Zero API costs.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 text-[11px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+            <div className="mt-3 pt-2.5 border-t border-zinc-800/80 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
               Qwen3-VL / Qwen2.5-VL 8B
             </div>
           </button>
@@ -271,29 +271,29 @@ export const AISettingsPanel: React.FC = () => {
               setProviderId('openai');
               AIEngine.setActiveProvider('openai');
             }}
-            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+            className={`p-4 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
               providerId === 'openai'
-                ? 'bg-purple-950/40 border-purple-500 text-purple-200 shadow-xl shadow-purple-500/10 ring-1 ring-purple-500/50'
+                ? 'bg-purple-950/40 border-purple-500 text-purple-200 shadow-lg shadow-purple-500/10 ring-1 ring-purple-500/50'
                 : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
             }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">
-                  <Key className="w-5 h-5" />
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">
+                  <Key className="w-4 h-4" />
                 </div>
                 {providerId === 'openai' && (
-                  <span className="text-[10px] bg-purple-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase">
+                  <span className="text-[9px] bg-purple-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full uppercase font-mono">
                     ACTIVE
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-bold text-zinc-100 mb-1">OpenAI GPT-4o</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <h3 className="text-xs font-bold text-zinc-100 mb-0.5">OpenAI GPT-4o</h3>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
                 Direct OpenAI API endpoint or custom compatible proxy endpoints for high-fidelity vision reasoning.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 text-[11px] text-purple-400 font-mono">
+            <div className="mt-3 pt-2.5 border-t border-zinc-800/80 text-[10px] text-purple-400 font-mono">
               GPT-4o / GPT-4o-mini
             </div>
           </button>
@@ -563,7 +563,7 @@ export const AISettingsPanel: React.FC = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {RECOMMENDED_LOCAL_MODELS.map((item) => {
                   const isActive = localModel === item.tag;
                   const isCopied = copiedModelTag === item.tag;

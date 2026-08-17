@@ -70,11 +70,10 @@ export const App: React.FC = () => {
                         key={m.mode}
                         type="button"
                         onClick={() => updateSettings({ mode: m.mode as MiniMaxMode })}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                          isSelected
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${isSelected
                             ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20 font-extrabold'
                             : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
-                        }`}
+                          }`}
                         title={m.desc}
                       >
                         <span>{m.label}</span>
@@ -175,7 +174,7 @@ export const App: React.FC = () => {
           )}
 
           {(activeView as any) === 'ai-settings' && (
-            <div className="max-w-4xl mx-auto">
+            <div className="w-full max-w-[1500px] mx-auto animate-fade-in">
               <AISettingsPanel />
             </div>
           )}
