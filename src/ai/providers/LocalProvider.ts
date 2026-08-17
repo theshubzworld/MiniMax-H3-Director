@@ -38,6 +38,54 @@ export class LocalProvider implements AIProvider {
     }
   }
 
+  public async getInstalledModels(): Promise<{ name: string; size?: string }[]> {
+    const endpoint = this.getEndpoint();
+    const results: { name: string; size?: string }[] = [];
+
+    // 1. Try Ollama native /api/tags
+    try {
+      const baseOllama = endpoint.replace(/\/v1\/?$/, '');
+      const res = await fetch(`${baseOllama}/api/tags`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.models && Array.isArray(data.models)) {
+          for (const m of data.models) {
+            const modelName = m.name || m.model;
+            if (modelName) {
+              results.push({
+                name: modelName,
+                size: m.size ? `${(m.size / (1024 * 1024 * 1024)).toFixed(1)} GB` : undefined,
+              });
+            }
+          }
+          if (results.length > 0) return results;
+        }
+      }
+    } catch (err) {
+      // fallback
+    }
+
+    // 2. Try OpenAI-compatible /v1/models (LM Studio / vLLM)
+    try {
+      const res = await fetch(`${endpoint}/models`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.data && Array.isArray(data.data)) {
+          for (const m of data.data) {
+            const modelName = m.id || m.name;
+            if (modelName) {
+              results.push({ name: modelName });
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to query local models:', err);
+    }
+
+    return results;
+  }
+
   public async analyzeVisualDNA(images: string[]): Promise<VisualDNA> {
     const defaultDNA: VisualDNA = {
       identity: {

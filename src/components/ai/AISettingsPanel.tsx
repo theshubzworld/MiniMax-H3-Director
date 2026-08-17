@@ -7,8 +7,10 @@ export const AISettingsPanel: React.FC = () => {
   const [providerId, setProviderId] = useState('gemini');
   const [apiKey, setApiKey] = useState('');
   const [localEndpoint, setLocalEndpoint] = useState('http://localhost:11434/v1');
-  const [localModel, setLocalModel] = useState('qwen2.5-vl:8b');
+  const [localModel, setLocalModel] = useState('hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M');
   const [isPinging, setIsPinging] = useState(false);
+  const [isScanningModels, setIsScanningModels] = useState(false);
+  const [installedModels, setInstalledModels] = useState<{ name: string; size?: string }[]>([]);
   const [pingResult, setPingResult] = useState<{ ok: boolean; latencyMs: number; error?: string } | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -27,7 +29,24 @@ export const AISettingsPanel: React.FC = () => {
 
     const activeId = AIEngine.getActiveProvider().id;
     if (activeId) setProviderId(activeId);
+
+    // Auto-scan installed models if local endpoint is reachable
+    scanInstalledModels(storedEndpoint || 'http://localhost:11434/v1');
   }, []);
+
+  const scanInstalledModels = async (endpointToTest?: string) => {
+    setIsScanningModels(true);
+    try {
+      if (endpointToTest) localStorage.setItem('minimax_local_endpoint', endpointToTest);
+      const localProv = new LocalProvider();
+      const models = await localProv.getInstalledModels();
+      setInstalledModels(models);
+    } catch (err) {
+      console.warn('Scan models failed:', err);
+    } finally {
+      setIsScanningModels(false);
+    }
+  };
 
   const handleTestPing = async () => {
     setIsPinging(true);
@@ -38,6 +57,9 @@ export const AISettingsPanel: React.FC = () => {
       const localProv = new LocalProvider();
       const res = await localProv.pingServer();
       setPingResult(res);
+      if (res.ok) {
+        scanInstalledModels(localEndpoint);
+      }
     } catch (err: any) {
       setPingResult({ ok: false, latencyMs: 0, error: err.message || 'Connection failed' });
     } finally {
@@ -73,8 +95,8 @@ export const AISettingsPanel: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-300 px-3.5 py-2 rounded-xl font-mono font-bold flex items-center gap-2 whitespace-nowrap shrink-0">
-            <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span className="text-xs bg-emerald-950 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 px-3.5 py-2 rounded-xl font-mono font-bold flex items-center gap-2 whitespace-nowrap shrink-0">
+            <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="whitespace-nowrap">Active Engine: {providerId.toUpperCase()}</span>
           </span>
 
@@ -139,13 +161,13 @@ export const AISettingsPanel: React.FC = () => {
             }}
             className={`p-5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
               providerId === 'local'
-                ? 'bg-emerald-950/40 border-emerald-500 text-emerald-200 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50'
+                ? 'bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-200 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/50'
                 : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
             }`}
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
                   <Cpu className="w-5 h-5" />
                 </div>
                 {providerId === 'local' && (
@@ -159,7 +181,7 @@ export const AISettingsPanel: React.FC = () => {
                 100% offline & private local Vision-LLM via Ollama, LM Studio, or ComfyUI. Zero API costs.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 text-[11px] text-emerald-400 font-mono">
+            <div className="mt-4 pt-3 border-t border-zinc-800/80 text-[11px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
               Qwen3-VL / Qwen2.5-VL 8B
             </div>
           </button>
@@ -243,19 +265,32 @@ export const AISettingsPanel: React.FC = () => {
           <div className="space-y-5 animate-fade-in">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-emerald-400" />
+                <Cpu className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <h3 className="text-sm font-bold text-zinc-100">Local GPU Vision-LLM Server Configuration</h3>
               </div>
               
-              <button
-                type="button"
-                onClick={handleTestPing}
-                disabled={isPinging}
-                className="px-4 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
-              >
-                {isPinging ? <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400" /> : <Activity className="w-3.5 h-3.5 text-emerald-400" />}
-                <span>{isPinging ? 'Testing Local GPU...' : '⚡ Test Connection'}</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => scanInstalledModels(localEndpoint)}
+                  disabled={isScanningModels}
+                  className="px-3.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  title="Query all models installed in Ollama / LM Studio"
+                >
+                  {isScanningModels ? <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400" /> : <span>🔍</span>}
+                  <span>{isScanningModels ? 'Scanning...' : 'Scan Local Models'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleTestPing}
+                  disabled={isPinging}
+                  className="px-4 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {isPinging ? <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-500" /> : <Activity className="w-3.5 h-3.5 text-emerald-500" />}
+                  <span>{isPinging ? 'Testing Local GPU...' : '⚡ Test Connection'}</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -276,30 +311,63 @@ export const AISettingsPanel: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs text-zinc-400 font-bold block">Local Vision Model Tag / Identifier</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-zinc-400 font-bold block">Local Vision Model Tag / Identifier</label>
+                  {installedModels.length > 0 && (
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+                      {installedModels.length} models detected
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={localModel}
                   onChange={(e) => setLocalModel(e.target.value)}
-                  placeholder="qwen2.5-vl:8b"
+                  placeholder="hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 font-mono focus:outline-none focus:border-emerald-500/50 shadow-inner"
                 />
-                <div className="text-[11px] text-zinc-500">
-                  Recommended: <code>qwen2.5-vl:8b</code> or <code>qwen3-vl-8b-heretic</code>
-                </div>
+
+                {/* 1-Click Installed Local Models Selector */}
+                {installedModels.length > 0 && (
+                  <div className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl space-y-1.5">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                      Installed on Your Machine (Click to select):
+                    </span>
+                    <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
+                      {installedModels.map((m) => {
+                        const isCurrent = localModel === m.name;
+                        return (
+                          <button
+                            key={m.name}
+                            type="button"
+                            onClick={() => setLocalModel(m.name)}
+                            className={`px-2.5 py-1 text-[11px] font-mono rounded-lg border text-left transition-all cursor-pointer flex items-center gap-1.5 ${
+                              isCurrent
+                                ? 'bg-emerald-950 border-emerald-500 text-emerald-800 dark:text-emerald-200 font-bold shadow-xs'
+                                : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                            }`}
+                          >
+                            <span>{m.name}</span>
+                            {m.size && <span className="text-[9px] text-zinc-500">({m.size})</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Quick Setup Instructions Box */}
             <div className="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-2 text-xs text-zinc-400">
               <div className="font-bold text-zinc-200 flex items-center gap-1.5">
-                <span>💡 1-Command Ollama Setup:</span>
+                <span>💡 1-Command Ollama Heretic Setup:</span>
               </div>
-              <code className="block p-2.5 bg-zinc-900 rounded-xl font-mono text-emerald-400 border border-zinc-800 select-all">
-                ollama run qwen2.5-vl:8b
+              <code className="block p-2.5 bg-zinc-900 rounded-xl font-mono text-emerald-600 dark:text-emerald-400 border border-zinc-800 select-all">
+                ollama run hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M
               </code>
               <p className="text-[11px] text-zinc-500">
-                Once downloaded, Ollama will automatically listen on <code>http://localhost:11434/v1</code> and serve your local GPU prompt requests.
+                Ollama will serve this model directly at <code>http://localhost:11434/v1</code> with zero safety refusals.
               </p>
             </div>
 
@@ -307,16 +375,16 @@ export const AISettingsPanel: React.FC = () => {
               <div
                 className={`p-3.5 rounded-2xl border text-xs sm:text-sm flex items-center justify-between animate-fade-in ${
                   pingResult.ok
-                    ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-200'
-                    : 'bg-red-950/60 border-red-500/50 text-red-200'
+                    ? 'bg-emerald-950 border-emerald-500 text-emerald-900 dark:text-emerald-200 shadow-sm'
+                    : 'bg-red-950 border-red-500 text-red-900 dark:text-red-200 shadow-sm'
                 }`}
               >
                 <div className="flex items-center gap-2">
                   <span>{pingResult.ok ? '✅' : '❌'}</span>
-                  <span className="font-semibold">{pingResult.ok ? 'Local GPU Vision-LLM Server is Online & Ready!' : pingResult.error}</span>
+                  <span className="font-bold">{pingResult.ok ? 'Local GPU Vision-LLM Server is Online & Ready!' : pingResult.error}</span>
                 </div>
                 {pingResult.ok && (
-                  <span className="font-mono font-extrabold text-xs bg-emerald-500/20 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                  <span className="font-mono font-extrabold text-xs bg-emerald-500/20 text-emerald-900 dark:text-emerald-200 px-2.5 py-1 rounded-lg border border-emerald-500/40">
                     {pingResult.latencyMs}ms latency
                   </span>
                 )}
