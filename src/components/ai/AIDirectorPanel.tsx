@@ -818,10 +818,10 @@ export const AIDirectorPanel: React.FC = () => {
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-cyan-300">🎬 Cinematic Director</span>
-              {directorProfile === 'cinematic' && <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-cyan-400 dark:text-cyan-300">🎬 Cinematic Director</span>
+              {directorProfile === 'cinematic' && <span className="text-[10px] bg-cyan-500/20 text-cyan-400 dark:text-cyan-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
               Gemini 3.5 Flash with 35mm optical lens physics, cinematic framing, depth of field, and lighting falloff.
             </p>
           </button>
@@ -832,15 +832,15 @@ export const AIDirectorPanel: React.FC = () => {
             onClick={() => setDirectorProfile('uncensored')}
             className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
               directorProfile === 'uncensored'
-                ? 'bg-rose-950/70 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
+                ? 'bg-rose-950/60 border-rose-500 text-rose-200 shadow-md shadow-rose-500/20'
                 : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-rose-300">🔥 Uncensored Real Motion</span>
-              {directorProfile === 'uncensored' && <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-rose-400 dark:text-rose-300">🔥 Uncensored Real Motion</span>
+              {directorProfile === 'uncensored' && <span className="text-[10px] bg-rose-500/20 text-rose-400 dark:text-rose-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
               Gemini 3.5 Flash with simple natural English. Focuses on continuous physical human motion without camera jargon.
             </p>
           </button>
@@ -856,10 +856,10 @@ export const AIDirectorPanel: React.FC = () => {
             }`}
           >
             <div className="font-bold text-xs flex items-center justify-between mb-1">
-              <span className="flex items-center gap-1.5 text-purple-300">🧠 Deep Reasoning</span>
-              {directorProfile === 'reasoning' && <span className="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
+              <span className="flex items-center gap-1.5 text-purple-400 dark:text-purple-300">🧠 Deep Reasoning</span>
+              {directorProfile === 'reasoning' && <span className="text-[10px] bg-purple-500/20 text-purple-400 dark:text-purple-300 px-2 py-0.5 rounded font-mono font-bold">ACTIVE</span>}
             </div>
-            <p className="text-[11px] text-zinc-400 leading-normal">
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal">
               Gemini 2.5 Pro with 4K thinking budget. Maximum logical consistency across complex multi-character plots.
             </p>
           </button>
