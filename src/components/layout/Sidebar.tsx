@@ -101,7 +101,7 @@ export const Sidebar: React.FC = () => {
             <span className="text-[9px] font-mono text-zinc-500">T2V · I2V · FL2V · L2V</span>
           </div>
           <span className="px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-[10px] font-mono font-bold text-cyan-400 shadow-xs">
-            v2.4.0
+            v2.4.1
           </span>
         </div>
 

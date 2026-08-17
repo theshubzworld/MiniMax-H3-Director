@@ -5,6 +5,14 @@ All notable changes to the MiniMax H3 Prompt Studio codebase will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-08-17
+
+### Fixed
+- **Local LLM Dual-Mode Multimodal Payload & Fallback**: Resolved Ollama / LM Studio connection stalls by transmitting clean string content for text-only storyboards and dual-transmitting OpenAI `image_url` + native Ollama base64 lists for visual keyframes with auto-recovery.
+- **Immediate Streaming Terminal Visibility**: Ensured the Live GPU streaming terminal opens instantly upon generation start with pulsing status indicator.
+- **Model Selector Dropdown Typography & Alignment**: Cleaned dropdown options in `AISettingsPanel.tsx` with dynamic model labels, eliminating broken ellipsis strings.
+- **Vite React Fast Refresh**: Scoped internal style dictionary exports in `AIDirectorPanel.tsx` to eliminate all HMR Fast Refresh warnings.
+
 ## [2.4.0] - 2026-08-17
 
 ### Added

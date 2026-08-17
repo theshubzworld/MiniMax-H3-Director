@@ -144,6 +144,7 @@ When making implementation decisions or resolving engineering trade-offs, follow
 
 ### 🛠️ Execution & Version Control
 * **Propose Fix Before Coding**: ALWAYS explain root cause analysis and proposed changes to the user before writing code. Explicit user approval is required.
-* **Always Maintain Timestamped Changelog**: Update `CHANGELOG.md` under `[Unreleased]` with timestamped entries before committing (`git add CHANGELOG.md`).
+* **Always Maintain Timestamped Changelog**: Update `CHANGELOG.md` with timestamped entries before committing (`git add CHANGELOG.md`).
+* **Mandatory Version Bump on Every Push**: ALWAYS bump the semantic version in `package.json` and `Sidebar.tsx` badge, add a dedicated version section in `CHANGELOG.md`, and create a matching Git tag (`vX.Y.Z`) on every approved push.
 * **Never Auto-Push**: NEVER execute `git push` without explicit user permission.
 * **Maintain Rolling Handoff Backup (`.agents/SESSION_HANDOFF_BACKUP.md`)**: Update context handoff when concluding sessions or upon user request.
