@@ -14,6 +14,7 @@ export const AISettingsPanel: React.FC = () => {
   const [isTestingGemini, setIsTestingGemini] = useState(false);
   const [geminiTestResult, setGeminiTestResult] = useState<{ ok: boolean; model: string; error?: string } | null>(null);
   const [installedModels, setInstalledModels] = useState<{ name: string; size?: string }[]>([]);
+  const [isCustomModel, setIsCustomModel] = useState(false);
   const [pingResult, setPingResult] = useState<{ ok: boolean; latencyMs: number; error?: string } | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -407,46 +408,83 @@ export const AISettingsPanel: React.FC = () => {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs text-zinc-400 font-bold block">Local Vision Model Tag / Identifier</label>
-                  {installedModels.length > 0 && (
+                  <label className="text-xs text-zinc-300 font-bold block">Local Vision Model</label>
+                  {installedModels.length > 0 ? (
                     <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
-                      {installedModels.length} models detected
+                      {installedModels.length} local models detected
                     </span>
+                  ) : (
+                    <span className="text-[10px] text-zinc-500">Popular defaults</span>
                   )}
                 </div>
-                <input
-                  type="text"
-                  value={localModel}
-                  onChange={(e) => setLocalModel(e.target.value)}
-                  placeholder="hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 font-mono focus:outline-none focus:border-emerald-500/50 shadow-inner"
-                />
 
-                {/* 1-Click Installed Local Models Selector */}
-                {installedModels.length > 0 && (
-                  <div className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-xl space-y-1.5">
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
-                      Installed on Your Machine (Click to select):
-                    </span>
-                    <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
-                      {installedModels.map((m) => {
-                        const isCurrent = localModel === m.name;
-                        return (
-                          <button
-                            key={m.name}
-                            type="button"
-                            onClick={() => setLocalModel(m.name)}
-                            className={`px-2.5 py-1 text-[11px] font-mono rounded-lg border text-left transition-all cursor-pointer flex items-center gap-1.5 ${
-                              isCurrent
-                                ? 'bg-emerald-950 border-emerald-500 text-emerald-800 dark:text-emerald-200 font-bold shadow-xs'
-                                : 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:border-zinc-700'
-                            }`}
-                          >
-                            <span>{m.name}</span>
-                            {m.size && <span className="text-[9px] text-zinc-500">({m.size})</span>}
-                          </button>
-                        );
-                      })}
+                {/* Main Native Dropdown Selector */}
+                <div className="relative">
+                  <select
+                    value={
+                      installedModels.some((m) => m.name === localModel)
+                        ? localModel
+                        : ['hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M', 'qwen2.5-vl:3b', 'qwen2.5-vl:7b-instruct-q4_K_M', 'minicpm-v:2.6'].includes(localModel)
+                        ? localModel
+                        : '__custom__'
+                    }
+                    onChange={(e) => {
+                      if (e.target.value === '__custom__') {
+                        setIsCustomModel(true);
+                      } else {
+                        setIsCustomModel(false);
+                        setLocalModel(e.target.value);
+                      }
+                    }}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xs sm:text-sm text-zinc-200 font-mono focus:outline-none focus:border-emerald-500/50 shadow-inner cursor-pointer appearance-none"
+                  >
+                    {installedModels.length > 0 && (
+                      <optgroup label="✨ Detected On Your Machine">
+                        {installedModels.map((m) => (
+                          <option key={m.name} value={m.name}>
+                            {m.name} {m.size ? `(${m.size})` : ''}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+
+                    <optgroup label="🔥 Recommended Vision Models">
+                      <option value="hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M">
+                        hf.co/.../Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M (Pixaroma Heretic Uncensored)
+                      </option>
+                      <option value="qwen2.5-vl:3b">qwen2.5-vl:3b (~3GB VRAM Fast)</option>
+                      <option value="qwen2.5-vl:7b-instruct-q4_K_M">qwen2.5-vl:7b-instruct-q4_K_M (~5GB VRAM)</option>
+                      <option value="minicpm-v:2.6">minicpm-v:2.6 (MiniCPM 8B Vision)</option>
+                    </optgroup>
+
+                    <option value="__custom__">✍️ Custom Model Tag (Type Manually...)</option>
+                  </select>
+
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 text-xs">
+                    ▼
+                  </div>
+                </div>
+
+                {/* Custom Model Input (If selected or manual mode) */}
+                {isCustomModel && (
+                  <div className="pt-1.5 animate-fade-in">
+                    <input
+                      type="text"
+                      value={localModel}
+                      onChange={(e) => setLocalModel(e.target.value)}
+                      placeholder="e.g. hf.co/user/custom-model:Q4_K_M"
+                      className="w-full bg-zinc-950 border border-emerald-500/40 rounded-xl px-4 py-2 text-xs text-zinc-200 font-mono focus:outline-none focus:border-emerald-500 shadow-inner"
+                      autoFocus
+                    />
+                    <div className="flex justify-between items-center mt-1 text-[10px] text-zinc-500">
+                      <span>Type any model tag registered in Ollama / LM Studio</span>
+                      <button
+                        type="button"
+                        onClick={() => setIsCustomModel(false)}
+                        className="text-cyan-400 hover:underline cursor-pointer"
+                      >
+                        Back to dropdown
+                      </button>
                     </div>
                   </div>
                 )}
