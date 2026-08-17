@@ -5,6 +5,15 @@ All notable changes to the MiniMax H3 Prompt Studio codebase will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-08-17
+
+### Added
+- **Vector Aperture Logo & Modern Header Redesign**: Designed custom luxury 35mm optical aperture vector emblem (`DirectorLogo.tsx`), updated `favicon.svg`, and rebuilt `Header.tsx` with live project metrics chip, view switchers, and gradient actions.
+- **Real-Time Token Streaming & Live GPU Terminal**: Integrated SSE token streaming (`stream: true`) in `LocalProvider.ts` with real-time reasoning and token display terminal in `AIDirectorPanel.tsx` with 1-click copy, minimize, and dismiss controls.
+- **Recommended Vision Models & 1-Click Library**: Added 4-model curated library in `AISettingsPanel.tsx` with direct 1-click copy commands and verified links for Ollama and Hugging Face GGUF (`Qwen3-VL Heretic`, `Qwen2.5-VL 3B`, `Qwen2.5-VL 7B`, and `LLaVA 7B`).
+- **Dynamic Provider Decoupling & Synchronization**: AI Director Studio dynamically adapts all previews, payloads, and buttons to active local models or cloud Gemini.
+- **Sidebar Footer Studio Version Badge**: Added `v2.4.0` status pill and Buy Me a Coffee direct support card.
+
 ## [Unreleased]
 
 ### Fixed
