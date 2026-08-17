@@ -55,23 +55,68 @@ cd MiniMax-H3-Director
 npm install
 ```
 
-### 3. Configure Gemini API Key
+### 3. Configure Gemini / Vertex AI API Key
 Create a `.env` file in the root folder (or copy from `.env.example`):
 ```bash
 cp .env.example .env
 ```
 
-Add your Google Gemini API key to `.env`:
+Add your Google Gemini / Vertex AI API key to `.env`:
 ```env
 VITE_GEMINI_API_KEY=your_gemini_api_key_here
 ```
-> 💡 *Get your free Gemini API key from [Google AI Studio](https://aistudio.google.com/). You can also enter or change your API key directly inside the studio UI's **AI Settings** panel.*
+> 💡 *You can also paste and update your API key directly inside the studio UI's **⚙️ Settings** panel. It is saved locally in your browser and never leaves your client.*
 
 ### 4. Run Development Server
 ```bash
 npm run dev
 ```
-Open your browser at `http://localhost:3000`.
+Open your browser at `http://localhost:4000`.
+
+---
+
+## 🔑 How to Get Your Google Gemini / Vertex AI API Key
+
+You can obtain an API key using either **Google AI Studio** (quickest & free) or **Google Cloud Console (Vertex AI)**:
+
+### 🌟 Method 1: Google AI Studio (Fastest & Recommended)
+
+1. **Open Google AI Studio**: Navigate to [aistudio.google.com](https://aistudio.google.com/).
+2. **Sign In**: Log in with your Google account.
+3. **Open API Keys**: Click the **"Get API key"** button in the left sidebar navigation.
+4. **Create Key**: Click **"Create API key"** and select **"Create API key in new project"** (or choose an existing Google Cloud project).
+5. **Copy Key**: Copy the generated API key (it starts with `AIzaSy...`).
+6. **Paste Key**: Add it to your `.env` file (`VITE_GEMINI_API_KEY=...`) or paste it into the **⚙️ Settings** modal in the studio UI.
+
+---
+
+### ☁️ Method 2: Google Cloud Console (Vertex AI Express Mode)
+
+1. **Open Google Cloud Console**: Go to [console.cloud.google.com](https://console.cloud.google.com/).
+2. **Select/Create Project**: Select an existing project or click **New Project** (ensure billing is enabled for Vertex AI access).
+3. **Enable Vertex AI API**:
+   - In the top search bar, search for **"Vertex AI API"**.
+   - Click **Enable** (or go to **APIs & Services > Library > Vertex AI API**).
+   - Also enable the **"Generative Language API"** if prompted.
+4. **Create API Key Credentials**:
+   - In the left sidebar, navigate to **APIs & Services > Credentials**.
+   - Click **+ CREATE CREDENTIALS** at the top and select **API key**.
+   - *(Recommended for Security)* Click **Edit API key**, go to **API restrictions**, choose **Restrict key**, and select **Vertex AI API** and **Generative Language API**.
+5. **Save & Paste**: Copy your API key into your `.env` or the Studio UI Settings.
+
+---
+
+### 🤖 Supported Model Tiers in MiniMax H3 Director
+
+| Model | Badge | Primary Capability |
+| :--- | :--- | :--- |
+| **`gemini-3.5-flash`** | ⚡ High Speed | Storyboard orchestration, visual DNA extraction & prompt synthesis |
+| **`gemini-2.5-flash`** | 🏎️ Workhorse | High-throughput, rate-limit resilient prompt generation |
+| **`gemini-2.5-pro`** | 🧠 Deep Thinking | Complex multi-shot narrative arcs, cinematic lighting & continuity |
+| **`gemini-3.1-flash-image`** | 🍌 Nano Banana 2 | 4K visual keyframe synthesis (Image-to-Video & FL2VA pairs) |
+| **`gemini-3-pro-image`** | 🎬 Nano Banana Pro | Multi-character staging & high spatial precision keyframes |
+
+---
 
 ### 5. Build for Production
 ```bash
