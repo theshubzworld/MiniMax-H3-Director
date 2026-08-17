@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **[2026-08-17] Git Configuration & Agent Guidelines Tracking**: Updated `.gitignore` to un-ignore `.agents/AGENTS.md` and `.agents/SESSION_HANDOFF_BACKUP.md` while keeping local agent cache folders ignored. Configured dev server port to 4000 in `vite.config.ts`.
 - **[2026-08-09] Uncensored NSFW Audio & Spoken Dialogue Mandate**: Updated `uncensored_nsfw` mode system prompt contract and JSON schema template in `GeminiProvider.ts` to mandate spoken dialogue (`hasDialogue: true`), intimate whispers, and rich multi-layer atmospheric soundscapes (`ambience` and `foley`).
 - **[2026-08-09] Per-Shot Duration Selectors & Mandatory Shot Count Contract**: Added interactive per-shot duration dropdown selectors (`0.5s` to `6.0s`) to `ShotCard.tsx` and `AIDirectorPanel.tsx`. Added `setShotsCount` dropdown selector (`1` to `9` shots) and enforced strict `MANDATORY SHOT COUNT CONTRACT` and array slicing in `GeminiProvider.ts` so generated storyboards always match requested shot count and preserve custom per-shot timings.
 - **[2026-08-09] Prominent Reference Image Delete Controls & Reduced UI Text Density**: Added direct delete button overlays (`<Trash2>`) on reference image thumbnails and explicit "Remove" buttons on card headers in `ReferenceImageDropzone.tsx`. Truncated long hash filenames (`a3e89eb...`), simplified visual trait badges, and streamlined workstation headers in `AIDirectorPanel.tsx` to reduce cognitive text clutter.
