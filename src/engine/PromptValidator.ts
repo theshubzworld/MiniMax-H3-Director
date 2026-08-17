@@ -127,7 +127,7 @@ export class PromptValidator {
         });
       }
 
-      // Pixaroma Gold Standard: Check for Banned Weak Adverbs (slightly, subtly, gently, a little, gradually)
+      // Directorial Gold Standard: Check for Banned Weak Adverbs (slightly, subtly, gently, a little, gradually)
       const actionText = `${shot.rawActionDescription || ''} ${shot.camera?.motionType || ''} ${shot.camera?.amplitude || ''} ${shot.camera?.speed || ''}`;
       const bannedMatch = actionText.match(/\b(slightly|subtly|gently|a little|gradually)\b/i);
       if (bannedMatch) {

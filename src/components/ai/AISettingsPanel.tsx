@@ -450,7 +450,7 @@ export const AISettingsPanel: React.FC = () => {
 
                     <optgroup label="🔥 Recommended Vision Models">
                       <option value="hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M">
-                        hf.co/.../Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M (Pixaroma Heretic Uncensored)
+                        hf.co/.../Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M (Qwen3-VL 8B Heretic Uncensored)
                       </option>
                       <option value="qwen2.5-vl:3b">qwen2.5-vl:3b (~3GB VRAM Fast)</option>
                       <option value="qwen2.5-vl:7b-instruct-q4_K_M">qwen2.5-vl:7b-instruct-q4_K_M (~5GB VRAM)</option>

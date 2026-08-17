@@ -29,7 +29,7 @@ export const ComfyUIModal: React.FC = () => {
             ComfyUI Payload Exporter
           </h2>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Export JSON payloads formatted for official MiniMax H3 3in1 or ComfyUI-Pixaroma workflows.
+            Export JSON payloads formatted for official MiniMax H3 3in1 or Advanced Custom Node workflows.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export const ComfyUIModal: React.FC = () => {
           }`}
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>👑 ComfyUI-Pixaroma (Video Prompt & Audio Sync)</span>
+          <span>⚡ Custom Video Prompt & Audio Sync Nodes</span>
         </button>
       </div>
 
