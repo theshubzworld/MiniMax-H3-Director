@@ -563,7 +563,7 @@ export const AISettingsPanel: React.FC = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {RECOMMENDED_LOCAL_MODELS.map((item) => {
                   const isActive = localModel === item.tag;
                   const isCopied = copiedModelTag === item.tag;
