@@ -52,15 +52,17 @@ export const ShotCard: React.FC<ShotCardProps> = ({
               >
                 <span className="text-[10px] text-zinc-400 font-sans font-medium">Duration:</span>
                 <select
-                  value={shot.durationSeconds}
+                  value={Number((shot.durationSeconds || 2).toFixed(1))}
                   onChange={(e) => onUpdate({ durationSeconds: parseFloat(e.target.value) || 2 })}
                   className="bg-transparent text-cyan-300 font-bold focus:outline-none cursor-pointer text-xs"
                 >
-                  {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6].map((sec) => (
-                    <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
-                      {sec.toFixed(1)}s
-                    </option>
-                  ))}
+                  {Array.from(new Set([0.5, 0.8, 1.0, 1.2, 1.5, 1.8, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, Number((shot.durationSeconds || 2).toFixed(1))]))
+                    .sort((a, b) => a - b)
+                    .map((sec) => (
+                      <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
+                        {sec.toFixed(1)}s
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>

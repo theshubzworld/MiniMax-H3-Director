@@ -342,6 +342,22 @@ export const AIDirectorPanel: React.FC = () => {
     }
   };
 
+  const getShotDurationOptions = (currentSeconds: number) => {
+    const standard = [0.5, 0.8, 1.0, 1.2, 1.5, 1.8, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0];
+    const roundedCurrent = Number((currentSeconds || 2).toFixed(1));
+    return Array.from(new Set([...standard, roundedCurrent])).sort((a, b) => a - b);
+  };
+
+  const handleDurationChange = (val: number) => {
+    const safeTotal = Math.max(1, Math.min(15, val));
+    const divided = TimelineEngine.divideShotsEvenly(project.shots, safeTotal);
+    setProject({
+      ...project,
+      settings: { ...project.settings, durationSeconds: safeTotal },
+      shots: divided,
+    });
+  };
+
   return (
     <div className="space-y-5">
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-5 shadow-sm">
@@ -381,7 +397,7 @@ export const AIDirectorPanel: React.FC = () => {
                 min={1}
                 max={15}
                 value={project.settings.durationSeconds}
-                onChange={(e) => updateSettings({ durationSeconds: parseFloat(e.target.value) || 6 })}
+                onChange={(e) => handleDurationChange(parseFloat(e.target.value) || 6)}
                 className="w-full bg-transparent text-xs text-zinc-100 font-mono font-bold focus:outline-none"
               />
               <span className="text-xs text-zinc-500 font-mono">sec</span>
@@ -449,25 +465,29 @@ export const AIDirectorPanel: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {activeShots.map((shot, idx) => (
-              <div
-                key={shot.id}
-                className="bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2 shadow-xs transition-all"
-              >
-                <span className="text-zinc-300 font-bold">Shot {idx + 1}</span>
-                <select
-                  value={shot.durationSeconds}
-                  onChange={(e) => updateShot(idx, { durationSeconds: parseFloat(e.target.value) || 2 })}
-                  className="bg-zinc-900 text-cyan-300 font-mono font-bold px-2 py-0.5 rounded-lg border border-zinc-700 text-xs focus:outline-none cursor-pointer"
+            {activeShots.map((shot, idx) => {
+              const options = getShotDurationOptions(shot.durationSeconds);
+              const currentVal = Number((shot.durationSeconds || 2).toFixed(1));
+              return (
+                <div
+                  key={shot.id}
+                  className="bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2 shadow-xs transition-all"
                 >
-                  {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6].map((sec) => (
-                    <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
-                      {sec.toFixed(1)}s
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
+                  <span className="text-zinc-300 font-bold">Shot {idx + 1}</span>
+                  <select
+                    value={currentVal}
+                    onChange={(e) => updateShot(idx, { durationSeconds: parseFloat(e.target.value) || 2 })}
+                    className="bg-zinc-900 text-cyan-300 font-mono font-bold px-2 py-0.5 rounded-lg border border-zinc-700 text-xs focus:outline-none cursor-pointer"
+                  >
+                    {options.map((sec) => (
+                      <option key={sec} value={sec} className="bg-zinc-950 text-zinc-100">
+                        {sec.toFixed(1)}s
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
