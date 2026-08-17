@@ -453,8 +453,9 @@ You MUST generate a concise, punchy 3-5 word visual recognition title (e.g. "Bed
 
 CORE DIRECTORIAL & MOTION VECTOR RULES:
 1. MOTION VECTORS & ACTION CONTINUITY: Ending state of Shot N logically matches beginning state of Shot N+1. Maintain left-to-right or right-to-left screen motion vectors across cuts without sudden direction reversals or character flipping.
-2. NATURAL CAMERA: Align camera motion with story pacing (push in for intensity, tracking for movement, static for intimacy).
-3. VISUAL REALISM: Describe visual physics, light behavior, character gestures, and micro-expressions.
+2. NATURAL CAMERA & STRICT ADVERB BAN: Camera motion must use explicit amplitude/speed keywords ("with small amplitude", "with large amplitude", "at slow speed", "at fast speed"). STRICTLY BANNED WORDS: slightly, subtly, gently, a little, gradually.
+3. VISUAL REALISM & FULL SENTENCE STRUCTURE: Every action sentence MUST end with a full stop (period). NEVER chain sequential actions together with commas. (Write: "The hero raises the sword. Light glints off the blade. She steps forward." NEVER write: "The hero raises the sword, light glinting, stepping forward.")
+4. DIALOGUE LIP-SYNC ANCHOR: When characters speak, include physical mouth movement and closing actions ("his jaw and lips move clearly through every word, and the protagonist (S1) says: <d>[English] Spoken words.</d> He closes his lips and looks ahead.").
 
 Audio & Spoken Dialogue Guidelines:
 - Write short original spoken lines (1 to ${maxWordsPerShot} words max per shot; ~1.8 words/sec unhurried pacing).

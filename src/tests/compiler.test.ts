@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { PromptCompiler } from '../engine/PromptCompiler';
 import { PromptValidator } from '../engine/PromptValidator';
+import { PromptOptimizer } from '../engine/PromptOptimizer';
 import { PromptFormatter } from '../engine/PromptFormatter';
+import { FrameMath } from '../engine/FrameMath';
 import { ReferenceEngine } from '../engine/ReferenceEngine';
 import { StudioProject } from '../types/project';
 
@@ -112,5 +114,46 @@ describe('MiniMax H3 Director Engine Tests', () => {
     const result = PromptValidator.validate({ ...sampleProject, compiledPrompt: compiled });
     expect(result.overallHealthScore).toBeGreaterThanOrEqual(80);
     expect(result.categoryScores['Camera 3D Direction']).toBeGreaterThan(0);
+  });
+
+  it('should accurately calculate MiniMax H3 17n + 5 frame counts', () => {
+    const calc5s = FrameMath.calculateH3Frames(5.0);
+    expect(calc5s.frames).toBe(124);
+    expect(calc5s.actualSeconds).toBe(5.17);
+    expect(calc5s.formula).toBe('17 * 7 + 5 = 124 frames');
+
+    const calc10s = FrameMath.calculateH3Frames(10.0);
+    expect(calc10s.frames).toBe(243);
+    expect(calc10s.actualSeconds).toBe(10.13);
+  });
+
+  it('should format payload for ComfyUI-Pixaroma workflow', () => {
+    const pixaromaStr = PromptFormatter.toPixaromaPayload(sampleProject);
+    const parsed = JSON.parse(pixaromaStr);
+    expect(parsed.node_family).toBe('Pixaroma');
+    expect(parsed.video_prompt_node.class_type).toBe('PixaromaVideoPrompt');
+    expect(parsed.video_prompt_node.inputs.frame_formula).toBe('17n + 5');
+    expect(parsed.audio_sync_node.class_type).toBe('PixaromaH3AudioSync');
+  });
+
+  it('should detect banned weak adverbs and auto-fix them', () => {
+    const weakProject: StudioProject = {
+      ...sampleProject,
+      shots: [
+        {
+          ...sampleProject.shots[0],
+          rawActionDescription: 'She gently pushes in and moves slightly toward the altar.',
+        },
+      ],
+    };
+    const compiled = PromptCompiler.compile(weakProject);
+    const diag = PromptValidator.validate({ ...weakProject, compiledPrompt: compiled });
+    const hasAdverbWarning = diag.issues.some((i) => i.ruleName === 'Banned Weak Adverb Detected');
+    expect(hasAdverbWarning).toBe(true);
+
+    const fixed = PromptOptimizer.autoFix(weakProject);
+    expect(fixed.shots[0].rawActionDescription).not.toContain('gently');
+    expect(fixed.shots[0].rawActionDescription).not.toContain('slightly');
+    expect(fixed.shots[0].rawActionDescription).toContain('with small amplitude');
   });
 });

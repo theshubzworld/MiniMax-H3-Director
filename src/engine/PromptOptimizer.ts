@@ -1,4 +1,5 @@
 import { StudioProject } from '../types/project';
+import { CameraAmplitude, CameraSpeed } from '../types/shot';
 import { TimelineEngine } from './TimelineEngine';
 import { PromptCompiler } from './PromptCompiler';
 
@@ -14,16 +15,40 @@ export class PromptOptimizer {
       updatedProject.shots = TimelineEngine.recalculateShotTimings(updatedProject.shots);
     }
 
-    // 2. Ensure Camera Motions & Focal Targets are populated
+    // 2. Ensure Camera Motions & Focal Targets are populated + Cleanse Banned Adverbs
     updatedProject.shots = updatedProject.shots.map((shot, idx) => {
       const camera = shot.camera || {};
       const character = shot.character || {};
+
+      let cleanAction = (shot.rawActionDescription || '')
+        .replace(/\bslowly and gently\b/gi, 'with small amplitude at slow speed')
+        .replace(/\bgently\b/gi, 'with small amplitude at slow speed')
+        .replace(/\bslightly\b/gi, 'with small amplitude')
+        .replace(/\bsubtly\b/gi, 'with small amplitude')
+        .replace(/\bgradually\b/gi, 'at slow speed')
+        .replace(/\ba little\b/gi, 'with small amplitude');
+
+      let cleanAmp: CameraAmplitude = 'small amplitude';
+      if (camera.amplitude === 'large amplitude' || /large/i.test(camera.amplitude || '')) {
+        cleanAmp = 'large amplitude';
+      } else if (camera.amplitude === 'medium amplitude' || /medium/i.test(camera.amplitude || '')) {
+        cleanAmp = 'medium amplitude';
+      }
+
+      let cleanSpeed: CameraSpeed = 'slow speed';
+      if (camera.speed === 'fast speed' || /fast/i.test(camera.speed || '')) {
+        cleanSpeed = 'fast speed';
+      } else if (camera.speed === 'normal speed' || /normal/i.test(camera.speed || '')) {
+        cleanSpeed = 'normal speed';
+      }
+
       return {
         ...shot,
+        rawActionDescription: cleanAction,
         camera: {
           motionType: camera.motionType || 'Push In',
-          amplitude: camera.amplitude || 'small amplitude',
-          speed: camera.speed || 'slow speed',
+          amplitude: cleanAmp,
+          speed: cleanSpeed,
           targetSubject: camera.targetSubject || 'the main focal subject',
         },
         character: {

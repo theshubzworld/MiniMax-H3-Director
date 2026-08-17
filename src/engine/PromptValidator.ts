@@ -127,6 +127,22 @@ export class PromptValidator {
         });
       }
 
+      // Pixaroma Gold Standard: Check for Banned Weak Adverbs (slightly, subtly, gently, a little, gradually)
+      const actionText = `${shot.rawActionDescription || ''} ${shot.camera?.motionType || ''} ${shot.camera?.amplitude || ''} ${shot.camera?.speed || ''}`;
+      const bannedMatch = actionText.match(/\b(slightly|subtly|gently|a little|gradually)\b/i);
+      if (bannedMatch) {
+        issues.push({
+          id: `adverb-${shotNum}`,
+          category: 'Camera 3D Direction',
+          severity: 'WARNING',
+          ruleName: 'Banned Weak Adverb Detected',
+          message: `Shot ${shotNum} uses ambiguous modifier "${bannedMatch[0]}". MiniMax H3 ignores weak adverbs; use explicit amplitude & speed keywords ("with small amplitude", "at slow speed").`,
+          suggestion: `Replace "${bannedMatch[0]}" with concrete amplitude and speed modifiers.`,
+          autoFixable: true,
+          affectedShotIndex: index,
+        });
+      }
+
       // Dialogue Syntax Check
       if (shot.dialogue && shot.dialogue.hasDialogue) {
         const d = shot.dialogue;

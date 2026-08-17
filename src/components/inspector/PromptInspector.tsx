@@ -3,6 +3,7 @@ import { useStudioStore } from '../../store/StudioStore';
 import { Copy, Check, Sparkles, Wrench, FileText, Code, Loader2, Bookmark, X, Maximize2, Minimize2, GripVertical } from 'lucide-react';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { PromptFormatter } from '../../engine/PromptFormatter';
+import { FrameMath } from '../../engine/FrameMath';
 import { AIEngine } from '../../ai/AIEngine';
 
 const highlightInlineTokens = (text: string) => {
@@ -197,7 +198,7 @@ export const PromptInspector: React.FC = () => {
     <div
       className="w-[560px] h-full bg-zinc-950 border-l border-zinc-800 flex flex-col flex-shrink-0 relative transition-all"
     >
-      {/* Sleek Recreated Header without resize controls */}
+      {/* Sleek Recreated Header with 17n + 5 frame math badge */}
       <div className="p-3.5 border-b border-zinc-800 flex items-center justify-between gap-3 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-20">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
@@ -207,7 +208,7 @@ export const PromptInspector: React.FC = () => {
             <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-2">
               <span>Prompt Inspector</span>
               <span className="text-[10px] bg-cyan-950 border border-cyan-500/30 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold">
-                Live H3
+                {FrameMath.formatH3Badge(project.settings.durationSeconds)}
               </span>
             </h3>
           </div>
@@ -217,7 +218,7 @@ export const PromptInspector: React.FC = () => {
           <button
             type="button"
             onClick={handleAutoFix}
-            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
               fixed
                 ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md font-bold'
                 : 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/60'
@@ -231,7 +232,7 @@ export const PromptInspector: React.FC = () => {
           <button
             type="button"
             onClick={handleSaveToLibrary}
-            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1.5 border text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
               saved
                 ? 'bg-purple-500 text-zinc-950 border-purple-400 font-bold shadow-md'
                 : 'bg-purple-950/50 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
@@ -245,7 +246,7 @@ export const PromptInspector: React.FC = () => {
           <button
             type="button"
             onClick={handleCopy}
-            className="px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-cyan-500/20 transition-all"
+            className="px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-zinc-950 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-cyan-500/20 transition-all cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'Copied!' : 'Copy'}</span>
@@ -254,7 +255,7 @@ export const PromptInspector: React.FC = () => {
           <button
             type="button"
             onClick={toggleInspectorOpen}
-            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-xl transition-all ml-1"
+            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-xl transition-all ml-1 cursor-pointer"
             title="Close Inspector Panel"
           >
             <X className="w-4 h-4" />
@@ -267,9 +268,9 @@ export const PromptInspector: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('prompt')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all ${
+          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all cursor-pointer ${
             activeTab === 'prompt'
-              ? 'border-cyan-500 text-cyan-300 bg-zinc-900'
+              ? 'border-cyan-500 text-cyan-300 bg-zinc-900 font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
@@ -279,9 +280,9 @@ export const PromptInspector: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('health')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 flex items-center justify-center gap-1.5 transition-all ${
+          className={`flex-1 py-2 text-xs font-medium border-b-2 flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
             activeTab === 'health'
-              ? 'border-cyan-500 text-cyan-300 bg-zinc-900'
+              ? 'border-cyan-500 text-cyan-300 bg-zinc-900 font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
@@ -291,9 +292,9 @@ export const PromptInspector: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('json')}
-          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all ${
+          className={`flex-1 py-2 text-xs font-medium border-b-2 transition-all cursor-pointer ${
             activeTab === 'json'
-              ? 'border-cyan-500 text-cyan-300 bg-zinc-900'
+              ? 'border-pink-500 text-pink-300 bg-zinc-900 font-bold'
               : 'border-transparent text-zinc-400 hover:text-zinc-200'
           }`}
         >
