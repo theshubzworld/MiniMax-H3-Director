@@ -31,7 +31,7 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
   {
     name: 'Qwen2.5-VL 3B Instruct (Ultra-Fast)',
     tag: 'qwen2.5vl:3b',
-    vram: '~1.9 GB (3GB-4GB VRAM)',
+    vram: '~3.2 GB (4GB+ VRAM)',
     badge: '⚡ ULTRA LIGHTWEIGHT',
     badgeColor: 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border-cyan-500/40',
     desc: 'Super-fast, low VRAM model ideal for laptop GPUs, GTX 1660 / RTX 3050, or instant generation.',
@@ -42,7 +42,7 @@ const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
   {
     name: 'Qwen2.5-VL 7B Instruct (Standard)',
     tag: 'qwen2.5vl:7b',
-    vram: '~4.7 GB (6GB+ VRAM)',
+    vram: '~6.0 GB (8GB+ VRAM)',
     badge: '🎯 HIGH PRECISION',
     badgeColor: 'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/40',
     desc: 'Official Alibaba vision model with high image understanding and sharp camera trajectory breakdown.',
