@@ -243,6 +243,8 @@ Narrative Aesthetic: "${params.narrativeStyle}"
 Shot Count: ${shotsCount}
 Total Duration: ${totalDuration}s`;
 
+    params.onProgress?.({ step: 2, totalSteps: 4, percent: 35, message: `Connecting to Local GPU (${model})...` });
+
     const response = await fetch(`${endpoint}/chat/completions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -254,6 +256,7 @@ Total Duration: ${totalDuration}s`;
         ],
         temperature: params.temperature || 0.7,
         max_tokens: 3000,
+        stream: true,
       }),
     });
 
@@ -262,8 +265,44 @@ Total Duration: ${totalDuration}s`;
       throw new Error(`Local model call failed (${response.status}): ${errBody || response.statusText}`);
     }
 
-    const data = await response.json();
-    const rawText = data.choices?.[0]?.message?.content || '';
+    let rawText = '';
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder('utf-8');
+
+    if (reader) {
+      params.onProgress?.({ step: 3, totalSteps: 4, percent: 65, message: `Local GPU streaming ${shotsCount} shots live...` });
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const clean = line.trim();
+          if (clean.startsWith('data: ')) {
+            const jsonStr = clean.substring(6).trim();
+            if (jsonStr === '[DONE]') continue;
+            try {
+              const chunkObj = JSON.parse(jsonStr);
+              const delta = chunkObj.choices?.[0]?.delta;
+              const token = delta?.content || delta?.reasoning_content || '';
+              if (token) {
+                rawText += token;
+                params.onStreamChunk?.(token, rawText);
+              }
+            } catch (e) {
+              // ignore partial chunk json
+            }
+          }
+        }
+      }
+    } else {
+      const data = await response.json();
+      rawText = data.choices?.[0]?.message?.content || '';
+    }
+
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {

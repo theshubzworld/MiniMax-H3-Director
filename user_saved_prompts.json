@@ -1,5 +1,22 @@
 [
   {
+    "id": "prompt-1786970477023-cejg8",
+    "title": "Under Blanket Selfie",
+    "idea": "women in refrence image taking nude selfie video under blanket",
+    "compiledPrompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description:\n\n[Shot 1] Live-Action Realism. The opening frame references character facial identity from <Picture 1>. Set in a Bedroom, messy bed, curtains drawn, soft red LED glow from phone screen, private, vulnerable, warm environment. Camera pushes in slowly as the woman adjusts her phone to center the frame, eyes half-lidded, fingers brushing the screen. The camera pushes in with small amplitude at normal speed.\n\n[Shot 2] At 00:05.000, the camera cuts to a new framing. Set in a Bedroom, nightstand with glass of water, phone light casting long shadows, intimate, slightly chaotic environment. Camera pans right as she playfully pulls the blanket lower, laughing softly, eyes darting between screen and camera. The camera pans right with medium amplitude at normal speed.\n\n[Shot 3] At 00:10.000, the camera cuts to a new framing. Set in a Bedroom, window blocked by curtains, only phone screen visible, rest of room dark, surreal, safe, self-contained environment. Camera slowly pulls back as she closes her eyes, still smiling, blanket draped like a cocoon around her form. The camera pulls out with small amplitude at slow speed.\n\noverall_soundscape: Soft ambient hum, distant city noise muffled by closed windows, occasional breath and phone shutter sound\n\nnon_diegetic_music: Minimalist ambient synth with subsonic pulse, no lyrics, evoking solitude and self-expression score featuring analog synth pads, warm bass at a slow tempo with slow sustained chords and subtle and atmospheric. Deep atmospheric soundscape",
+    "narrativeStyle": "Live-Action Realism",
+    "mode": "I2VA",
+    "shotsCount": 3,
+    "durationSeconds": 15,
+    "aspectRatio": "9:16",
+    "createdAt": "2026-08-17T12:41:17.023Z",
+    "isFavorite": false,
+    "tags": [
+      "I2VA",
+      "Live-Action Realism"
+    ]
+  },
+  {
     "id": "prompt-1786970198809-a00sj",
     "title": "Under the Blanket",
     "idea": "women in refrence image taking nude selfie video under blanket",

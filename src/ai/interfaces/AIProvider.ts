@@ -55,6 +55,7 @@ export interface StoryboardParams {
   subjectComposition?: 'solo' | 'couple' | 'ensemble';
   stateMachineId?: string;
   onProgress?: (progress: { step: number; totalSteps: number; percent: number; message: string }) => void;
+  onStreamChunk?: (chunk: string, accumulated: string) => void;
 }
 
 export interface AIProvider {

@@ -182,6 +182,7 @@ export const AIDirectorPanel: React.FC = () => {
     return localStorage.getItem('minimax_h3_prompt_idea') || '';
   });
   const [isGenerating, setIsGenerating] = useState(false);
+  const [liveStreamText, setLiveStreamText] = useState<string>('');
   const [progressState, setProgressState] = useState<{ step: number; totalSteps: number; percent: number; message: string } | null>(null);
   const [showTechnicalOverrides, setShowTechnicalOverrides] = useState(false);
   const [showAllStyles, setShowAllStyles] = useState(false);
@@ -310,6 +311,7 @@ export const AIDirectorPanel: React.FC = () => {
 
   const handleAutoBuild = async () => {
     setIsGenerating(true);
+    setLiveStreamText('');
     setProgressState({ step: 1, totalSteps: 4, percent: 10, message: `Initializing ${formattedModelName}...` });
     const provider = AIEngine.getActiveProvider();
     const apiKey = (localStorage.getItem('minimax_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '').trim();
@@ -331,6 +333,9 @@ export const AIDirectorPanel: React.FC = () => {
           directorMode,
           systemPromptPreset,
           onProgress: (prog) => setProgressState(prog),
+          onStreamChunk: (_chunk, accumulated) => {
+            setLiveStreamText(accumulated);
+          },
         },
         apiKey
       );
@@ -1027,6 +1032,26 @@ export const AIDirectorPanel: React.FC = () => {
             <pre className="whitespace-pre-wrap font-mono text-cyan-400 font-semibold">{compiledGeminiPrompt}</pre>
           </div>
         </div>
+
+        {/* Live GPU Reasoning & Token Stream Terminal */}
+        {isGenerating && liveStreamText && (
+          <div className="bg-zinc-950/95 border border-cyan-500/50 rounded-2xl p-4 space-y-2.5 shadow-2xl animate-fade-in ring-1 ring-cyan-500/30">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+              <span className="text-[11px] font-mono font-extrabold text-cyan-400 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/80" />
+                <span>Live GPU Token Stream ({formattedModelName})</span>
+              </span>
+              <span className="text-[10px] text-zinc-500 font-mono">
+                {liveStreamText.length} chars streamed
+              </span>
+            </div>
+
+            <div className="font-mono text-xs text-zinc-200 dark:text-cyan-200 leading-relaxed max-h-52 overflow-y-auto whitespace-pre-wrap select-all bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80 shadow-inner">
+              {liveStreamText}
+              <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse align-middle" />
+            </div>
+          </div>
+        )}
 
         {/* Live Real-Time AI Progress Status Tracker */}
         {isGenerating && progressState && (
