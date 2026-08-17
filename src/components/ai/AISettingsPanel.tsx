@@ -2,7 +2,61 @@ import React, { useState, useEffect } from 'react';
 import { AIEngine } from '../../ai/AIEngine';
 import { LocalProvider } from '../../ai/providers/LocalProvider';
 import { GeminiProvider } from '../../ai/providers/GeminiProvider';
-import { Key, Sliders, Check, Shield, Cpu, Activity, Loader2, Sparkles } from 'lucide-react';
+import { Key, Sliders, Check, Shield, Cpu, Activity, Loader2, Sparkles, Download, Copy, ExternalLink, Play } from 'lucide-react';
+
+interface RecommendedModel {
+  name: string;
+  tag: string;
+  vram: string;
+  badge: string;
+  badgeColor: string;
+  desc: string;
+  downloadUrl: string;
+  ollamaCmd: string;
+}
+
+const RECOMMENDED_LOCAL_MODELS: RecommendedModel[] = [
+  {
+    name: 'Qwen3-VL 8B Heretic (Uncensored Vision)',
+    tag: 'hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M',
+    vram: '~5.4 GB (6GB+ VRAM)',
+    badge: '👑 TOP CHOICE / UNCENSORED',
+    badgeColor: 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/40',
+    desc: 'Unfiltered vision-language model for candid, intimate, raw smartphone, and unfiltered cinematic scene reasoning.',
+    downloadUrl: 'https://huggingface.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF',
+    ollamaCmd: 'ollama run hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M',
+  },
+  {
+    name: 'Qwen2.5-VL 3B Instruct (Ultra-Fast)',
+    tag: 'qwen2.5-vl:3b',
+    vram: '~1.9 GB (3GB-4GB VRAM)',
+    badge: '⚡ ULTRA LIGHTWEIGHT',
+    badgeColor: 'bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border-cyan-500/40',
+    desc: 'Super-fast, low VRAM model ideal for laptop GPUs, GTX 1660 / RTX 3050, or instant generation.',
+    downloadUrl: 'https://ollama.com/library/qwen2.5-vl:3b',
+    ollamaCmd: 'ollama run qwen2.5-vl:3b',
+  },
+  {
+    name: 'Qwen2.5-VL 7B Instruct (Standard)',
+    tag: 'qwen2.5-vl:7b-instruct-q4_K_M',
+    vram: '~4.7 GB (6GB+ VRAM)',
+    badge: '🎯 HIGH PRECISION',
+    badgeColor: 'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/40',
+    desc: 'Official Alibaba vision model with high image understanding and sharp camera trajectory breakdown.',
+    downloadUrl: 'https://ollama.com/library/qwen2.5-vl:7b',
+    ollamaCmd: 'ollama run qwen2.5-vl:7b',
+  },
+  {
+    name: 'MiniCPM-V 2.6 (8B Vision)',
+    tag: 'minicpm-v:2.6',
+    vram: '~5.5 GB (8GB+ VRAM)',
+    badge: '🖼️ MULTI-IMAGE VISION',
+    badgeColor: 'bg-purple-500/20 text-purple-800 dark:text-purple-300 border-purple-500/40',
+    desc: 'Exceptional visual OCR and spatial image recognition with dense visual captioning.',
+    downloadUrl: 'https://ollama.com/library/minicpm-v',
+    ollamaCmd: 'ollama run minicpm-v:2.6',
+  },
+];
 
 export const AISettingsPanel: React.FC = () => {
   const [providerId, setProviderId] = useState('gemini');
@@ -15,6 +69,7 @@ export const AISettingsPanel: React.FC = () => {
   const [geminiTestResult, setGeminiTestResult] = useState<{ ok: boolean; model: string; error?: string } | null>(null);
   const [installedModels, setInstalledModels] = useState<{ name: string; size?: string }[]>([]);
   const [isCustomModel, setIsCustomModel] = useState(false);
+  const [copiedModelTag, setCopiedModelTag] = useState<string | null>(null);
   const [pingResult, setPingResult] = useState<{ ok: boolean; latencyMs: number; error?: string } | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -491,17 +546,100 @@ export const AISettingsPanel: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Setup Instructions Box */}
-            <div className="bg-zinc-950/80 border border-zinc-800/80 rounded-2xl p-4 space-y-2 text-xs text-zinc-400">
-              <div className="font-bold text-zinc-200 flex items-center gap-1.5">
-                <span>💡 1-Command Ollama Heretic Setup:</span>
+            {/* Recommended Local Vision Models Library & 1-Click Setup Cards */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-zinc-200 flex items-center gap-1.5 uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Recommended Vision Models & 1-Click Commands</span>
+                </span>
+                <span className="text-[11px] text-zinc-500 font-mono">
+                  Ollama · LM Studio · GGUF
+                </span>
               </div>
-              <code className="block p-2.5 bg-zinc-900 rounded-xl font-mono text-emerald-600 dark:text-emerald-400 border border-zinc-800 select-all">
-                ollama run hf.co/mradermacher/Qwen3-VL-8B-Instruct-Heretic-GGUF:Q4_K_M
-              </code>
-              <p className="text-[11px] text-zinc-500">
-                Ollama will serve this model directly at <code>http://localhost:11434/v1</code> with zero safety refusals.
-              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {RECOMMENDED_LOCAL_MODELS.map((item) => {
+                  const isActive = localModel === item.tag;
+                  const isCopied = copiedModelTag === item.tag;
+
+                  return (
+                    <div
+                      key={item.tag}
+                      className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 ${
+                        isActive
+                          ? 'bg-emerald-950/40 border-emerald-500/60 ring-1 ring-emerald-500/30'
+                          : 'bg-zinc-950/70 border-zinc-800/90 hover:border-zinc-700'
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-xs font-bold text-zinc-100 leading-tight">
+                            {item.name}
+                          </span>
+                          <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${item.badgeColor}`}>
+                            {item.vram}
+                          </span>
+                        </div>
+
+                        <p className="text-[11px] text-zinc-400 leading-relaxed">
+                          {item.desc}
+                        </p>
+
+                        <div className="pt-1">
+                          <code className="block p-2 bg-zinc-900 border border-zinc-800/80 rounded-lg text-[10px] font-mono text-emerald-600 dark:text-emerald-400 truncate select-all">
+                            {item.ollamaCmd}
+                          </code>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons Row */}
+                      <div className="flex items-center gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(item.ollamaCmd);
+                            setCopiedModelTag(item.tag);
+                            setTimeout(() => setCopiedModelTag(null), 2000);
+                          }}
+                          className="flex-1 py-1.5 px-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                          title="Copy terminal command to run model in Ollama"
+                        >
+                          <Copy className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>{isCopied ? '✓ Copied' : 'Copy Command'}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setLocalModel(item.tag);
+                            setIsCustomModel(false);
+                            localStorage.setItem('minimax_local_model', item.tag);
+                          }}
+                          className={`py-1.5 px-2.5 text-xs font-bold rounded-xl border transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                            isActive
+                              ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300'
+                              : 'bg-zinc-900 hover:bg-emerald-950/40 border-zinc-700 hover:border-emerald-500/40 text-zinc-300'
+                          }`}
+                          title="Set as active model in Studio"
+                        >
+                          <span>{isActive ? '✓ Active' : '⚡ Use Model'}</span>
+                        </button>
+
+                        <a
+                          href={item.downloadUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-cyan-300 rounded-xl transition-all flex items-center justify-center shrink-0"
+                          title="Open Model Page / Download GGUF"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {pingResult && (
